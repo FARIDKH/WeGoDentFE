@@ -7,7 +7,8 @@
         "dev-old": "next dev",
         "build": "next build",
         "start": "next start",
-        "lint": "next lint"
+        "lint": "next lint",
+        "export": "next export"
     },
     "dependencies": {
         "@date-io/date-fns": "^2.11.0",
