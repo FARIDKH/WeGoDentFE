@@ -5,7 +5,7 @@
     "scripts": {
         "dev": "cross-env NODE_OPTIONS='--openssl-legacy-provider' next dev",
         "dev-old": "next dev",
-        "build": "next build",
+        "build": "cross-env NODE_OPTIONS='--openssl-legacy-provider' next build",
         "start": "next start",
         "lint": "next lint",
         "export": "next export"
