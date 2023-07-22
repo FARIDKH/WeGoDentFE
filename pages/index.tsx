@@ -60,18 +60,20 @@ const useStyle = makeStyles(() => ({
     },
 }))
 
-const HomePage = () => {
-    const classes = useStyle()
-    const router = useRouter()
-
-
-    declare global {
+declare global {
       namespace JSX {
         interface IntrinsicElements {
           'stripe-pricing-table': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
         }
       }
     }
+
+const HomePage = () => {
+    const classes = useStyle()
+    const router = useRouter()
+
+
+
 
     return (
         <Layout>
