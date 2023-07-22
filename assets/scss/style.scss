@@ -40,6 +40,17 @@ html, body {
   }
 }
 
+.background-round-2 {
+  background: url('../images/background-round.png');
+  background-repeat: no-repeat;
+  background-position: right;
+  position: relative;
+  padding: 100px;
+}
+
+
+
+
 .adminWrapper {
   background: url('../images/background.png');
   background-repeat: no-repeat;

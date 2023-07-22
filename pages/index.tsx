@@ -23,6 +23,7 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import TimelineDot from '@mui/lab/TimelineDot';
+import { FormControl, InputLabel, FormHelperText, Input } from '@mui/material';
 
 const useStyle = makeStyles(() => ({
     selectDoctorType: {
@@ -145,7 +146,6 @@ const HomePage = () => {
                     </Box>
                 </Container>
             </Box>
-
                 <Box sx={{ 
 
                     background :'#9BC1C2',
@@ -238,8 +238,12 @@ const HomePage = () => {
                     </Container>
                 </Box>
 
-
-
+            <Box mt={5} mb={5}> 
+                <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
+                <stripe-pricing-table pricing-table-id="prctbl_1NWfqNFxp2O97KgcqhfFQLo6"
+                publishable-key="pk_live_51NLo3DFxp2O97KgcyH8edFjfc1HheQuKdgneQPMwbShHHhlAp5P3z3Ra1Wgir7h23MqTMkZKESWUBsMUHMmJ1ixx00ZaWWps1V">
+                </stripe-pricing-table>
+            </Box>
             <Box>
                 <Container>
                     
@@ -333,6 +337,49 @@ const HomePage = () => {
                     </Timeline>
                 </Container>
 
+            </Box>
+
+
+            <Box className="background-round-2" >
+                <Container>
+                    <Grid container>
+                        <Grid item xs={6}>
+                            
+                            <h1>Book a Demo</h1>
+                            <p>One of our assistant will get back to you and will provide you with demo credentials</p>
+                        </Grid> 
+                        <Grid item xs={6}>
+                            <Box sx={{
+                                "color" : "white",
+                                "padding" : "25px",
+                                "textAlign" : "right",
+                            }
+                            }>
+                                <Box>
+                                    <FormControl >
+                                      <InputLabel sx={{ 
+                                "fontSize" : "20px",
+                                'color':'white',
+                                'width' : "250px"
+                            }} htmlFor="my-input">Email address</InputLabel>
+                                      <Input id="my-input" aria-describedby="my-helper-text" />
+                                      <FormHelperText sx={{ 'color':'white' }} id="my-helper-text">We'll never share your email.</FormHelperText>
+                                    </FormControl>
+                                </Box>
+                                <Box mt={5}>
+
+                                    <FormControl >
+                                      <InputLabel sx={{ 'color':'white' }} htmlFor="my-input">Your full name</InputLabel>
+                                      <Input sx={{ 'color':'white' }} id="my-input" aria-describedby="my-helper-text" />
+                                    </FormControl>
+                                </Box>
+                                <Box mt={5}>
+                                    <Button variant="contained" sx={"color: white"}>Submit</Button>  
+                                </Box>
+                            </Box>
+                        </Grid>
+                    </Grid>
+                </Container>
             </Box>
 
         </Layout>
