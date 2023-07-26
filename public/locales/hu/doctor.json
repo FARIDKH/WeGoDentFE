@@ -1,0 +1,21 @@
+{
+    "labelDashboard" : "Irányítópult",
+    "labelAppointments" : "Találkozók",
+    "labelAvailabilities" : "Elérhetőségek",
+    "labelPatients" : "Pácienseid",
+    "labelAllTreatments" : "Összes kezelés",
+    "labelToday" : "Ma",
+    "labelMonth" : "Hónap",
+    "labelWeek" : "Hét",
+    "labelDay" : "Nap",
+    "labelPatient" : "Páciens",
+    "labelPatientContact" : "Páciens kapcsolat",
+    "labelAppointmentStartDate" : "Kezdő dátum",
+    "labelAppointmentEndDate" : "Befejező dátum",
+    "labelAppointmentStatus" : "Állapot",
+    "labelMenuItemDashboard" : "Irányítópult",
+    "labelMenuItemAppointment" : "Találkozó",
+    "labelMenuItemAvailabilities" : "Elérhetőségek",
+    "labelMenuItemYourPatients" : "Pácienseid",
+    "labelMenuItemAllTreatments" : "Összes kezelés"
+}

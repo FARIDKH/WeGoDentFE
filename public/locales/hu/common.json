@@ -1,0 +1,23 @@
+{
+    "welcome" : "Szüksége van fogorvosra?",
+    "welcome_h3" : "Keressen a közelben fogorvost az Ön igényei szerint",
+    "buttonSearch" : "Keresés",
+    "reservationCountInfo" : "Foglalások, melyeket okos naptárunk kezel",
+    "treatmentModuleCountInfo" : "Kezelési modul fogorvosok számára",
+    "succesfullAppointmentsInfo" : "Sikeresen befejezett időpontok",
+    "howDoesItWork" : "Hogyan működik?",
+    "hdiwp1head" : "Hozzon létre egy fiókot",
+    "hdiwp1desc" : "A fiók létrehozása lehetővé teszi a betegek számára, hogy nyomon kövessék korábbi (és közelgő) időpontjaikat, a fogorvos megjegyzéseit, valamint a kezelés nyomon követését.",
+    "hdiwp2head" : "Válassza ki az elérhető idősávot",
+    "hdiwp2desc" : "Miután beírta a helyét, megkapja a közelben lévő fogorvosok listáját. Ezután ki kell választania a doktor idősávját.",
+    "hdiwp3head" : "Kapjon értesítést!",
+    "hdiwp3desc" : "Az idősáv kiválasztása után a fogorvosok értesítést kapnak az Ön időpontjáról, és a beteg is értesítést kap, illetve.",
+    "bookADemo" : "Foglaljon bemutatót",
+    "bookADemoInfo" : "Az egyik asszisztensünk visszajelzést ad Önnek, és bemutató hitelesítő adatokat biztosít Önnek",
+    "buttonSubmit" : "Beküldés",
+    "newsletter" : "Hírlevél",
+    "news_subscribe" : "Szeretne tudni, mit csinálunk? Iratkozzon fel a hírlevélre, és csatlakozzon a törzsünkhöz",
+    "buttonSubscribe" : "Feliratkozás",
+    "labelContact" : "Kapcsolat",
+    "labelAddress": "Cím"
+} 

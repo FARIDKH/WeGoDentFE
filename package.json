@@ -49,6 +49,7 @@
         "framer-motion": "^4.1.17",
         "fullcalendar": "^6.1.8",
         "har-validator": "^5.1.5",
+        "i18next": "^23.3.0",
         "iron-session": "^6.3.1",
         "lodash.debounce": "^4.0.8",
         "markdown-to-jsx": "^7.2.1",
@@ -64,6 +65,7 @@
         "react-bus": "^3.0.0",
         "react-device-detect": "^1.17.0",
         "react-dom": "17.0.2",
+        "react-i18next": "^13.0.2",
         "react-idle-timer": "^4.6.4",
         "react-input-mask": "^2.0.4",
         "react-intl": "^5.20.4",
@@ -89,8 +91,7 @@
         "start-server-and-test": "^1.14.0",
         "typescript": "^4.6.4"
     },
-
-    "engines" : { 
+    "engines": {
         "node": ">=17 <18"
     }
 }

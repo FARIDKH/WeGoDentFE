@@ -7,6 +7,8 @@ if (process.env.NODE_ENV === 'production') {
     basePath = process.env.BASE_PATH !== undefined ? process.env.BASE_PATH : ''
 }
 
+const { i18n } = require('./next-i18next.config');
+
 module.exports = {
     basePath: basePath,
     reactStrictMode: false,
@@ -40,4 +42,6 @@ module.exports = {
             },
         ]
     },
+    i18n
+    
 }

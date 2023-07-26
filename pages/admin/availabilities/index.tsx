@@ -20,7 +20,7 @@ import UpdateAvailability from '../../../modules/appointments/UpdateAvailability
 import CreateButtonFab from '../../../ui-component/CreateButtonFab'
 import dayjs from 'dayjs'
 
-
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const Availabilities = () => {
     const [isListView, setIsListView] = useState(false)
@@ -144,3 +144,11 @@ const Availabilities = () => {
 }
 
 export default Availabilities
+
+export const getStaticProps = async ({ locale }) => {
+    return {
+      props: {
+        ...(await serverSideTranslations(locale, ["doctor"])),
+      },
+    };
+  };

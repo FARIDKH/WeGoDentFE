@@ -13,6 +13,9 @@ import { useRouter } from 'next/router'
 import { LinearProgress } from '@material-ui/core'
 import BaseLayout from '../layout/admin/BaseLayout'
 
+
+import { appWithTranslation } from 'next-i18next'
+
 export const store = createStore(reducer)
 
 const Loading = ({ initial }: { initial: boolean }) => {
@@ -128,4 +131,4 @@ function App({ Component, pageProps }: AppProps) {
         </>
     )
 }
-export default App
+export default appWithTranslation(App)

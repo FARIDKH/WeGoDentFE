@@ -88,6 +88,7 @@ const MainLayout = ({ children }) => {
                 <Toolbar>
                     <Header handleLeftDrawerToggle={handleLeftDrawerToggle} />
                 </Toolbar>
+                    
             </AppBar>
 
             <Sidebar drawerOpen={leftDrawerOpened} drawerToggle={handleLeftDrawerToggle} />

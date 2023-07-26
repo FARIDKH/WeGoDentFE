@@ -2,6 +2,10 @@ import { Typography } from '@material-ui/core'
 import React from 'react'
 import MainLayout from '../../layout/admin/MainLayout'
 
+
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
+
 const Dashboard = () => {
     return (
         <MainLayout>
@@ -11,3 +15,10 @@ const Dashboard = () => {
 }
 
 export default Dashboard
+export const getStaticProps = async ({ locale }) => {
+    return {
+      props: {
+        ...(await serverSideTranslations(locale, ["doctor"])),
+      },
+    };
+  };

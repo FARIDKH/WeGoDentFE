@@ -1,0 +1,21 @@
+{
+    "labelDashboard" : "Dashboard",
+    "labelAppointments" : "Appointments",
+    "labelAvailabilities" : "Availabilities",
+    "labelPatients" : "Your patients",
+    "labelAllTreatments" : "All treatments",
+    "labelToday" : "Today",
+    "labelMonth" : "Month",
+    "labelWeek" : "Week",
+    "labelDay" : "Day",
+    "labelPatient" : "Patient",
+    "labelPatientContact" : "Patient Contact",
+    "labelAppointmentStartDate" : "Start Date",
+    "labelAppointmentEndDate" : "End Date",
+    "labelAppointmentStatus" : "Status",
+    "labelMenuItemDashboard" : "Dashboard",
+    "labelMenuItemAppointment" : "Appointment",
+    "labelMenuItemAvailabilities" : "Availabilities",
+    "labelMenuItemYourPatients" : "Your Patients",
+    "labelMenuItemAllTreatments" : "All Treatments"
+}

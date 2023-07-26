@@ -1,0 +1,24 @@
+{
+    "welcome" : "Do you need a Dentist?",
+    "welcome_h3" : "Find dentist nearby according to your needs",
+    "buttonSearch" : "Search",
+    "reservationCountInfo" : "Reservations managed by our smart calendar",
+    "treatmentModuleCountInfo" : "Treatment module for dentists",
+    "succesfullAppointmentsInfo" : "Successfully done appointments",
+    "howDoesItWork" : "How Does It Work?",
+    "hdiwp1head" : "Create an account",
+    "hdiwp1desc" : "Account creation enables patients to track their previous (and upcoming) appointments, dentist notes as well as treatment tracking.",
+    "hdiwp2head" : "Choose available timeslot",
+    "hdiwp2desc" : "Once you type your location, you will get a list of dentists that are nearby. Then you need to choose timeslot of doctor.",
+    "hdiwp3head" : "Get notified!",
+    "hdiwp3desc" : "After choosing timeslot, dentists gets notification of your appointment and patient gets notified, respectively.",
+    "bookADemo" : "Book a Demo",
+    "bookADemoInfo" : "One of our assistant will get back to you and will provide you with demo credentials",
+    "buttonSubmit" : "Submit",
+    "newsletter" : "Newsletter",
+    "news_subscribe" : "Want to know what we're up to? Sign up for the newsletter and join our tribe",
+    "buttonSubscribe" : "Subscribe",
+    "labelContact" : "Contact",
+    "labelAddress": "Address"
+
+} 

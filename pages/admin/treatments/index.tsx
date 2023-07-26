@@ -11,6 +11,9 @@ import CreateEditForm from '../../../modules/treatments/CreateEdit'
 import CreateEditPhaseForm from '../../../modules/treatments/CreateEditPhase'
 import { trimString } from '../../../utils/string'
 
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
+
 const Treatments = () => {
     const createEditRef = useRef(null)
     const createEditPhaseRef = useRef(null)
@@ -86,3 +89,11 @@ const Treatments = () => {
 }
 
 export default Treatments
+
+export const getStaticProps = async ({ locale }) => {
+    return {
+      props: {
+        ...(await serverSideTranslations(locale, ["doctor"])),
+      },
+    };
+  };

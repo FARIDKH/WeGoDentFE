@@ -1,5 +1,9 @@
 import { IconUsers, IconHome, IconCalendarEvent, IconBoxMultiple, IconNotes, IconPill } from '@tabler/icons'
 import useUser from '../lib/useUser'
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from 'next-i18next'
+
+
 
 const icons = {
     IconDashboard: IconHome,
@@ -13,7 +17,7 @@ const icons = {
 const useMenuItems = () => {
     const { isDoctor, isPatient, isAdmin, isBlogger } = useUser()
 
-    console.log({ isDoctor, isPatient, isAdmin, isBlogger })
+    const { t } = useTranslation('doctor');
 
     return [
         {
@@ -22,7 +26,7 @@ const useMenuItems = () => {
             children: [
                 {
                     id: 'dashboard',
-                    title: 'Dashboard',
+                    title: t('labelMenuItemDashboard'),
                     type: 'item',
                     url: '/admin/dashboard',
                     icon: icons['IconDashboard'],
@@ -30,7 +34,7 @@ const useMenuItems = () => {
                 },
                 {
                     id: 'appointments',
-                    title: 'Appointments',
+                    title: t('labelMenuItemAppointment'),
                     type: 'item',
                     url: '/admin/appointments',
                     icon: icons['IconAppointments'],
@@ -39,7 +43,7 @@ const useMenuItems = () => {
                 },
                 {
                     id: 'availabilities',
-                    title: 'Availabilities',
+                    title: t('labelMenuItemAvailabilities'),
                     type: 'item',
                     url: '/admin/availabilities',
                     icon: icons['IconAppointments'],
@@ -48,7 +52,7 @@ const useMenuItems = () => {
                 },
                 {
                     id: 'patients',
-                    title: 'Your patients',
+                    title: t('labelMenuItemYourPatients'),
                     type: 'item',
                     url: '/admin/patients',
                     icon: icons['IconUsers'],
@@ -57,7 +61,7 @@ const useMenuItems = () => {
                 },
                 {
                     id: 'treatments',
-                    title: 'All Treatments',
+                    title: t('labelMenuItemAllTreatments'),
                     type: 'item',
                     url: '/admin/treatments',
                     icon: icons['IconPill'],

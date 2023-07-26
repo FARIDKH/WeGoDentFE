@@ -21,6 +21,12 @@ import CreateEditForm from '../../../modules/appointments/CreateEdit'
 import CreateButtonFab from '../../../ui-component/CreateButtonFab'
 
 
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from 'next-i18next'
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+
+
+
 const Appointments = () => {
     const [isListView, setIsListView] = useState(false)
     const createEditRef = useRef(null)
@@ -28,6 +34,23 @@ const Appointments = () => {
     const { isDoctor, isPatient, info } = useUser()
     const id = info?.id
     const router: any = useRouter()
+
+    const { t, i18n } = useTranslation('doctor');
+
+
+
+    const changeLanguage = (lng: string) => {
+        i18n.changeLanguage(lng).then(() => {
+            console.log(`Language changed to ${lng}`);
+          });
+    };
+    
+    const [language, setLanguage] = React.useState('');
+
+    const handleChange = (event: SelectChangeEvent) => {
+        setLanguage(event.target.value as string);
+        changeLanguage(event.target.value as string);
+    };
 
     const { data, isFetching, isError, refetch } = useQuery(
         ['Appointments', router.query],
@@ -73,7 +96,7 @@ const Appointments = () => {
         <>
             <MainLayout>
                 <Typography variant="h1" mb={2}>
-                    Appointments
+                    {t('labelAppointments')}
                 </Typography>
 
                 <MainCard>
@@ -100,7 +123,7 @@ const Appointments = () => {
                                     {
                                         id: 'patient',
                                         numeric: false,
-                                        label: 'Patient',
+                                        label: t('labelPatients'),
                                         align: 'left',
                                         hide: isPatient,
                                         renderAs: ({ patientDTO }) => `${patientDTO?.userDTO?.firstName} ${patientDTO?.userDTO?.lastName}`,
@@ -108,7 +131,7 @@ const Appointments = () => {
                                     {
                                         id: 'patient',
                                         numeric: false,
-                                        label: 'Patient Contact',
+                                        label: t('labelPatientContact'),
                                         align: 'left',
                                         hide: isPatient,
                                         renderAs: ({ patientDTO }) => (
@@ -161,21 +184,21 @@ const Appointments = () => {
                                     {
                                         id: 'appointmentStart',
                                         numeric: false,
-                                        label: 'Start Date',
+                                        label: t('labelAppointmentStartDate'),
                                         align: 'left',
                                         renderAs: ({ appointmentStart }) => <DateTime value={appointmentStart} />,
                                     },
                                     {
                                         id: 'appointmentEnd',
                                         numeric: false,
-                                        label: 'End Date',
+                                        label: t('labelAppointmentEndDate'),
                                         align: 'left',
                                         renderAs: ({ appointmentEnd }) => <DateTime value={appointmentEnd} />,
                                     },
                                     {
                                         id: 'status',
                                         numeric: false,
-                                        label: 'Status',
+                                        label: t('labelAppointmentStatus'),
                                         align: 'left',
                                         renderAs: ({ status }) => <Chip label={status} chipcolor={APPOINTMENT_STATUS_COLORS?.[status]} />,
                                     },
@@ -193,10 +216,10 @@ const Appointments = () => {
                             <FullCalendar
                                 events={events}
                                 buttonText={{
-                                    today: 'Today',
-                                    month: 'Month',
-                                    week: 'Week',
-                                    day: 'Day',
+                                    today: t('labelToday'),
+                                    month: t('labelMonth'),
+                                    week: t('labelWeek'),
+                                    day: t('labelDay'),
                                 }}
                                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                                 headerToolbar={{
@@ -261,3 +284,11 @@ const Appointments = () => {
 }
 
 export default Appointments
+
+export const getStaticProps = async ({ locale }) => {
+    return {
+      props: {
+        ...(await serverSideTranslations(locale, ["doctor"])),
+      },
+    };
+  };

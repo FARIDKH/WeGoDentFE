@@ -25,6 +25,14 @@ import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import { FormControl, InputLabel, FormHelperText, Input } from '@mui/material';
 
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import * as React from 'react';
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from 'next-i18next'
+
+
+
 const useStyle = makeStyles(() => ({
     selectDoctorType: {
         height: '32px',
@@ -72,8 +80,22 @@ const HomePage = () => {
     const classes = useStyle()
     const router = useRouter()
 
+    const { t, i18n } = useTranslation('common');
 
 
+
+    const changeLanguage = (lng: string) => {
+        i18n.changeLanguage(lng).then(() => {
+            console.log(`Language changed to ${lng}`);
+          });
+    };
+    
+    const [language, setLanguage] = React.useState('');
+
+    const handleChange = (event: SelectChangeEvent) => {
+        setLanguage(event.target.value as string);
+        changeLanguage(event.target.value as string);
+    };
 
     return (
         <Layout>
@@ -81,15 +103,35 @@ const HomePage = () => {
                 <Container maxWidth="lg">
                     <Box display="flex" justifyContent="space-between" pt={4}>
                         <Logo />
-                        <LoginButton />
+                        <Box style={{ display: 'inline-flex' }} >
+                            
+                            <Box mr={5} sx={{ minWidth: 120 }}>
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Language</InputLabel>
+                                    <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    label="Language"
+                                    value={language}
+                                    onChange={handleChange}
+                                    defaultValue={'en'}
+                                    >
+                                        <MenuItem value={'en'}>EN</MenuItem>
+                                        <MenuItem value={'hu'}>HU</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                            <LoginButton />
+                        </Box>
+                        
                     </Box>
 
                     <Box mt={15}>
                         <Typography variant="h1" fontSize="45px" mb={3}>
-                            Do you need a Dentist?
+                            {t('welcome')}
                         </Typography>
                         <Typography variant="h3" color="#808080">
-                            Find dentist nearby according to your needs
+                            {t('welcome_h3')}
                         </Typography>
                         <Box mt={5}>
                             <Formik
@@ -143,7 +185,7 @@ const HomePage = () => {
                                                                     },
                                                                 }}
                                                             >
-                                                                Search
+                                                                {t('buttonSearch')}
                                                             </Button>
                                                         </InputAdornment>
                                                     ),
@@ -187,7 +229,7 @@ const HomePage = () => {
                                     fontWeight : '350'
                                 }} mt={3}  variant="h4" color="black">
 
-                                        Reservations managed by our smart calendar
+                                            {t('reservationCountInfo')}
 
                                     </Typography>
                                 </Box>
@@ -213,7 +255,7 @@ const HomePage = () => {
                                     fontWeight : '350'
                                 }} mt={3}  variant="h4" color="black">
 
-                                        Treatment module for dentists
+                                        {t('treatmentModuleCountInfo')}
 
                                     </Typography>
                                 </Box>
@@ -239,7 +281,7 @@ const HomePage = () => {
                                     fontWeight : '300'
                                 }} mt={3}  variant="h4" color="black">
 
-                                        Successfully done appointments
+                                        {t('succesfullAppointmentsInfo')}     
 
                                     </Typography>
                                 </Box>
@@ -264,8 +306,8 @@ const HomePage = () => {
                                 backgroundColor: "#4CD48B",
                                 height:'12px',
                                 width:"250px",
-                            }}  mb={10} variant="h2" color="black">
-                                            How Does It Work?
+                            }}  mb={10} variant="h2" color="black"> 
+                                    {t('howDoesItWork')}     
                                     </Typography>
 
                    </Box>
@@ -294,9 +336,13 @@ const HomePage = () => {
                         </TimelineSeparator>
                         <TimelineContent sx={{ py: '50px', px: 2 }}>
                           <Typography variant="h3" component="span">
-                            Create an account
+                          {t('hdiwp1head')}
                           </Typography>
-                          <Typography>Account creation enables patients to track their previous (and upcoming) appointments, dentist notes as well as treatment tracking.</Typography>
+                          <Typography>
+                            
+                          {t('hdiwp1desc')}     
+
+                          </Typography>
                         </TimelineContent>
                       </TimelineItem>
                       <TimelineItem>
@@ -317,9 +363,9 @@ const HomePage = () => {
                         </TimelineSeparator>
                         <TimelineContent sx={{ py: '12px', px: 2 }}>
                           <Typography variant="h3" component="span">
-                            Choose available timeslot
+                          {t('hdiwp2head')}     
                           </Typography>
-                          <Typography>Once you type your location, you will get a list of dentists that are nearby. Then you need to choose timeslot of doctor.</Typography>
+                          <Typography>{t('hdiwp2desc')}</Typography>
                         </TimelineContent>
                       </TimelineItem>
                       <TimelineItem>
@@ -340,9 +386,9 @@ const HomePage = () => {
                         </TimelineSeparator>
                         <TimelineContent sx={{ py: '12px', px: 2 }}>
                           <Typography variant="h3" component="span">
-                            Get notified!
+                          {t('hdiwp3head')}     
                           </Typography>
-                          <Typography>After choosing timeslot, dentists gets notification of your appointment and patient gets notified, respectively.</Typography>
+                          <Typography>{t('hdiwp3desc')}</Typography>
                         </TimelineContent>
                       </TimelineItem>
                     </Timeline>
@@ -356,8 +402,8 @@ const HomePage = () => {
                     <Grid container>
                         <Grid item xs={6}>
                             
-                            <h1>Book a Demo</h1>
-                            <p>One of our assistant will get back to you and will provide you with demo credentials</p>
+                            <h1>{t('bookADemo')}     </h1>
+                            <p>{t('bookADemoInfo')}  </p>
                         </Grid> 
                         <Grid item xs={6}>
                             <Box sx={{
@@ -385,7 +431,7 @@ const HomePage = () => {
                                     </FormControl>
                                 </Box>
                                 <Box mt={5}>
-                                    <Button variant="contained" sx={{"color": "white"}}>Submit</Button>  
+                                    <Button variant="contained" sx={{"color": "white"}}>{t('buttonSubmit')}</Button>  
                                 </Box>
                             </Box>
                         </Grid>
@@ -398,3 +444,12 @@ const HomePage = () => {
 }
 
 export default HomePage
+
+
+export const getStaticProps = async ({ locale }) => {
+    return {
+      props: {
+        ...(await serverSideTranslations(locale, ["common"])),
+      },
+    };
+  };
