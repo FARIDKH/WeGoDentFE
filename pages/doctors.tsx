@@ -187,11 +187,13 @@ const DoctorsPage = () => {
                                     dayjs(new Date()).isBetween(item?.startDateTime, item?.endDateTime)
                                 )
 
+                                
+
                                 const startDate = dayjs(availableRange ? new Date() : availabilityList?.[0]?.startDateTime ?? new Date())
                                 const isFuture = startDate?.isAfter(new Date())
 
                                 const endDateTime = dayjs(availableRange?.endDateTime ?? availabilityList?.[0]?.endDateTime)
-                                const availableFutureDays = startDate.add(2, 'days')
+                                const availableFutureDays = startDate.add(25, 'days')
                                 const endDate = endDateTime && availableFutureDays?.isAfter(endDateTime) ? endDateTime : availableFutureDays
 
                                 const doctorName = `${doctor?.userDTO?.firstName} ${doctor?.userDTO?.lastName}`
@@ -241,12 +243,12 @@ const DoctorsPage = () => {
                                                     </Box>
                                                     <Box flex={1}>
                                                         <DigitalClock
-                                                            value={isSelectedDoctor ? selected.time : null}
-                                                            minTime={startDate}
-                                                            maxTime={dayjs(endDate.format('YYYY-MM-DDT18:00'))}
-                                                            timeStep={60}
-                                                            skipDisabled
-                                                            disablePast={!isFuture}
+                                                            // value={isSelectedDoctor ? selected.time : null}
+                                                            // minTime={dayjs(startDate.format('YYYY-MM-DDT07:00'))}
+                                                            // maxTime={dayjs(endDate.format('YYYY-MM-DDT18:00'))}
+                                                            // timeStep={60}
+                                                            // skipDisabled
+                                                            // disablePast={!isFuture}
                                                             sx={{
                                                                 maxHeight: '300px',
                                                             }}
