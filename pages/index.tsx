@@ -385,7 +385,7 @@ const HomePage = () => {
                                     </FormControl>
                                 </Box>
                                 <Box mt={5}>
-                                    <Button variant="contained" sx={{"color: white"}}>Submit</Button>  
+                                    <Button variant="contained" sx={{"color": "white"}}>Submit</Button>  
                                 </Box>
                             </Box>
                         </Grid>
