@@ -4,13 +4,13 @@ import MainLayout from '../../../layout/admin/MainLayout'
 import MainCard from '../../../ui-component/cards/MainCard'
 import PaginatedTableGenerator from '../../../ui-component/PaginatedTableGenerator'
 import { Box, Typography } from '@material-ui/core'
-import { useDoctorPatients } from '../../../hooks/usePatient'
+import { useDoctorPatients } from '../../../hooks/usePatient';
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 
 const Patients = () => {
     const { data, isFetching, isError } = useDoctorPatients()
-    
+
     return (
         <>
             <MainLayout>

@@ -54,6 +54,7 @@
         "lodash.debounce": "^4.0.8",
         "markdown-to-jsx": "^7.2.1",
         "material-ui-dropzone": "^3.5.0",
+        "material-ui-flags": "^1.2.4",
         "material-ui-popup-state": "^1.8.4",
         "next": "11.0.1",
         "next-http-proxy-middleware": "^1.1.1",

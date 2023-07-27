@@ -60,6 +60,15 @@ const useMenuItems = () => {
                     hide: !isDoctor,
                 },
                 {
+                    id: 'doctors',
+                    title: 'Doctor List',
+                    type: 'item',
+                    url: '/admin/doctors',
+                    icon: icons['IconUsers'],
+                    breadcrumbs: false,
+                    hide: !isAdmin,
+                },
+                {
                     id: 'treatments',
                     title: t('labelMenuItemAllTreatments'),
                     type: 'item',

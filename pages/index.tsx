@@ -31,7 +31,13 @@ import * as React from 'react';
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from 'next-i18next'
 
+import {
+    IconFlagTR,
+    IconFlagUK,
+} from 'material-ui-flags';
 
+  
+ 
 
 const useStyle = makeStyles(() => ({
     selectDoctorType: {
@@ -105,7 +111,7 @@ const HomePage = () => {
                         <Logo />
                         <Box style={{ display: 'inline-flex' }} >
                             
-                            <Box mr={5} sx={{ minWidth: 120 }}>
+                            <Box mr={5} sx={{ minWidth: 100 }}>
                                 <FormControl fullWidth>
                                     <InputLabel id="demo-simple-select-label">Language</InputLabel>
                                     <Select
@@ -116,8 +122,8 @@ const HomePage = () => {
                                     onChange={handleChange}
                                     defaultValue={'en'}
                                     >
-                                        <MenuItem value={'en'}>EN</MenuItem>
-                                        <MenuItem value={'hu'}>HU</MenuItem>
+                                        <MenuItem value={'en'}><IconFlagUK sx={{ "marginRight" : "15px" }} /> EN </MenuItem>
+                                        <MenuItem value={'hu'}><svg style={{ "marginRight" : "15px" }}  width={'25px'} xmlns="http://www.w3.org/2000/svg" id="flag-icons-hu" viewBox="0 0 640 480"> <g fill-rule="evenodd"> <path fill="#fff" d="M640 480H0V0h640z"/> <path fill="#388d00" d="M640 480H0V320h640z"/> <path fill="#d43516" d="M640 160.1H0V.1h640z"/> </g> </svg> HU</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Box>
