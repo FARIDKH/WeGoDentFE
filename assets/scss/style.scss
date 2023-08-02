@@ -22,6 +22,10 @@ html, body {
   background: $mainBlue;
 }
 
+.mainBlueBgGradient {
+  background: linear-gradient(to right, white, $mainBlue);
+}
+
 .background-round {
   background: url('../images/background-round.png');
   background-repeat: no-repeat;

@@ -28,6 +28,7 @@ export default class MyDocument extends Document {
                 <Head>
                     {/* PWA primary color */}
                     <meta name="theme-color" content={theme(customization).palette.primary.main} />
+                    <link rel="icon" href="/wego-32x32.png" />
                     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
                     {/* Google Tag Manager Script */}
                     <script
