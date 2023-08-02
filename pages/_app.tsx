@@ -117,7 +117,7 @@ function App({ Component, pageProps }: AppProps) {
     return (
         <>
             <Head>
-                <title>WeGoDent.</title>
+                <title>WeGoDent</title>
             </Head>
             <Provider store={store}>
                 <QueryClientProvider client={queryClient}>

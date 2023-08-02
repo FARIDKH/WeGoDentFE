@@ -1,6 +1,10 @@
 import { Typography } from '@material-ui/core'
 import { useRouter } from 'next/router'
 import React from 'react'
+import wegodentlogo from '../assets/images/wego-logo-gradient.png'
+
+
+import Image from 'next/image'
 
 const Logo = ({ href = '/', style = {} }) => {
     const router = useRouter()
@@ -16,7 +20,9 @@ const Logo = ({ href = '/', style = {} }) => {
             onClick={handleClick}
             variant="h2"
         >
-            WeGoDent.
+            <div >
+                <Image    width={55} height={50}  src={wegodentlogo} /> 
+            </div>
         </Typography>
     )
 }

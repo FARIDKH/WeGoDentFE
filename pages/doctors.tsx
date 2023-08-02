@@ -89,7 +89,7 @@ const DoctorsPage = () => {
 
     return (
         <Layout>
-            <Box className="mainBlueBg" paddingY={2}>
+            <Box className="mainBlueBgGradient" paddingY={2}>
                 <Container maxWidth="lg">
                     <Box display="flex" justifyContent="space-between" alignItems="center">
                         <Logo
