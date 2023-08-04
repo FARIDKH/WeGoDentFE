@@ -16,45 +16,24 @@ export enum ENUM_DOCTOR_TYPES {
     Emergency_Dentist = 'Emergency_Dentist',
 }
 
-// export const useDoctor = ({ id, enabled = true, params = null, checkAuth = true }) => {
-
-//     // if (!id) {
-//     //     return { data: null, isFetching: false };
-//     //   }
-    
-//     return useQuery(
-//         ['Doctor'],
-//         async ({ signal }) => {
-//             const result = await axios(`/api/doctor/${id}`, {
-//                 signal,
-//                 checkAuth,
-//             })
-//             return [result.data]
-//         },
-//         {
-//             initialData: [],
-//             enabled: true,
-//             ...params,
-//         }
-//     )
-// }
-
 export const useDoctor = ({ id, enabled = true, params = null, checkAuth = true }) => {
-    const fetchDoctor = async ({ signal }) => {
-        const result = await axios(`/api/doctor/${id}`, {
-            signal,
-            checkAuth,
-        })
-        return [result.data]
-    }
 
+    
+    
     return useQuery(
-        ['Doctor', id], // Also include id as part of the query key
-        fetchDoctor,
+        ['Doctor', id],
+        async ({ signal }) => {
+            const result = await axios(`/api/doctor/${id}`, {
+                signal,
+                checkAuth,
+            })
+            return [result.data]
+        },
         {
             initialData: [],
-            enabled: enabled && id !== undefined, // only enable query if id is not undefined
+            enabled: enabled && id !== undefined,
             ...params,
         }
     )
 }
+
