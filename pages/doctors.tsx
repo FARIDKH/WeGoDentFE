@@ -1,4 +1,4 @@
-import { Avatar, Box, Container, Divider, IconButton, InputAdornment, makeStyles, Paper, TextField, Typography } from '@material-ui/core'
+import { Link,Avatar, Box, Container, Divider, IconButton, InputAdornment, makeStyles, Paper, TextField, Typography } from '@material-ui/core'
 import { useRouter } from 'next/router'
 import { ENUM_DOCTOR_TYPES, useDoctors } from '../hooks/useDoctors'
 import Layout from '../layout/main/Layout'
@@ -101,7 +101,7 @@ const DoctorsPage = () => {
                         <Formik
                             enableReinitialize
                             initialValues={{
-                                doctorType: (query?.doctorType ?? ENUM_DOCTOR_TYPES.Emergency_Dentist) as string,
+                                doctorType: (query?.doctorType ?? ENUM_DOCTOR_TYPES.General_Dentist) as string,
                                 officeLocation: query?.officeLocation as string,
                             }}
                             onSubmit={(values) => {
@@ -199,7 +199,7 @@ const DoctorsPage = () => {
                                 const doctorName = `${doctor?.userDTO?.firstName} ${doctor?.userDTO?.lastName}`
 
                                 const isSelectedDoctor = doctor?.id === selected?.doctorId
-
+                                const doctorLink = "/doctors/" + doctor?.id
                                 return (
                                     <Box key={doctor?.id}>
                                         <Box display="flex">
@@ -209,7 +209,7 @@ const DoctorsPage = () => {
                                                 </Box>
                                                 <Box ml="12px">
                                                     <Typography variant="h4">
-                                                        <strong>Dr. {doctorName}</strong>
+                                                        <Link key={doctor.id} href={doctorLink}> <strong>Dr. {doctorName}</strong> </Link>
                                                     </Typography>
                                                     <Typography my={1}>{doctor?.doctorType?.replaceAll('_', ' ')}</Typography>
                                                     <Typography my={1}>{doctor?.experience}</Typography>
