@@ -63,6 +63,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                     name: data?.name ?? '',
                     description: data?.description ?? '',
                     cost: data?.cost ?? '',
+                    creatorId : user?.id ?? '',
                 }}
                 onSubmit={(values) => mutate(values)}
             >

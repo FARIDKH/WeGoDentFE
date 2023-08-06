@@ -54,9 +54,12 @@ const Appointments = () => {
 
     const { data, isFetching, isError, refetch } = useQuery(
         ['Appointments', router.query],
+        
         async ({ signal }) => {
             const result = await axios(isDoctor ? `/api/doctor/${id}/appointments` : `/api/patient/${id}/appointments`, { signal })
-            return result.data
+            const filteredData =  result.data.filter((item: any) => item.status !== ENUM_APPOINTMENT_STATUSES.REJECTED)
+            console.log(result.data)
+            return filteredData
         },
         {
             initialData: [],
@@ -64,9 +67,37 @@ const Appointments = () => {
         }
     )
 
+    const { data : treatmentPhases } = useQuery(
+        ['TreatmentPhases', router.query],
+        
+        async ({ signal }) => {
+            const result = await axios(isDoctor ? `/api/doctor/${id}/appointments` : `/api/patient/${id}/appointments`, { signal })
+            const filteredData =  result.data.filter((item: any) => item.status !== ENUM_APPOINTMENT_STATUSES.REJECTED)
+            console.log(result.data)
+            return filteredData
+        },
+        {
+            initialData: [],
+            enabled: !!id,
+        }
+    )
+
+    // const { data , isFetching, isError, refetch } = useQuery(
+    //     ['Appointments', router.query],
+    //     async ({ signal }) => {
+    //         const result = await axios(isDoctor ? `/api/doctor/${id}/appointments` : `/api/patient/${id}/appointments`, { signal })
+    //         return result.data
+    //     },
+    //     {
+    //         initialData: [],
+    //         enabled: !!id,
+    //     }
+    // )
+
     const events = data?.map(({ id, ...item }) => {
         const user = isDoctor ? item?.patientDTO?.userDTO : item?.doctorDTO?.userDTO
-
+        console.log(item?.id)
+        if(item?.status === ENUM_APPOINTMENT_STATUSES.REJECTED) return [] ;
         return {
             id,
             title: `${user?.firstName} ${user?.lastName}`,
@@ -202,6 +233,13 @@ const Appointments = () => {
                                         align: 'left',
                                         renderAs: ({ status }) => <Chip label={status} chipcolor={APPOINTMENT_STATUS_COLORS?.[status]} />,
                                     },
+                                    {
+                                        id: 'status',
+                                        numeric: false,
+                                        label: t('labelAppointmentStatus'),
+                                        align: 'left',
+                                        renderAs: ({ status }) => <Chip label={status} />,
+                                    }
                                 ]}
                                 actions={(appointment) => [
                                     {

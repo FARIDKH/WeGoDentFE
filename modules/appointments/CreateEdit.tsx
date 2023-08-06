@@ -1,5 +1,5 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, CircularProgress } from '@material-ui/core'
-import axios from 'axios'
+import axios from '../../utils/axios'
 import { format } from 'date-fns'
 import { Formik } from 'formik'
 import React from 'react'
@@ -12,6 +12,8 @@ import DateTimePicker from '../../ui-component/Form/DateTimePicker'
 import Select from '../../ui-component/Form/Select'
 import DoctorSelect from '../../ui-component/Form/selects/DoctorSelect'
 import PatientSelect from '../../ui-component/Form/selects/PatientSelect'
+import TreatmentSelect from '../../ui-component/Form/selects/TreatmentSelect'
+import TreatmentPhaseSelect from '../../ui-component/Form/selects/TreatmentPhaseSelect'
 import { useOpenState } from '../../ui-component/hooks/useOpenState'
 import { ENUM_APPOINTMENT_STATUSES } from './constants'
 
@@ -33,8 +35,18 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                 appointmentStart: format(new Date(values?.appointmentStart), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
                 appointmentEnd: format(new Date(values?.appointmentEnd), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
             }
-
-            return data?.id ? axios.put(`/api/appointment/${data?.id}`, requestBody) : axios.post('/api/appointment', requestBody)
+            const requestTreatmentSessionBody = {
+                status: "SCHEDULED",
+                doctorId: values?.doctor_id,
+                patientId: values?.patient_id,
+                appointmentStart: format(new Date(values?.appointmentStart), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
+                appointmentEnd: format(new Date(values?.appointmentEnd), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
+            }
+            if(values?.appointmentStatus === ENUM_APPOINTMENT_STATUSES.REJECTED || values?.appointmentStatus === ENUM_APPOINTMENT_STATUSES.CANCELLED || values?.appointmentStatus === ENUM_APPOINTMENT_STATUSES.COMPLETED){
+               return axios.put(`/api/appointment/${data?.id}`, requestBody);
+            }
+            console.log(values)
+            return data?.id ? axios.put(`/api/doctor/appointment/${data?.id}/treatment-phase/${values?.treatment_phase_id}`, requestTreatmentSessionBody) : axios.put(`/api/doctor/treatment-phase/${values?.treatment_phase_id}`, requestTreatmentSessionBody)
         },
         {
             onSuccess: () => {
@@ -73,10 +85,18 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
 
     const doctorId = data?.doctorDTO?.id
     const patientId = data?.patientDTO?.id
+    const treatmentId : any = '';
+    const treatmentPhaseId : any = '';
 
     const statuses = isPatient
         ? [ENUM_APPOINTMENT_STATUSES.REQUESTED, ENUM_APPOINTMENT_STATUSES.CANCELLED]
         : Object.keys(ENUM_APPOINTMENT_STATUSES)
+
+    const [selectedTreatment, setSelectedTreatment] = useState(null);
+
+
+    
+
 
     return (
         <Dialog sx={{ '& .MuiDialog-paper': { width: '30%', maxHeight: 600 } }} maxWidth="lg" open={isOpen}>
@@ -90,6 +110,8 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                     doctorType: data?.doctorDTO?.doctorType ?? '',
                     officeLocation: data?.doctorDTO?.officeLocationName ?? '',
                     patient_id: patientId ?? (isPatient ? info?.id : ''),
+                    treatment_id : treatmentId,
+                    treatment_phase_id :  treatmentPhaseId,
                 }}
                 // validationSchema={blogValidationSchema}
                 onSubmit={(values) => mutate(values)}
@@ -113,7 +135,36 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                                         disabled={patientId || isLoading}
                                         value={values?.patient_id}
                                     />
+                                    
                                 )}
+                                {isDoctor && (
+                                    <TreatmentSelect
+                                        fetch={isOpen}
+                                        name="treatment_id"
+                                        isTouched={!!touched.treatment_id}
+                                        error={errors.treatment_id as string}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        // disabled={treatment_id || isLoading}
+                                        value={values?.treatment_id}
+                                    />
+
+                                )} 
+                                
+                                {isDoctor  && (
+                                    <TreatmentPhaseSelect
+                                        fetch={isOpen}
+                                        name="treatment_phase_id"
+                                        treatmentId={values?.treatment_id}
+                                        isTouched={!!touched.treatment_phase_id}
+                                        error={errors.treatment_phase_id as string}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        // disabled={values?.treatment_id || isLoading}
+                                        value={values?.treatment_phase_id}
+                                    />
+                                )}
+
 
                                 {isPatient && (
                                     <DoctorSelect fetch={isOpen} form={form} name="doctor_id" disabled={!!doctorId || isLoading} />

@@ -1,6 +1,7 @@
 import { Box, Button, Dialog, DialogContent, DialogTitle, Divider } from '@material-ui/core'
 import dayjs from 'dayjs'
 import React from 'react'
+import { format } from 'date-fns'
 import { forwardRef, useState } from 'react'
 import { useMutation } from 'react-query'
 import { fetchCurrentUser } from '../../../lib/useUser'
@@ -35,6 +36,8 @@ const CreateAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref) => {
         open()
     }
 
+    var resultStartDate = "2021-09-01T10:00:00.000Z"
+
     const { mutate: createAppointment } = useMutation(
         async () => {
             const day = dayjs(data?.day).format('YYYY-MM-DD')
@@ -47,8 +50,6 @@ const CreateAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref) => {
 
             const userData = await fetchCurrentUser()
 
-            console.log('userData', userData, userData?.id)
-
             const requestBody = {
                 appointmentStatus: ENUM_APPOINTMENT_STATUSES.REQUESTED,
                 doctor_id: data?.doctorId,
@@ -56,7 +57,8 @@ const CreateAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref) => {
                 appointmentStart: startDate,
                 appointmentEnd: endDate,
             }
-
+            resultStartDate = dayjs(startDate).subtract(1, 'day').format('ddd MMM DD YYYY HH:mm:ss');
+            
             return await axios.post('/api/appointment', requestBody)
         },
         {
@@ -64,7 +66,7 @@ const CreateAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref) => {
                 store.dispatch({
                     type: SNACKBAR_OPEN,
                     open: true,
-                    message: 'Appointment has been created successfully',
+                    message: 'Appointment has been created successfully at ' + resultStartDate,
                     variant: 'alert',
                     alertSeverity: 'success',
                     anchorOrigin: { vertical: 'top', horizontal: 'center' },
