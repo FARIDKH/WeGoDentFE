@@ -27,11 +27,16 @@ html, body {
 }
 
 .background-round {
-  background: url('../images/background-round.png');
+  background: url('../images/backgroundRound.png');
   background-repeat: no-repeat;
   background-position: right;
   position: relative;
 
+
+
+
+
+  
   &::after{
     content: "";
     position: absolute;
@@ -45,7 +50,7 @@ html, body {
 }
 
 .background-round-2 {
-  background: url('../images/background-round.png');
+  background: url('../images/backgroundRound.png');
   background-repeat: no-repeat;
   background-position: right;
   position: relative;
