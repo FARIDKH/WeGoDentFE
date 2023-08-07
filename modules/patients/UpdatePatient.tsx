@@ -7,24 +7,19 @@ import Input from '../../ui-component/Form/Input'
 import { SNACKBAR_OPEN } from '../../store/actions'
 import { store } from '../../pages/_app'
 import axios from '../../utils/axios'
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 
-const UpdateDoctor = ({ doctor }) => {
+const UpdatePatient = ({ patient }) => {
     
 
     const { errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values } = useFormik({
         initialValues: {
-            username: doctor?.userDTO?.username,
-            firstName: doctor?.userDTO?.firstName,
-            lastName : doctor?.userDTO?.lastName,
-            email: doctor?.userDTO?.email,
-            phoneNumber: doctor?.userDTO?.phoneNumber,
-            experience: doctor.experience,
-            hourlyRate: doctor.hourlyRate,
-            language: doctor.language,
+            username: patient?.userDTO?.username,
+            firstName: patient?.userDTO?.firstName,
+            lastName : patient?.userDTO?.lastName,
+            email: patient?.userDTO?.email,
+            phoneNumber: patient?.userDTO?.phoneNumber,
             password: '',
-            officeLocationName : ''
         },
         validationSchema: yup.object().shape({
             username: yup.string().required('Username is required'),
@@ -33,27 +28,22 @@ const UpdateDoctor = ({ doctor }) => {
         onSubmit: async ({ username,firstName, lastName, phoneNumber, email, password, ...rest }) => {
 
             try {
-                const newValues = {...doctor, 
-                    userDTO : {...doctor.userDTO, 
+                const newValues = {...patient, 
+                    userDTO : {...patient.userDTO, 
                         username,firstName, lastName, phoneNumber, email, password
                     }, 
                     ...rest
                 }
-                await axios.patch(`/api/doctor/${doctor.id}`, newValues)
+                await axios.patch(`/api/patient/${patient.id}`, newValues)
 
-                // onSuccess: () => {
-                //     store.dispatch({
-                //         type: SNACKBAR_OPEN,
-                //         open: true,
-                //         message: 'Account has been updated successfully' ,
-                //         variant: 'alert',
-                //         alertSeverity: 'success',
-                //         anchorOrigin: { vertical: 'top', horizontal: 'center' },
-                //     })
-
-                //     // handleClose()
-                //     onSuccess()
-                // }
+                store.dispatch({
+                    type: SNACKBAR_OPEN,
+                    open: true,
+                    message: 'Account has been updated successfully' ,
+                    variant: 'alert',
+                    alertSeverity: 'success',
+                    anchorOrigin: { vertical: 'top', horizontal: 'center' },
+                })
             } catch (e) {
                 store.dispatch({
                     type: SNACKBAR_OPEN,
@@ -128,62 +118,6 @@ const UpdateDoctor = ({ doctor }) => {
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <Input
-                            id="doctor-experience"
-                            type="phoneNumber"
-                            value={values.experience}
-                            name="experience"
-                            size="medium"
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            label="Experience"
-                            error={errors?.experience}
-                            isTouched={touched?.experience}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Input
-                            id="doctor-language"
-                            type="phoneNumber"
-                            value={values.language}
-                            name="language"
-                            size="medium"
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            label="Language"
-                            error={errors?.language}
-                            isTouched={touched?.language}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Input
-                            id="doctor-rate"
-                            type="hourlyRate"
-                            value={values.hourlyRate}
-                            name="hourlyRate"
-                            size="medium"
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            label="Hourly rate"
-                            error={errors?.hourlyRate}
-                            isTouched={touched?.hourlyRate}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Input
-                            id="doctor-office-location-name"
-                            type="rate"
-                            value={values.officeLocationName}
-                            name="officeLocationName"
-                            size="medium"
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            label="Office Location"
-                            error={errors?.officeLocationName}
-                            isTouched={touched?.officeLocationName}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
                         <PasswordInput
                             id="outlined-adornment-password-login"
                             value={values.password}
@@ -216,5 +150,5 @@ const UpdateDoctor = ({ doctor }) => {
     )
 }
 
-export default UpdateDoctor
+export default UpdatePatient
 

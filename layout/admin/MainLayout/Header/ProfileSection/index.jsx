@@ -120,6 +120,8 @@ const ProfileSection = () => {
         }
     }
 
+    
+
     const handleListItemClick = (event) => {
         handleClose(event)
     }
@@ -181,9 +183,9 @@ const ProfileSection = () => {
                                     <CardContent className={classes.cardContent}>
                                         <Grid container direction="column" spacing={0} mb={2}>
                                             <Grid item className={classes.flex}>
-                                                <Typography variant="h4">Hello,</Typography>
+                                                <Typography variant="h4">Hello</Typography>
                                                 <Typography component="span" variant="h4" className={classes.name}>
-                                                    {user?.firstName} {user?.lastName}
+                                                    , {user?.userDTO?.firstName} {user?.userDTO?.lastName}
                                                 </Typography>
                                             </Grid>
                                             <Grid item>
