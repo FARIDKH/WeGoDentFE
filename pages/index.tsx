@@ -1,4 +1,4 @@
-import { Box, Button, Container, InputAdornment, makeStyles, TextField, Typography, Grid } from '@material-ui/core'
+import { Box, Button, Container, InputAdornment, makeStyles, TextField, Typography, Grid, Link } from '@material-ui/core'
 import Logo from '../ui-component/Logo'
 import { ENUM_DOCTOR_TYPES } from '../hooks/useDoctors'
 import { Formik } from 'formik'
@@ -96,7 +96,7 @@ const HomePage = () => {
           });
     };
     
-    const [language, setLanguage] = React.useState('');
+    const [language, setLanguage] = React.useState('en');
 
     const handleChange = (event: SelectChangeEvent) => {
         setLanguage(event.target.value as string);
@@ -109,23 +109,47 @@ const HomePage = () => {
                 <Container maxWidth="lg">
                     <Box display="flex" justifyContent="space-between" pt={4}>
                         <Logo />
-                        <Box style={{ display: 'inline-flex' }} >
-                            
-                            <Box mr={5} sx={{ minWidth: 100 }}>
-                                <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">Language</InputLabel>
+                        <Box style={{ display: 'flex', alignItems : 'center'}} >
+                            <Link sx = {{ '&:hover' : {textDecoration : "none"} }} href="https://blog.wegodent.com">
+                                <Typography variant="h3" fontSize="20px" sx={{color :'white'}} mr={5}>
+                                    Blog
+                                </Typography>
+                            </Link>
+                            <Box mr={5} sx={{ width: 100, height:50 }}>
+                                
                                     <Select
+                                    
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
-                                    label="Language"
+                                    // label="Language"
                                     value={language}
                                     onChange={handleChange}
-                                    defaultValue={'en'}
+                                    MenuProps={{
+                                        sx: {
+                                          "& .Mui-selected": {
+                                            backgroundColor: "pink"
+                                          }
+                                        }
+                                      }}
+                                    sx = {{ height:'50px',  background : 'none ', border: '1px solid white', '& div' : { background: 'none', color : 'white' } }}
                                     >
-                                        <MenuItem value={'en'}><IconFlagUK sx={{ "marginRight" : "15px" }} /> EN </MenuItem>
-                                        <MenuItem value={'hu'}><svg style={{ "marginRight" : "15px" }}  width={'25px'} xmlns="http://www.w3.org/2000/svg" id="flag-icons-hu" viewBox="0 0 640 480"> <g fill-rule="evenodd"> <path fill="#fff" d="M640 480H0V0h640z"/> <path fill="#388d00" d="M640 480H0V320h640z"/> <path fill="#d43516" d="M640 160.1H0V.1h640z"/> </g> </svg> HU</MenuItem>
+                                        <MenuItem value={'en'}>
+                                            <Box style={{ display: 'flex', alignItems : 'center'}}>
+                                                <IconFlagUK sx={{ "marginRight" : "15px" }} /> 
+                                                <div>EN</div> 
+                                            </Box>    
+                                        </MenuItem>
+                                        <MenuItem value={'hu'}>
+                                            <Box style={{ display: 'flex', alignItems : 'center'}}>
+                                                <svg style={{ "marginRight" : "15px" }}  width={'25px'} xmlns="http://www.w3.org/2000/svg" id="flag-icons-hu" viewBox="0 0 640 480"> <g fill-rule="evenodd"> <path fill="#fff" d="M640 480H0V0h640z"/> <path fill="#388d00" d="M640 480H0V320h640z"/> <path fill="#d43516" d="M640 160.1H0V.1h640z"/> </g> </svg> 
+                                                <div>HU</div> 
+                                            </Box> 
+                                            </MenuItem>
                                     </Select>
-                                </FormControl>
+                                
+
+
+                                
                             </Box>
                             <LoginButton />
                         </Box>
@@ -419,19 +443,23 @@ const HomePage = () => {
                             }
                             }>
                                 <Box>
-                                    <FormControl >
-                                      <InputLabel sx={{ 
+                                    <FormControl sx={{ 
                                 "fontSize" : "20px",
                                 'color':'white',
-                                'width' : "250px"
-                            }} htmlFor="my-input">Email address</InputLabel>
-                                      <Input id="my-input" aria-describedby="my-helper-text" />
+                                'width' : "550px"
+                            }} >
+                                      <InputLabel sx={{ 'color':'white' }} htmlFor="my-input">Email address</InputLabel>
+                                      <Input sx={{ 'color':'white' }} id="my-input" aria-describedby="my-helper-text" />
                                       <FormHelperText sx={{ 'color':'white' }} id="my-helper-text">We'll never share your email.</FormHelperText>
                                     </FormControl>
                                 </Box>
                                 <Box mt={5}>
 
-                                    <FormControl >
+                                    <FormControl sx={{ 
+                                "fontSize" : "20px",
+                                'color':'white',
+                                'width' : "550px"
+                            }} >
                                       <InputLabel sx={{ 'color':'white' }} htmlFor="my-input">Your full name</InputLabel>
                                       <Input sx={{ 'color':'white' }} id="my-input" aria-describedby="my-helper-text" />
                                     </FormControl>

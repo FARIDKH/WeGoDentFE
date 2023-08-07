@@ -52,11 +52,14 @@ const Appointments = () => {
         changeLanguage(event.target.value as string);
     };
 
-    const { data, isFetching, isError, refetch } = useQuery(
+    const { data , isFetching, isError, refetch } = useQuery(
         ['Appointments', router.query],
+        
         async ({ signal }) => {
             const result = await axios(isDoctor ? `/api/doctor/${id}/appointments` : `/api/patient/${id}/appointments`, { signal })
-            return result.data
+            const filteredData =  result.data.filter((item: any) => item.status !== ENUM_APPOINTMENT_STATUSES.REJECTED)
+            console.log(result.data)
+            return filteredData
         },
         {
             initialData: [],
@@ -64,9 +67,16 @@ const Appointments = () => {
         }
     )
 
+    
+    
+
+    
+
+
     const events = data?.map(({ id, ...item }) => {
         const user = isDoctor ? item?.patientDTO?.userDTO : item?.doctorDTO?.userDTO
-
+        // console.log(item?.treatmentSessionDTO?.treatmentPhaseDTO?.name)
+        if(item?.status === ENUM_APPOINTMENT_STATUSES.REJECTED) return [] ;
         return {
             id,
             title: `${user?.firstName} ${user?.lastName}`,
@@ -121,7 +131,7 @@ const Appointments = () => {
                                 }}
                                 columns={[
                                     {
-                                        id: 'patient',
+                                        id: 'patientName',
                                         numeric: false,
                                         label: t('labelPatients'),
                                         align: 'left',
@@ -129,7 +139,7 @@ const Appointments = () => {
                                         renderAs: ({ patientDTO }) => `${patientDTO?.userDTO?.firstName} ${patientDTO?.userDTO?.lastName}`,
                                     },
                                     {
-                                        id: 'patient',
+                                        id: 'patientContact',
                                         numeric: false,
                                         label: t('labelPatientContact'),
                                         align: 'left',
@@ -202,6 +212,13 @@ const Appointments = () => {
                                         align: 'left',
                                         renderAs: ({ status }) => <Chip label={status} chipcolor={APPOINTMENT_STATUS_COLORS?.[status]} />,
                                     },
+                                    {
+                                        id: 'Treatment',
+                                        numeric: false,
+                                        label: 'Treatment',
+                                        align: 'left',
+                                        renderAs: ({ treatmentSessionDTO }) => <Chip label={ treatmentSessionDTO?.treatmentPhaseDTO?.name ?? null} />,
+                                    }
                                 ]}
                                 actions={(appointment) => [
                                     {
