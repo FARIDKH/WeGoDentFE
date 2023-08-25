@@ -212,7 +212,7 @@ const DoctorsPage = () => {
                                                         <Link key={doctor.id} href={doctorLink}> <strong>Dr. {doctorName}</strong> </Link>
                                                     </Typography>
                                                     <Typography my={1}>{doctor?.doctorType?.replaceAll('_', ' ')}</Typography>
-                                                    <Typography my={1}>{doctor?.experience}</Typography>
+                                                    <Typography sx={{ "width" : "75%", "textAlign" : "justify", "textJustify" : "innerWord" }} my={1}>{doctor?.experience}</Typography>
                                                     <Typography>Office Location: {doctor?.officeLocationName}</Typography>
                                                 </Box>
                                             </Box>

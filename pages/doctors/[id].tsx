@@ -276,14 +276,14 @@ const SingleDoctor = () => {
                                         <Box display="flex">
                                             <Box className="doctorInfo" display="flex" flex={1} mt={3}>
                                                 <Box>
-                                                    <Avatar src={avatar?.src} alt={doctorName} sx={{ width: 75, height: 75 }} />
+                                                    <Avatar src={avatar?.src} alt={doctorName} sx={{ width: 150, height: 150 }} />
                                                 </Box>
                                                 <Box ml="12px">
                                                     <Typography variant="h4">
                                                         <strong>Dr. {doctorName}</strong>
                                                     </Typography>
                                                     <Typography my={1}>{doctor?.doctorType?.replaceAll('_', ' ')}</Typography>
-                                                    <Typography my={1}>{doctor?.experience}</Typography>
+                                                    <Typography sx={{ "width" : "75%", "textAlign" : "justify", "textJustify" : "innerWord" }} my={1}>{doctor?.experience}</Typography>
                                                     <Rating name="read-only" value={value} readOnly />
                                                     <Typography>Office Location: {doctor?.officeLocationName}</Typography>
                                                     {/* <Divider /> */}
