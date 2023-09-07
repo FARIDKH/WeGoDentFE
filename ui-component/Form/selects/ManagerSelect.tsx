@@ -14,7 +14,18 @@ interface IProps {
 
 const ManagerSelect = ({  name, isTouched, error, onBlur, onChange, value, disabled }: IProps) => {
     const { data: managers, isFetching: isManagerFetching } = useManager()
-    // console.log(managers.data)
+
+    const managerOptions = managers?.data 
+        ? managers.data.map((item) => ({
+            label: `${item?.username}`,
+            value: item?.id,
+          }))
+        : [];
+    
+//     console.log("ManagerSelect value:", value);
+    console.log("Manager options:", managerOptions);
+
+
     return (
         <Select
             id="manager"
@@ -26,12 +37,10 @@ const ManagerSelect = ({  name, isTouched, error, onBlur, onChange, value, disab
             onChange={onChange}
             disabled={disabled || isManagerFetching }
             value={value}
-            data={managers?.data?.map((item) => ({
-                label: `${item?.username}`,
-                value: item?.id,
-            }))}
+            data={managerOptions}
         />
     )
 }
+
 
 export default ManagerSelect

@@ -16,11 +16,13 @@ interface IProps {
 }
 
 const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
-    const { user } = useUser()
     const { isOpen, open, close } = useOpenState()
     const [data, setData] = useState(null)
 
     const { isLoading, mutate } = useMutation(
+
+        
+
         (values: any) => (data?.id ? axios.patch(`/api/clinics/${data?.id}`, values) : axios.post('/api/clinics', values)),
         
         {
@@ -71,18 +73,31 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                 initialValues={{
                     name: data?.name ?? '',
                     officeLocationName: data?.officeLocationName ?? '',
-                    managerId: data?.managerId ?? '',
+                    managerId: data?.id ? data?.manager?.id : data?.managerId ?? '',
                     email: data?.email ?? '',
                 }}
                 onSubmit={(values) => {
-                    const payload = {
-                        name: values.name,
-                        officeLocationName: values.officeLocationName,
-                        managerId: values.managerId,
-                        email: values.email,
-                    };
+                    let payload;
+                    if (data?.id) {
+                        // When updating
+                        payload = {
+                            name: values?.name,
+                            officeLocationName: values?.officeLocationName,
+                            manager: { id: values?.managerId },
+                            email: values?.email,
+                        };
+                    } else {
+                        // When creating
+                        payload = {
+                            name: values?.name,
+                            officeLocationName: values?.officeLocationName,
+                            managerId: values?.managerId,
+                            email: values?.email,
+                        };
+                    }
                     mutate(payload);
-                  }}
+                }}
+                enableReinitialize={true} 
             >
                 {({ errors, handleBlur, handleChange, handleSubmit, touched, values,setFieldValue }) => (
                 <form noValidate onSubmit={handleSubmit}>
@@ -123,7 +138,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                                 isLoading={isLoading}
                                 onBlur={handleBlur}
                                 error={errors?.managerId as string}
-                                isTouched={!!touched.managerId}                  />
+                                isTouched={!!touched.managerId} />
 
 
                         <Input

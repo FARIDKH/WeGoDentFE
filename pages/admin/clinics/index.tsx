@@ -95,7 +95,7 @@ const Clinics = () => {
                             actions={[
                                 {
                                     label: 'Edit',
-                                    onClick: (doctor) => createEditRef?.current?.open(doctor),
+                                    onClick: (clinic) => createEditRef?.current?.open(clinic),
                                 },
                                 {
                                     label: 'Delete',
