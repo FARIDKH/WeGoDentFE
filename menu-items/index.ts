@@ -79,6 +79,15 @@ const useMenuItems = () => {
                     hide: !isAdmin,
                 },
                 {
+                    id: 'role_managements',
+                    title: 'Role Managements',
+                    type: 'item',
+                    url: '/admin/role_managements',
+                    icon: icons['IconUsers'],
+                    breadcrumbs: false,
+                    hide: !isAdmin,
+                },
+                {
                     id: 'clinics',
                     title: 'Clinics',
                     type: 'item',

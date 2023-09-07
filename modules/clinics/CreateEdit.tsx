@@ -102,7 +102,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                 {({ errors, handleBlur, handleChange, handleSubmit, touched, values,setFieldValue }) => (
                 <form noValidate onSubmit={handleSubmit}>
                     <DialogTitle>
-                        <span style={{ fontSize: 22, fontWeight: 'bold' }}>{data?.id ? 'Update' : 'Create'} User</span>
+                        <span style={{ fontSize: 22, fontWeight: 'bold' }}>{data?.id ? 'Update' : 'Create'} Clinic</span>
                     </DialogTitle>
                     <DialogContent dividers>
 
