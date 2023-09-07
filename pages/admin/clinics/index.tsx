@@ -21,7 +21,7 @@ const Clinics = () => {
 
     const { data, isFetching, isError, refetch } = useQuery(['Clinics'], async ({ signal }) => {
         const result = await axios(`/api/clinics`, { signal })
-        return result.data.data
+        return result.data
     })
 
     return (

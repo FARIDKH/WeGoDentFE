@@ -115,26 +115,15 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                             value={values?.officeLocationName}
                         />
 
-                        {/* <Input
-                            id="managerId"
-                            label="Manager"
-                            name="managerId"
-                            isTouched={touched.managerId}
-                            error={errors.managerId}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            disabled={isLoading}
-                            value={values?.managerId}
-                        /> */}
 
                         <ManagerSelect
-                                name="blogCategoryDTOS"
+                                name="managerId"
                                 value={values?.managerId}
-                                onChange={(value) => setFieldValue('blogCategoryDTOS', value)}
+                                onChange={(value) => setFieldValue('managerId',value?.target?.value)}
                                 isLoading={isLoading}
                                 onBlur={handleBlur}
                                 error={errors?.managerId as string}
-                                isTouched={!!touched.managerId} fetch={false}                        />
+                                isTouched={!!touched.managerId}                  />
 
 
                         <Input

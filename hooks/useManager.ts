@@ -6,10 +6,12 @@ export const useManager = (enabled = true, params = null) => {
     const { info } = useUser()
 
     return useQuery(
-        ['Managers'],
+        ['AllUsers'],
         async ({ signal }) => {
             const result = await axios(`/api/allUsers`, { signal })
-            return result.data.data
+            console.log("allUsers")
+            console.log(result.data)
+            return result.data
         },
         {
             initialData: [],

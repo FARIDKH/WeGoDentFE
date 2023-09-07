@@ -2,7 +2,6 @@ import { useManager } from '../../../hooks/useManager'
 import Select from '../Select'
 
 interface IProps {
-    fetch: boolean
     name: string
     value: any
     onChange: any
@@ -13,9 +12,9 @@ interface IProps {
     [key: string]: any
 }
 
-const ManagerSelect = ({ fetch, name, isTouched, error, onBlur, onChange, value, disabled }: IProps) => {
-    const { data: managers, isFetching: isPatientFetching } = useManager(fetch)
-    console.log(managers)
+const ManagerSelect = ({  name, isTouched, error, onBlur, onChange, value, disabled }: IProps) => {
+    const { data: managers, isFetching: isManagerFetching } = useManager()
+    // console.log(managers.data)
     return (
         <Select
             id="manager"
@@ -25,10 +24,10 @@ const ManagerSelect = ({ fetch, name, isTouched, error, onBlur, onChange, value,
             error={error}
             onBlur={onBlur}
             onChange={onChange}
-            disabled={disabled || isPatientFetching}
+            disabled={disabled || isManagerFetching }
             value={value}
-            data={managers?.map((item) => ({
-                label: `${item?.firstName} ${item?.lastName}`,
+            data={managers?.data?.map((item) => ({
+                label: `${item?.username}`,
                 value: item?.id,
             }))}
         />
