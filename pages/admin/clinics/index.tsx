@@ -8,7 +8,7 @@ import MainCard from '../../../ui-component/cards/MainCard'
 import PaginatedTableGenerator from '../../../ui-component/PaginatedTableGenerator'
 import CreateButtonFab from '../../../ui-component/CreateButtonFab'
 import CreateEditForm from '../../../modules/clinics/CreateEdit'
-import DeleteForm from '../../../modules/Doctor/Delete'
+import DeleteForm from '../../../modules/clinics/Delete'
 import { trimString } from '../../../utils/string'
 
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
@@ -99,8 +99,8 @@ const Clinics = () => {
                                 },
                                 {
                                     label: 'Delete',
-                                    onClick: ({ id }) => {
-                                        deleteRef?.current?.open(id)
+                                    onClick: ({ clinicId }) => {
+                                        deleteRef?.current?.open(clinicId)
                                     },
                                 },
                             ]}
