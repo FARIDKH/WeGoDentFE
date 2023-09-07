@@ -79,6 +79,14 @@ const useMenuItems = () => {
                     hide: !isAdmin,
                 },
                 {
+                    id: 'clinics',
+                    title: 'Clinics',
+                    type: 'item',
+                    url: '/admin/clinics',
+                    icon: icons['IconDashboard'],
+                    breadcrumbs: false,
+                },
+                {
                     id: 'treatments',
                     title: t('labelMenuItemAllTreatments'),
                     type: 'item',

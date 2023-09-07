@@ -8,7 +8,7 @@ import useUser from '../../lib/useUser'
 import { store } from '../../pages/_app'
 import { SNACKBAR_OPEN } from '../../store/actions'
 import Input from '../../ui-component/Form/Input'
-import BlogCategorySelect from '../../ui-component/Form/selects/BlogCategorySelect'
+import ManagerSelect from '../../ui-component/Form/selects/ManagerSelect'
 import { useOpenState } from '../../ui-component/hooks/useOpenState'
 
 interface IProps {
@@ -21,7 +21,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
     const [data, setData] = useState(null)
 
     const { isLoading, mutate } = useMutation(
-        (values: any) => (data?.id ? axios.patch(`/api/account`, values) : axios.post('/api/account', values)),
+        (values: any) => (data?.id ? axios.patch(`/api/clinics/${data?.id}`, values) : axios.post('/api/clinics', values)),
         
         {
             
@@ -29,7 +29,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                 store.dispatch({
                     type: SNACKBAR_OPEN,
                     open: true,
-                    message: data?.id ? 'Manager has been updated successfully' : 'Manager has been created successfully',
+                    message: data?.id ? 'Clinic has been updated successfully' : 'Doctor has been created successfully',
                     variant: 'alert',
                     alertSeverity: 'success',
                     anchorOrigin: { vertical: 'top', horizontal: 'center' },
@@ -69,27 +69,22 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
         <Dialog sx={{ '& .MuiDialog-paper': { width: '30%', maxHeight: 600 } }} maxWidth="lg" open={isOpen}>
             <Formik
                 initialValues={{
-                    username: data?.username ?? '',
-                    firstName: data?.firstName ?? '',
-                    lastName: data?.lastName ?? '',
-                    password: '',
+                    name: data?.name ?? '',
+                    officeLocationName: data?.officeLocationName ?? '',
+                    managerId: data?.managerId ?? '',
                     email: data?.email ?? '',
-                    phoneNumber: data?.phoneNumber ?? '',
                 }}
                 onSubmit={(values) => {
                     const payload = {
-                        username: values.username,
-                        firstName: values.firstName,
-                        lastName: values.lastName,
-                        password: values.password,
+                        name: values.name,
+                        officeLocationName: values.officeLocationName,
+                        managerId: values.managerId,
                         email: values.email,
-                        roleIds: [5],  // set to manager role id
-                        phoneNumber: values.phoneNumber,
                     };
                     mutate(payload);
                   }}
             >
-                {({ errors, handleBlur, handleChange, handleSubmit, touched, values }) => (
+                {({ errors, handleBlur, handleChange, handleSubmit, touched, values,setFieldValue }) => (
                 <form noValidate onSubmit={handleSubmit}>
                     <DialogTitle>
                         <span style={{ fontSize: 22, fontWeight: 'bold' }}>{data?.id ? 'Update' : 'Create'} User</span>
@@ -97,53 +92,50 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                     <DialogContent dividers>
 
                         <Input
-                            id="username"
-                            label="Username"
-                            name="username"
-                            isTouched={touched.username}
-                            error={errors.username}
+                            id="name"
+                            label="Clinic name"
+                            name="name"
+                            isTouched={touched.name}
+                            error={errors.name}
                             onBlur={handleBlur}
                             onChange={handleChange}
                             disabled={isLoading}
-                            value={values?.username}
+                            value={values?.name}
                         />
 
                         <Input
-                            id="firstName"
-                            label="First Name"
-                            name="firstName"
-                            isTouched={touched.firstName}
-                            error={errors.firstName}
+                            id="officeLocationName"
+                            label="Office Location"
+                            name="officeLocationName"
+                            isTouched={touched.officeLocationName}
+                            error={errors.officeLocationName}
                             onBlur={handleBlur}
                             onChange={handleChange}
                             disabled={isLoading}
-                            value={values?.firstName}
+                            value={values?.officeLocationName}
                         />
 
-                        <Input
-                            id="lastName"
-                            label="Last Name"
-                            name="lastName"
-                            isTouched={touched.lastName}
-                            error={errors.lastName}
+                        {/* <Input
+                            id="managerId"
+                            label="Manager"
+                            name="managerId"
+                            isTouched={touched.managerId}
+                            error={errors.managerId}
                             onBlur={handleBlur}
                             onChange={handleChange}
                             disabled={isLoading}
-                            value={values?.lastName}
-                        />
+                            value={values?.managerId}
+                        /> */}
 
-                        <Input
-                            id="password"
-                            label="Password"
-                            name="password"
-                            type="password"
-                            isTouched={touched.password}
-                            error={errors.password}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            disabled={isLoading}
-                            value={values?.password}
-                        />
+                        <ManagerSelect
+                                name="blogCategoryDTOS"
+                                value={values?.managerId}
+                                onChange={(value) => setFieldValue('blogCategoryDTOS', value)}
+                                isLoading={isLoading}
+                                onBlur={handleBlur}
+                                error={errors?.managerId as string}
+                                isTouched={!!touched.managerId} fetch={false}                        />
+
 
                         <Input
                             id="email"
@@ -158,17 +150,6 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                             value={values?.email}
                         />
 
-                        <Input
-                            id="phoneNumber"
-                            label="Phone Number"
-                            name="phoneNumber"
-                            isTouched={touched.phoneNumber}
-                            error={errors.phoneNumber}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            disabled={isLoading}
-                            value={values?.phoneNumber}
-                        />
 
                     </DialogContent>
                     <DialogActions>
