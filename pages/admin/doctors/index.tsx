@@ -53,6 +53,12 @@ const Doctors = () => {
                                     align: 'left',
                                     renderAs: ({ userDTO }) => ("Dr. " + userDTO?.firstName + " " + userDTO?.lastName).toString()
                                 },
+                                {
+                                    id: 'clinicName',
+                                    numeric: false,
+                                    label: 'Associated Clinic',
+                                    align: 'left',
+                                },
                                 // {
                                 //     id: 'title',
                                 //     numeric: false,

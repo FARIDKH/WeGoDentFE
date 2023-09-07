@@ -21,7 +21,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
     const [data, setData] = useState(null)
 
     const { isLoading, mutate } = useMutation(
-        (values: any) => (data?.id ? axios.patch(`/api/account`, values) : axios.post('/api/account', values)),
+        (values: any) => (data?.id ? axios.post(`/api/account`, values) : axios.post('/api/account', values)),
         
         {
             
