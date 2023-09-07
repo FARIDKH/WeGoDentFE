@@ -70,6 +70,15 @@ const useMenuItems = () => {
                     hide: !isAdmin,
                 },
                 {
+                    id: 'users',
+                    title: 'User List',
+                    type: 'item',
+                    url: '/admin/users',
+                    icon: icons['IconUsers'],
+                    breadcrumbs: false,
+                    hide: !isAdmin,
+                },
+                {
                     id: 'treatments',
                     title: t('labelMenuItemAllTreatments'),
                     type: 'item',
