@@ -6,7 +6,7 @@ const config = {
     outlinedFilled: true,
     theme: 'light',
     presetColor: 'theme4',
-    i18n: 'en',
+    i18n: 'hu',
     rtlLayout: false,
 }
 

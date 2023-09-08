@@ -18,13 +18,12 @@ const customization = {
     opened: true,
 }
 
-
-const googleTagManagerId = 'GTM-MQ4R7G9V';
+const googleTagManagerId = 'GTM-MQ4R7G9V'
 
 export default class MyDocument extends Document {
     render() {
         return (
-            <Html lang="en">
+            <Html lang={customization?.locale}>
                 <Head>
                     {/* PWA primary color */}
                     <meta name="theme-color" content={theme(customization).palette.primary.main} />
@@ -33,7 +32,7 @@ export default class MyDocument extends Document {
                     {/* Google Tag Manager Script */}
                     <script
                         dangerouslySetInnerHTML={{
-                        __html: `
+                            __html: `
                             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
                             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
                             j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -43,20 +42,16 @@ export default class MyDocument extends Document {
                         }}
                     />
 
-                    
                     {/* End Google Tag Manager (noscript) */}
-
-                    
-
                 </Head>
                 <body>
                     {/* Google Tag Manager (noscript) */}
                     <noscript>
                         <iframe
-                        src={`https://www.googletagmanager.com/ns.html?id=${googleTagManagerId}`}
-                        height="0"
-                        width="0"
-                        style={{ display: 'none', visibility: 'hidden' }}
+                            src={`https://www.googletagmanager.com/ns.html?id=${googleTagManagerId}`}
+                            height="0"
+                            width="0"
+                            style={{ display: 'none', visibility: 'hidden' }}
                         />
                     </noscript>
                     <Main />

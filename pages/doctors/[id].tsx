@@ -1,35 +1,27 @@
-import { Avatar, Box, Container, Divider,
-    IconButton, InputAdornment, makeStyles, Paper, TextField, Typography, Rating ,Tabs, Tab, Grid} from '@material-ui/core'
+import { Avatar, Box, Container, Divider, Typography, Rating, Tabs, Tab, Grid } from '@material-ui/core'
 import { useRouter } from 'next/router'
 // import Rating from '@mui/material/Rating';
 // import Tabs from '@mui/material/Tabs';
 // import Tab from '@mui/material/Tab';
-import * as React from 'react';
+import * as React from 'react'
 
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import ShieldIcon from '@mui/icons-material/Shield';
-import LocationCityIcon from '@mui/icons-material/LocationCity';
-import CreditCardIcon from '@mui/icons-material/CreditCard';
-import PeopleIcon from '@mui/icons-material/People';
-import BackHandIcon from '@mui/icons-material/BackHand';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import ShieldIcon from '@mui/icons-material/Shield'
+import LocationCityIcon from '@mui/icons-material/LocationCity'
+import CreditCardIcon from '@mui/icons-material/CreditCard'
+import PeopleIcon from '@mui/icons-material/People'
+import BackHandIcon from '@mui/icons-material/BackHand'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 
-
-import { ENUM_DOCTOR_TYPES, useDoctor } from '../../hooks/useDoctor'
+import { useDoctor } from '../../hooks/useDoctor'
 import Layout from '../../layout/main/Layout'
-import LoginButton from '../../layout/main/LoginButton'
-import Logo from '../../ui-component/Logo'
-import DoctorTypeSelect from '../../ui-component/main/DoctorTypeSelect'
-import IconSearch from '@material-ui/icons/Search'
-import { Formik } from 'formik'
 import Loading from '../../ui-component/Loading'
 import NoResult from '../../ui-component/NoResult'
 
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar'
 import { DigitalClock, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -38,81 +30,36 @@ import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import { useEffect, useRef, useState } from 'react'
 import CreateAppointment from '../../modules/main/appointments/CreateAppointment'
+import Header2 from '../../layout/main/Header2'
 
 dayjs.extend(isBetween)
 
-
 interface TabPanelProps {
-    children?: React.ReactNode;
-    index: number;
-    value: number;
-  }
-  
-  function CustomTabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-  
+    children?: React.ReactNode
+    index: number
+    value: number
+}
+
+function CustomTabPanel(props: TabPanelProps) {
+    const { children, value, index, ...other } = props
+
     return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box sx={{ p: 3 }}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    );
-  }
-  
-  function a11yProps(index: number) {
+        <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`} aria-labelledby={`simple-tab-${index}`} {...other}>
+            {value === index && (
+                <Box sx={{ p: 3 }}>
+                    <Typography>{children}</Typography>
+                </Box>
+            )}
+        </div>
+    )
+}
+
+function a11yProps(index: number) {
     return {
-      id: `simple-tab-${index}`,
-      'aria-controls': `simple-tabpanel-${index}`,
-    };
-  }
-
-const useStyle = makeStyles(() => ({
-    paper: {
-        height: '45px',
-        borderRadius: '50px',
-    },
-    selectDoctorType: {
-        height: '100%',
-        background: 'transparent',
-        marginRight: '10px',
-        borderRadius: 0,
-        borderRight: '1px solid #D9D9D9',
-        '& .MuiSelect-root': {
-            padding: '4px',
-            paddingRight: '32px',
-            paddingLeft: '16px',
-            background: 'transparent',
-        },
-        '& fieldset': {
-            border: 0,
-        },
-    },
-    inputOfficeLocation: {
-        '& .MuiOutlinedInput-root': {
-            background: 'transparent',
-            height: '100%',
-            paddingTop: '0',
-            '& input.MuiOutlinedInput-input': {
-                background: 'transparent',
-                paddingTop: '12px',
-                paddingBottom: '12px',
-            },
-
-            '& fieldset': {
-                border: 0,
-            },
-        },
-    },
-}))
+        id: `simple-tab-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`,
+    }
+}
 
 const initialState = {
     day: null,
@@ -125,33 +72,22 @@ const SingleDoctor = () => {
 
     const [selected, setSelected] = useState(initialState)
 
-    const classes = useStyle()
-    const { query, push } = useRouter()
+    const { query } = useRouter()
 
-
-    
     const { id } = query ?? {}
 
-     
-
-
-    const [value, setValue] = useState<number | null>(4);
-    
-    
-
+    const [value, setValue] = useState<number | null>(4)
 
     const { data: doctors, isFetching } = useDoctor({
         id,
         checkAuth: false,
     })
 
-
-    const [tabValue, setTabValue] = useState(0);
+    const [tabValue, setTabValue] = useState(0)
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setTabValue(newValue);
-    };
-
+        setTabValue(newValue)
+    }
 
     useEffect(() => {
         if (Object.values(selected).every((val) => !!val)) {
@@ -159,94 +95,12 @@ const SingleDoctor = () => {
         }
     }, [selected])
 
-    
-    
-
     return (
-
-        
-        
-
         <Layout>
-            <Box className="mainBlueBgGradient" paddingY={2}>
-                <Container maxWidth="lg">
-                    <Box display="flex" justifyContent="space-between" alignItems="center">
-                        <Logo
-                            style={{
-                                color: 'white',
-                            }}
-                        />
-
-                        <Formik
-                            enableReinitialize
-                            initialValues={{
-                                doctorType: (query?.doctorType ?? ENUM_DOCTOR_TYPES.Emergency_Dentist) as string,
-                                officeLocation: query?.officeLocation as string,
-                            }}
-                            onSubmit={(values) => {
-                                if (values?.doctorType && values?.officeLocation)
-                                    push({
-                                        pathname: '/doctors',
-                                        query: values,
-                                    })
-                            }}
-                        >
-                            {({ handleSubmit, values, handleChange }) => (
-                                <form autoComplete="off" noValidate onSubmit={handleSubmit}>
-                                    <Paper className={classes.paper}>
-                                        <DoctorTypeSelect
-                                            className={classes.selectDoctorType}
-                                            name="doctorType"
-                                            value={values?.doctorType}
-                                            variant="outlined"
-                                            IconComponent={() => null}
-                                            handleChange={handleChange}
-                                        />
-
-                                        <TextField
-                                            className={classes.inputOfficeLocation}
-                                            name="officeLocation"
-                                            value={values?.officeLocation}
-                                            onChange={handleChange}
-                                            placeholder="Budapest I. Kerulet"
-                                            variant="outlined"
-                                            InputProps={{
-                                                endAdornment: (
-                                                    <InputAdornment position="end">
-                                                        <IconButton
-                                                            onClick={() => handleSubmit()}
-                                                            sx={{
-                                                                padding: 0,
-                                                            }}
-                                                        >
-                                                            <IconSearch />
-                                                        </IconButton>
-                                                    </InputAdornment>
-                                                ),
-                                            }}
-                                        />
-                                    </Paper>
-                                </form>
-                            )}
-                        </Formik>
-
-                        <LoginButton
-                            variant="outlined"
-                            sx={{
-                                color: 'white',
-                                borderColor: 'white',
-                                '&:hover': {
-                                    borderColor: 'white',
-                                },
-                            }}
-                        />
-                    </Box>
-                </Container>
-            </Box>
+            <Header2 />
             <Container maxWidth="lg">
                 <Box minHeight="50vh" my={4}>
-                    
-                    {isFetching  && id != undefined ? (
+                    {isFetching && id != undefined ? (
                         <Loading size={60} />
                     ) : !doctors?.length ? (
                         <NoResult />
@@ -257,8 +111,6 @@ const SingleDoctor = () => {
                                 const availableRange = availabilityList?.find((item) =>
                                     dayjs(new Date()).isBetween(item?.startDateTime, item?.endDateTime)
                                 )
-
-                                
 
                                 const startDate = dayjs(availableRange ? new Date() : availabilityList?.[0]?.startDateTime ?? new Date())
                                 const isFuture = startDate?.isAfter(new Date())
@@ -273,8 +125,27 @@ const SingleDoctor = () => {
 
                                 return (
                                     <Box key={doctor?.id}>
-                                        <Box display="flex">
-                                            <Box className="doctorInfo" display="flex" flex={1} mt={3}>
+                                        <Box
+                                            display="flex"
+                                            sx={{
+                                                flexDirection: {
+                                                    sm: 'row',
+                                                    xs: 'column',
+                                                },
+                                            }}
+                                        >
+                                            <Box
+                                                className="doctorInfo"
+                                                display="flex"
+                                                flex={1}
+                                                sx={{
+                                                    mt: 3,
+                                                    mb: {
+                                                        sm: 0,
+                                                        xs: 3,
+                                                    },
+                                                }}
+                                            >
                                                 <Box>
                                                     <Avatar src={avatar?.src} alt={doctorName} sx={{ width: 150, height: 150 }} />
                                                 </Box>
@@ -287,191 +158,187 @@ const SingleDoctor = () => {
                                                     <Rating name="read-only" value={value} readOnly />
                                                     <Typography>Office Location: {doctor?.officeLocationName}</Typography>
                                                     {/* <Divider /> */}
-                                                    <Box sx={{ marginTop : '25px',  borderBottom: 1, borderColor: 'divider' }}>
+                                                    <Box sx={{ marginTop: '25px', borderBottom: 1, borderColor: 'divider' }}>
                                                         <Tabs value={tabValue} onChange={handleChange} aria-label="basic tabs example">
-                                                        <Tab label="Address" {...a11yProps(0)} />
-                                                        <Tab label="Treatments" {...a11yProps(1)} />
-                                                        <Tab label="Reviews" {...a11yProps(2)} />
+                                                            <Tab label="Address" {...a11yProps(0)} />
+                                                            <Tab label="Treatments" {...a11yProps(1)} />
+                                                            <Tab label="Reviews" {...a11yProps(2)} />
                                                         </Tabs>
                                                     </Box>
                                                     <CustomTabPanel value={tabValue} index={0}>
                                                         {/* <Box> */}
-                                                            <List>
-                                                                <ListItem disablePadding>
-                                                                    <ListItemButton>
+                                                        <List>
+                                                            <ListItem disablePadding>
+                                                                <ListItemButton>
                                                                     <ListItemIcon>
                                                                         <ShieldIcon />
                                                                     </ListItemIcon>
                                                                     <ListItemText primary="Insurances accepted: TAJ card, Generali" />
-                                                                    </ListItemButton>
-                                                                </ListItem>
-                                                                <ListItem disablePadding>
-                                                                    <ListItemButton>
+                                                                </ListItemButton>
+                                                            </ListItem>
+                                                            <ListItem disablePadding>
+                                                                <ListItemButton>
                                                                     <ListItemIcon>
                                                                         <LocationCityIcon />
                                                                     </ListItemIcon>
                                                                     <ListItemText primary="Egyetem ter 7, Budapest" />
-                                                                    </ListItemButton>
-                                                                </ListItem>
-                                                                <ListItem disablePadding>
-                                                                    <ListItemButton>
+                                                                </ListItemButton>
+                                                            </ListItem>
+                                                            <ListItem disablePadding>
+                                                                <ListItemButton>
                                                                     <ListItemIcon>
                                                                         <CreditCardIcon />
                                                                     </ListItemIcon>
                                                                     <ListItemText primary="Accepted payments: Cash, Credit card" />
-                                                                    </ListItemButton>
-                                                                </ListItem>
-                                                                <ListItem disablePadding>
-                                                                    <ListItemButton>
+                                                                </ListItemButton>
+                                                            </ListItem>
+                                                            <ListItem disablePadding>
+                                                                <ListItemButton>
                                                                     <ListItemIcon>
                                                                         <PeopleIcon />
                                                                     </ListItemIcon>
                                                                     <ListItemText primary="Accepted age group: Adult, Children of any age" />
-                                                                    </ListItemButton>
-                                                                </ListItem>
-                                                                <ListItem disablePadding>
-                                                                    <ListItemButton>
+                                                                </ListItemButton>
+                                                            </ListItem>
+                                                            <ListItem disablePadding>
+                                                                <ListItemButton>
                                                                     <ListItemIcon>
                                                                         <BackHandIcon />
                                                                     </ListItemIcon>
                                                                     <ListItemText primary="The office is ventilated and disinfected after each appointment" />
-                                                                    </ListItemButton>
-                                                                </ListItem>
-                                                            </List>
+                                                                </ListItemButton>
+                                                            </ListItem>
+                                                        </List>
                                                         {/* </Box> */}
                                                     </CustomTabPanel>
                                                     <CustomTabPanel value={tabValue} index={1}>
-                                                    <List>
-                                                        
-                                                        <ListItem>
-                                                            <ListItemIcon>
-                                                                <ChevronRightIcon />
-                                                            </ListItemIcon>
-                                                            <ListItemText primary="Tooth Withdrawal"/>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                        <ListItemIcon>
-                                                                <ChevronRightIcon />
-                                                            </ListItemIcon>
-                                                            <ListItemText primary="Tooth Whitening"/>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                        <ListItemIcon>
-                                                                <ChevronRightIcon />
-                                                            </ListItemIcon>
-                                                            <ListItemText primary="Dental Fillings"/>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                        <ListItemIcon>
-                                                                <ChevronRightIcon />
-                                                            </ListItemIcon>
-                                                            <ListItemText primary="Root Canal Treatment"/>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                        <ListItemIcon>
-                                                                <ChevronRightIcon />
-                                                            </ListItemIcon>
-                                                            <ListItemText primary="Dental Implants"/>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                        <ListItemIcon>
-                                                                <ChevronRightIcon />
-                                                            </ListItemIcon>
-                                                            <ListItemText primary="Gum Disease Treatment"/>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                        <ListItemIcon>
-                                                                <ChevronRightIcon />
-                                                            </ListItemIcon>
-                                                            <ListItemText primary="Orthodontics (Braces)"/>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                        <ListItemIcon>
-                                                                <ChevronRightIcon />
-                                                            </ListItemIcon>
-                                                            <ListItemText primary="Periodontal Surgery"/>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                        <ListItemIcon>
-                                                                <ChevronRightIcon />
-                                                            </ListItemIcon>
-                                                            <ListItemText primary="Dental Crowns"/>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                        <ListItemIcon>
-                                                                <ChevronRightIcon />
-                                                            </ListItemIcon>
-                                                            <ListItemText primary="Dental Bridges"/>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                        <ListItemIcon>
-                                                                <ChevronRightIcon />
-                                                            </ListItemIcon>
-                                                            <ListItemText primary="Dental Veneers"/>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                        <ListItemIcon>
-                                                                <ChevronRightIcon />
-                                                            </ListItemIcon>
-                                                            <ListItemText primary="Oral Cancer Screening"/>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                        <ListItemIcon>
-                                                                <ChevronRightIcon />
-                                                            </ListItemIcon>
-                                                            <ListItemText primary="Dentures"/>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                        <ListItemIcon>
-                                                                <ChevronRightIcon />
-                                                            </ListItemIcon>
-                                                            <ListItemText primary="Tooth Extractions"/>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                        <ListItemIcon>
-                                                                <ChevronRightIcon />
-                                                            </ListItemIcon>
-                                                            <ListItemText primary="Tooth Bonding"/>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                        <ListItemIcon>
-                                                                <ChevronRightIcon />
-                                                            </ListItemIcon>
-                                                            <ListItemText primary="Dental Sealants"/>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                        <ListItemIcon>
-                                                                <ChevronRightIcon />
-                                                            </ListItemIcon>
-                                                            <ListItemText primary="Nightguards for Bruxism"/>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                        <ListItemIcon>
-                                                                <ChevronRightIcon />
-                                                            </ListItemIcon>
-                                                            <ListItemText primary="Mouthguards for Sports"/>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                        <ListItemIcon>
-                                                                <ChevronRightIcon />
-                                                            </ListItemIcon>
-                                                            <ListItemText primary="Dental Cleaning"/>
-                                                        </ListItem>
-                                                        <ListItem>
-                                                        <ListItemIcon>
-                                                                <ChevronRightIcon />
-                                                            </ListItemIcon>
-                                                            <ListItemText primary="Pediatric Dentistry"/>
-                                                        </ListItem>
-
-                                                         
+                                                        <List>
+                                                            <ListItem>
+                                                                <ListItemIcon>
+                                                                    <ChevronRightIcon />
+                                                                </ListItemIcon>
+                                                                <ListItemText primary="Tooth Withdrawal" />
+                                                            </ListItem>
+                                                            <ListItem>
+                                                                <ListItemIcon>
+                                                                    <ChevronRightIcon />
+                                                                </ListItemIcon>
+                                                                <ListItemText primary="Tooth Whitening" />
+                                                            </ListItem>
+                                                            <ListItem>
+                                                                <ListItemIcon>
+                                                                    <ChevronRightIcon />
+                                                                </ListItemIcon>
+                                                                <ListItemText primary="Dental Fillings" />
+                                                            </ListItem>
+                                                            <ListItem>
+                                                                <ListItemIcon>
+                                                                    <ChevronRightIcon />
+                                                                </ListItemIcon>
+                                                                <ListItemText primary="Root Canal Treatment" />
+                                                            </ListItem>
+                                                            <ListItem>
+                                                                <ListItemIcon>
+                                                                    <ChevronRightIcon />
+                                                                </ListItemIcon>
+                                                                <ListItemText primary="Dental Implants" />
+                                                            </ListItem>
+                                                            <ListItem>
+                                                                <ListItemIcon>
+                                                                    <ChevronRightIcon />
+                                                                </ListItemIcon>
+                                                                <ListItemText primary="Gum Disease Treatment" />
+                                                            </ListItem>
+                                                            <ListItem>
+                                                                <ListItemIcon>
+                                                                    <ChevronRightIcon />
+                                                                </ListItemIcon>
+                                                                <ListItemText primary="Orthodontics (Braces)" />
+                                                            </ListItem>
+                                                            <ListItem>
+                                                                <ListItemIcon>
+                                                                    <ChevronRightIcon />
+                                                                </ListItemIcon>
+                                                                <ListItemText primary="Periodontal Surgery" />
+                                                            </ListItem>
+                                                            <ListItem>
+                                                                <ListItemIcon>
+                                                                    <ChevronRightIcon />
+                                                                </ListItemIcon>
+                                                                <ListItemText primary="Dental Crowns" />
+                                                            </ListItem>
+                                                            <ListItem>
+                                                                <ListItemIcon>
+                                                                    <ChevronRightIcon />
+                                                                </ListItemIcon>
+                                                                <ListItemText primary="Dental Bridges" />
+                                                            </ListItem>
+                                                            <ListItem>
+                                                                <ListItemIcon>
+                                                                    <ChevronRightIcon />
+                                                                </ListItemIcon>
+                                                                <ListItemText primary="Dental Veneers" />
+                                                            </ListItem>
+                                                            <ListItem>
+                                                                <ListItemIcon>
+                                                                    <ChevronRightIcon />
+                                                                </ListItemIcon>
+                                                                <ListItemText primary="Oral Cancer Screening" />
+                                                            </ListItem>
+                                                            <ListItem>
+                                                                <ListItemIcon>
+                                                                    <ChevronRightIcon />
+                                                                </ListItemIcon>
+                                                                <ListItemText primary="Dentures" />
+                                                            </ListItem>
+                                                            <ListItem>
+                                                                <ListItemIcon>
+                                                                    <ChevronRightIcon />
+                                                                </ListItemIcon>
+                                                                <ListItemText primary="Tooth Extractions" />
+                                                            </ListItem>
+                                                            <ListItem>
+                                                                <ListItemIcon>
+                                                                    <ChevronRightIcon />
+                                                                </ListItemIcon>
+                                                                <ListItemText primary="Tooth Bonding" />
+                                                            </ListItem>
+                                                            <ListItem>
+                                                                <ListItemIcon>
+                                                                    <ChevronRightIcon />
+                                                                </ListItemIcon>
+                                                                <ListItemText primary="Dental Sealants" />
+                                                            </ListItem>
+                                                            <ListItem>
+                                                                <ListItemIcon>
+                                                                    <ChevronRightIcon />
+                                                                </ListItemIcon>
+                                                                <ListItemText primary="Nightguards for Bruxism" />
+                                                            </ListItem>
+                                                            <ListItem>
+                                                                <ListItemIcon>
+                                                                    <ChevronRightIcon />
+                                                                </ListItemIcon>
+                                                                <ListItemText primary="Mouthguards for Sports" />
+                                                            </ListItem>
+                                                            <ListItem>
+                                                                <ListItemIcon>
+                                                                    <ChevronRightIcon />
+                                                                </ListItemIcon>
+                                                                <ListItemText primary="Dental Cleaning" />
+                                                            </ListItem>
+                                                            <ListItem>
+                                                                <ListItemIcon>
+                                                                    <ChevronRightIcon />
+                                                                </ListItemIcon>
+                                                                <ListItemText primary="Pediatric Dentistry" />
+                                                            </ListItem>
                                                         </List>
                                                     </CustomTabPanel>
                                                     <CustomTabPanel value={tabValue} index={2}>
                                                         <Grid mt={5} wrap="nowrap" container spacing={1}>
                                                             <Grid item>
-
-                                                                <Avatar>AP</Avatar>   
+                                                                <Avatar>AP</Avatar>
                                                             </Grid>
                                                             <Grid item xs={12} sm>
                                                                 <Typography gutterBottom variant="subtitle1" component="div">
@@ -480,20 +347,19 @@ const SingleDoctor = () => {
                                                                 <Typography variant="body2" color="text.secondary">
                                                                     27 July 2023
                                                                 </Typography>
-                                                                <Typography>I had him veneer, apart from that, 
-                                                                    I had a bridge and tooth extraction, 
-                                                                    and I also had a cyst removal. 
-                                                                    He is a doctor who examines his patient very well,
-                                                                     he does what he can to save the teeth before 
-                                                                     the procedure in this process and then proceeds 
-                                                                     to the procedures to be done, I am very
-                                                                      pleased with this aspect, I am still his patient at the moment, I continue my treatment.</Typography>
+                                                                <Typography>
+                                                                    I had him veneer, apart from that, I had a bridge and tooth extraction,
+                                                                    and I also had a cyst removal. He is a doctor who examines his patient
+                                                                    very well, he does what he can to save the teeth before the procedure in
+                                                                    this process and then proceeds to the procedures to be done, I am very
+                                                                    pleased with this aspect, I am still his patient at the moment, I
+                                                                    continue my treatment.
+                                                                </Typography>
                                                             </Grid>
                                                         </Grid>
                                                         <Grid mt={5} wrap="nowrap" container spacing={1}>
                                                             <Grid item>
-
-                                                                <Avatar>SD</Avatar>   
+                                                                <Avatar>SD</Avatar>
                                                             </Grid>
                                                             <Grid item xs={12} sm>
                                                                 <Typography gutterBottom variant="subtitle1" component="div">
@@ -502,12 +368,15 @@ const SingleDoctor = () => {
                                                                 <Typography variant="body2" color="text.secondary">
                                                                     12 June 2023
                                                                 </Typography>
-                                                                <Typography>I had him fill and veneer. In this process, I was very pleased with his interest and interest in his patient, as well as his experience in the field, and I still continue my process, I go from time to time at the moment, I continue my treatment.</Typography>
+                                                                <Typography>
+                                                                    I had him fill and veneer. In this process, I was very pleased with his
+                                                                    interest and interest in his patient, as well as his experience in the
+                                                                    field, and I still continue my process, I go from time to time at the
+                                                                    moment, I continue my treatment.
+                                                                </Typography>
                                                             </Grid>
                                                         </Grid>
                                                     </CustomTabPanel>
-
-
                                                 </Box>
                                             </Box>
                                             <Box
@@ -515,27 +384,32 @@ const SingleDoctor = () => {
                                                 display="flex"
                                                 flex={1}
                                                 sx={{
-                                                    borderLeft: '1px solid #eeeeee'
+                                                    borderLeft: {
+                                                        sm: '1px solid #eeeeee',
+                                                        xs: '0',
+                                                    },
+                                                    borderTop: {
+                                                        sm: '0',
+                                                        xs: '1px solid #eeeeee',
+                                                    },
                                                 }}
-                                            >   
-                                                
+                                            >
                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-
                                                     <Box flex={2}>
-                                                            <DateCalendar
-                                                                views={['day']}
-                                                                disablePast
-                                                                minDate={startDate}
-                                                                maxDate={endDate}
-                                                                value={isSelectedDoctor ? selected.day : null}
-                                                                onChange={(value) =>
-                                                                    setSelected((prev) => ({
-                                                                        ...prev,
-                                                                        day: value,
-                                                                        doctorId: doctor?.id,
-                                                                    }))
-                                                                }
-                                                            />
+                                                        <DateCalendar
+                                                            views={['day']}
+                                                            disablePast
+                                                            minDate={startDate}
+                                                            maxDate={endDate}
+                                                            value={isSelectedDoctor ? selected.day : null}
+                                                            onChange={(value) =>
+                                                                setSelected((prev) => ({
+                                                                    ...prev,
+                                                                    day: value,
+                                                                    doctorId: doctor?.id,
+                                                                }))
+                                                            }
+                                                        />
                                                     </Box>
                                                     <Box flex={1}>
                                                         <DigitalClock
@@ -547,6 +421,12 @@ const SingleDoctor = () => {
                                                             // disablePast={!isFuture}
                                                             sx={{
                                                                 maxHeight: '300px',
+                                                                '& .MuiDigitalClock-item': {
+                                                                    padding: {
+                                                                        sm: '8px 16px',
+                                                                        xs: 0,
+                                                                    },
+                                                                },
                                                             }}
                                                             onChange={(value) =>
                                                                 setSelected((prev) => ({
@@ -558,7 +438,6 @@ const SingleDoctor = () => {
                                                         />
                                                     </Box>
                                                 </LocalizationProvider>
-                                        
                                             </Box>
                                         </Box>
 
