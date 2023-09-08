@@ -39,7 +39,17 @@ const Footer = () => {
             paddingY={4}
         >
             <Container maxWidth="lg">
-                <Box display="flex" justifyContent="space-between">
+                <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    sx={{
+                        gap: '30px',
+                        flexDirection: {
+                            md: 'row',
+                            xs: 'column',
+                        },
+                    }}
+                >
                     <Box>
                         <Typography variant="h1" color="inherit">
                             Newsletter
