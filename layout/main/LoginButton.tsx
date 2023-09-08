@@ -8,9 +8,9 @@ const LoginButton = (props?: ButtonProps) => {
 
     return (
         <Button
-        sx={{
-            height: '90%',
-        }}
+            sx={{
+                height: '90%',
+            }}
             disableElevation
             LinkComponent="a"
             variant="contained"

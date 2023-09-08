@@ -1,12 +1,8 @@
-import { Link,Avatar, Box, Container, Divider, IconButton, InputAdornment, makeStyles, Paper, TextField, Typography } from '@material-ui/core'
+import { Link, Avatar, Box, Container, Divider, Typography } from '@material-ui/core'
 import { useRouter } from 'next/router'
-import { ENUM_DOCTOR_TYPES, useDoctors } from '../hooks/useDoctors'
+import { useDoctors } from '../hooks/useDoctors'
 import Layout from '../layout/main/Layout'
-import LoginButton from '../layout/main/LoginButton'
-import Logo from '../ui-component/Logo'
-import DoctorTypeSelect from '../ui-component/main/DoctorTypeSelect'
-import IconSearch from '@material-ui/icons/Search'
-import { Formik } from 'formik'
+
 import Loading from '../ui-component/Loading'
 import NoResult from '../ui-component/NoResult'
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar'
@@ -17,47 +13,9 @@ import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import { useEffect, useRef, useState } from 'react'
 import CreateAppointment from '../modules/main/appointments/CreateAppointment'
+import Header2 from '../layout/main/Header2'
 
 dayjs.extend(isBetween)
-
-const useStyle = makeStyles(() => ({
-    paper: {
-        height: '45px',
-        borderRadius: '50px',
-    },
-    selectDoctorType: {
-        height: '100%',
-        background: 'transparent',
-        marginRight: '10px',
-        borderRadius: 0,
-        borderRight: '1px solid #D9D9D9',
-        '& .MuiSelect-root': {
-            padding: '4px',
-            paddingRight: '32px',
-            paddingLeft: '16px',
-            background: 'transparent',
-        },
-        '& fieldset': {
-            border: 0,
-        },
-    },
-    inputOfficeLocation: {
-        '& .MuiOutlinedInput-root': {
-            background: 'transparent',
-            height: '100%',
-            paddingTop: '0',
-            '& input.MuiOutlinedInput-input': {
-                background: 'transparent',
-                paddingTop: '12px',
-                paddingBottom: '12px',
-            },
-
-            '& fieldset': {
-                border: 0,
-            },
-        },
-    },
-}))
 
 const initialState = {
     day: null,
@@ -70,8 +28,7 @@ const DoctorsPage = () => {
 
     const [selected, setSelected] = useState(initialState)
 
-    const classes = useStyle()
-    const { query, push } = useRouter()
+    const { query } = useRouter()
 
     const { doctorType, officeLocation } = query ?? {}
 
@@ -89,81 +46,7 @@ const DoctorsPage = () => {
 
     return (
         <Layout>
-            <Box className="mainBlueBgGradient" paddingY={2}>
-                <Container maxWidth="lg">
-                    <Box display="flex" justifyContent="space-between" alignItems="center">
-                        <Logo
-                            style={{
-                                color: 'white',
-                            }}
-                        />
-
-                        <Formik
-                            enableReinitialize
-                            initialValues={{
-                                doctorType: (query?.doctorType ?? ENUM_DOCTOR_TYPES.General_Dentist) as string,
-                                officeLocation: query?.officeLocation as string,
-                            }}
-                            onSubmit={(values) => {
-                                if (values?.doctorType && values?.officeLocation)
-                                    push({
-                                        pathname: '/doctors',
-                                        query: values,
-                                    })
-                            }}
-                        >
-                            {({ handleSubmit, values, handleChange }) => (
-                                <form autoComplete="off" noValidate onSubmit={handleSubmit}>
-                                    <Paper className={classes.paper}>
-                                        <DoctorTypeSelect
-                                            className={classes.selectDoctorType}
-                                            name="doctorType"
-                                            value={values?.doctorType}
-                                            variant="outlined"
-                                            IconComponent={() => null}
-                                            handleChange={handleChange}
-                                        />
-
-                                        <TextField
-                                            className={classes.inputOfficeLocation}
-                                            name="officeLocation"
-                                            value={values?.officeLocation}
-                                            onChange={handleChange}
-                                            placeholder="Budapest I. Kerulet"
-                                            variant="outlined"
-                                            InputProps={{
-                                                endAdornment: (
-                                                    <InputAdornment position="end">
-                                                        <IconButton
-                                                            onClick={() => handleSubmit()}
-                                                            sx={{
-                                                                padding: 0,
-                                                            }}
-                                                        >
-                                                            <IconSearch />
-                                                        </IconButton>
-                                                    </InputAdornment>
-                                                ),
-                                            }}
-                                        />
-                                    </Paper>
-                                </form>
-                            )}
-                        </Formik>
-
-                        <LoginButton
-                            variant="outlined"
-                            sx={{
-                                color: 'white',
-                                borderColor: 'white',
-                                '&:hover': {
-                                    borderColor: 'white',
-                                },
-                            }}
-                        />
-                    </Box>
-                </Container>
-            </Box>
+            <Header2 />
             <Container maxWidth="lg">
                 <Box minHeight="50vh" my={4}>
                     <Box mb={2}>
@@ -187,8 +70,6 @@ const DoctorsPage = () => {
                                     dayjs(new Date()).isBetween(item?.startDateTime, item?.endDateTime)
                                 )
 
-                                
-
                                 const startDate = dayjs(availableRange ? new Date() : availabilityList?.[0]?.startDateTime ?? new Date())
                                 const isFuture = startDate?.isAfter(new Date())
 
@@ -199,17 +80,39 @@ const DoctorsPage = () => {
                                 const doctorName = `${doctor?.userDTO?.firstName} ${doctor?.userDTO?.lastName}`
 
                                 const isSelectedDoctor = doctor?.id === selected?.doctorId
-                                const doctorLink = "/doctors/" + doctor?.id
+                                const doctorLink = '/doctors/' + doctor?.id
                                 return (
                                     <Box key={doctor?.id}>
-                                        <Box display="flex">
-                                            <Box className="doctorInfo" display="flex" flex={1} mt={3}>
+                                        <Box
+                                            display="flex"
+                                            sx={{
+                                                flexDirection: {
+                                                    sm: 'row',
+                                                    xs: 'column',
+                                                },
+                                            }}
+                                        >
+                                            <Box
+                                                className="doctorInfo"
+                                                display="flex"
+                                                flex={1}
+                                                sx={{
+                                                    mt: 3,
+                                                    mb: {
+                                                        sm: 0,
+                                                        xs: 3,
+                                                    },
+                                                }}
+                                            >
                                                 <Box>
                                                     <Avatar src={avatar?.src} alt={doctorName} sx={{ width: 75, height: 75 }} />
                                                 </Box>
                                                 <Box ml="12px">
                                                     <Typography variant="h4">
-                                                        <Link key={doctor.id} href={doctorLink}> <strong>Dr. {doctorName}</strong> </Link>
+                                                        <Link key={doctor.id} href={doctorLink}>
+                                                            {' '}
+                                                            <strong>Dr. {doctorName}</strong>{' '}
+                                                        </Link>
                                                     </Typography>
                                                     <Typography my={1}>{doctor?.doctorType?.replaceAll('_', ' ')}</Typography>
                                                     <Typography sx={{ "width" : "75%", "textAlign" : "justify", "textJustify" : "innerWord" }} my={1}>{doctor?.experience}</Typography>
@@ -221,7 +124,14 @@ const DoctorsPage = () => {
                                                 display="flex"
                                                 flex={1}
                                                 sx={{
-                                                    borderLeft: '1px solid #eeeeee',
+                                                    borderLeft: {
+                                                        sm: '1px solid #eeeeee',
+                                                        xs: '0',
+                                                    },
+                                                    borderTop: {
+                                                        sm: '0',
+                                                        xs: '1px solid #eeeeee',
+                                                    },
                                                 }}
                                             >
                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -251,6 +161,12 @@ const DoctorsPage = () => {
                                                             // disablePast={!isFuture}
                                                             sx={{
                                                                 maxHeight: '300px',
+                                                                '& .MuiDigitalClock-item': {
+                                                                    padding: {
+                                                                        sm: '8px 16px',
+                                                                        xs: 0,
+                                                                    },
+                                                                },
                                                             }}
                                                             onChange={(value) =>
                                                                 setSelected((prev) => ({

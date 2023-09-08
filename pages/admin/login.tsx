@@ -58,7 +58,15 @@ const LoginWrapper = () => {
 
     return (
         <Box className="adminWrapper">
-            <Box display="flex">
+            <Box
+                display="flex"
+                sx={{
+                    flexDirection: {
+                        sm: 'row',
+                        xs: 'column',
+                    },
+                }}
+            >
                 <Box flex={1} className={classes.leftDiv} />
                 <Box flex={1} display="flex" alignItems="center" justifyContent="center">
                     <MainCard className={classes?.card} contentClass={classes?.content}>
