@@ -1,18 +1,23 @@
-import { Box, MenuItem, Select, SelectChangeEvent } from '@mui/material'
+import { Box, MenuItem, Select, SelectChangeEvent, SelectProps } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { IconFlagUK } from 'material-ui-flags'
 
-const LanguagaSelect = () => {
+interface IProps {
+    selectProps?: SelectProps
+}
+
+const LanguagaSelect = ({ selectProps }: IProps) => {
     const router = useRouter()
 
     const [language, setLanguage] = React.useState(router?.locale ?? 'hu')
 
     const { i18n } = useTranslation('common')
+    console.log('i18n', i18n)
 
     const changeLanguage = (lng: string) => {
-        i18n.changeLanguage(lng).then(() => {
+        i18n?.changeLanguage(lng)?.then(() => {
             router.push(router.asPath, undefined, { locale: lng })
         })
     }
@@ -23,6 +28,8 @@ const LanguagaSelect = () => {
         changeLanguage(event.target.value as string)
     }
 
+    const { sx, ...restSelectProps } = selectProps ?? {}
+
     return (
         <Box sx={{ width: 100, height: 50 }}>
             <Select
@@ -30,14 +37,6 @@ const LanguagaSelect = () => {
                 id="demo-simple-select"
                 // label="Language"
                 value={language}
-                onChange={handleChange}
-                MenuProps={{
-                    sx: {
-                        '& .Mui-selected': {
-                            backgroundColor: 'pink',
-                        },
-                    },
-                }}
                 sx={{
                     height: '50px',
                     background: 'none ',
@@ -45,9 +44,24 @@ const LanguagaSelect = () => {
                     '& div': {
                         background: 'none',
                         color: {
-                            md: 'white',
+                            xl: 'black',
                             sm: 'white',
-                            xs: 'black',
+                        },
+                    },
+                    '& .MuiSvgIcon-root': {
+                        fill: {
+                            xl: 'black',
+                            sm: 'white',
+                        },
+                    },
+                    ...sx,
+                }}
+                {...restSelectProps}
+                onChange={handleChange}
+                MenuProps={{
+                    sx: {
+                        '& .Mui-selected': {
+                            backgroundColor: 'pink',
                         },
                     },
                 }}

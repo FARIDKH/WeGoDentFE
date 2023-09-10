@@ -20,12 +20,8 @@ import { APPOINTMENT_STATUS_BGCOLORS, APPOINTMENT_STATUS_COLORS, ENUM_APPOINTMEN
 import CreateEditForm from '../../../modules/appointments/CreateEdit'
 import CreateButtonFab from '../../../ui-component/CreateButtonFab'
 
-
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-
-
 
 const Appointments = () => {
     const [isListView, setIsListView] = useState(false)
@@ -35,29 +31,14 @@ const Appointments = () => {
     const id = info?.id
     const router: any = useRouter()
 
-    const { t, i18n } = useTranslation('doctor');
+    const { t } = useTranslation('doctor')
 
-
-
-    const changeLanguage = (lng: string) => {
-        i18n.changeLanguage(lng).then(() => {
-            console.log(`Language changed to ${lng}`);
-          });
-    };
-    
-    const [language, setLanguage] = React.useState('');
-
-    const handleChange = (event: SelectChangeEvent) => {
-        setLanguage(event.target.value as string);
-        changeLanguage(event.target.value as string);
-    };
-
-    const { data , isFetching, isError, refetch } = useQuery(
+    const { data, isFetching, isError, refetch } = useQuery(
         ['Appointments', router.query],
-        
+
         async ({ signal }) => {
             const result = await axios(isDoctor ? `/api/doctor/${id}/appointments` : `/api/patient/${id}/appointments`, { signal })
-            const filteredData =  result.data.filter((item: any) => item.status !== ENUM_APPOINTMENT_STATUSES.REJECTED)
+            const filteredData = result.data.filter((item: any) => item.status !== ENUM_APPOINTMENT_STATUSES.REJECTED)
             console.log(result.data)
             return filteredData
         },
@@ -67,16 +48,10 @@ const Appointments = () => {
         }
     )
 
-    
-    
-
-    
-
-
     const events = data?.map(({ id, ...item }) => {
         const user = isDoctor ? item?.patientDTO?.userDTO : item?.doctorDTO?.userDTO
         // console.log(item?.treatmentSessionDTO?.treatmentPhaseDTO?.name)
-        if(item?.status === ENUM_APPOINTMENT_STATUSES.REJECTED) return [] ;
+        if (item?.status === ENUM_APPOINTMENT_STATUSES.REJECTED) return []
         return {
             id,
             title: `${user?.firstName} ${user?.lastName}`,
@@ -90,17 +65,9 @@ const Appointments = () => {
         }
     })
 
-
-   
-
-    
-    
     const canEdit = (status) => {
         return isPatient ? [ENUM_APPOINTMENT_STATUSES.REQUESTED].includes(status) : true
     }
-
-
-    
 
     return (
         <>
@@ -110,7 +77,7 @@ const Appointments = () => {
                 </Typography>
 
                 <MainCard>
-                    <Box className="fullCalendar" px={2}>
+                    <Box className="fullCalendar">
                         <Box display={'flex'} justifyContent="flex-end" mb={2}>
                             <Button
                                 onClick={() => setIsListView((prev) => !prev)}
@@ -217,8 +184,10 @@ const Appointments = () => {
                                         numeric: false,
                                         label: 'Treatment',
                                         align: 'left',
-                                        renderAs: ({ treatmentSessionDTO }) => <Chip label={ treatmentSessionDTO?.treatmentPhaseDTO?.name ?? null} />,
-                                    }
+                                        renderAs: ({ treatmentSessionDTO }) => (
+                                            <Chip label={treatmentSessionDTO?.treatmentPhaseDTO?.name ?? null} />
+                                        ),
+                                    },
                                 ]}
                                 actions={(appointment) => [
                                     {
@@ -229,39 +198,46 @@ const Appointments = () => {
                                 ]}
                             />
                         ) : (
-                        <div>
-                            <FullCalendar
-                                events={events}
-                                buttonText={{
-                                    today: t('labelToday'),
-                                    month: t('labelMonth'),
-                                    week: t('labelWeek'),
-                                    day: t('labelDay'),
+                            <Box
+                                sx={{
+                                    '& .fc-header-toolbar': {
+                                        flexWrap: 'wrap',
+                                        gap: '10px',
+                                    },
                                 }}
-                                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                                headerToolbar={{
-                                    left: 'prev,next today',
-                                    center: 'title',
-                                    right: 'dayGridMonth,timeGridWeek,timeGridDay',
-                                }}
-                                initialView="timeGridDay"
-                                editable={true}
-                                selectable={true}
-                                selectMirror={true}
-                                dayMaxEvents={true}
-                                select={({ startStr, endStr }) => {
-                                    createEditRef?.current?.open({
-                                        appointmentStart: startStr,
-                                        appointmentEnd: endStr,
-                                    })
-                                }}
-                                eventClick={({ event }) => {
-                                    const appointment = event?.extendedProps
-                                    const editable = canEdit(appointment?.status)
-                                    editable && createEditRef?.current?.open(appointment)
-                                }}
-                            />
-                            </div>
+                            >
+                                <FullCalendar
+                                    events={events}
+                                    buttonText={{
+                                        today: t('labelToday'),
+                                        month: t('labelMonth'),
+                                        week: t('labelWeek'),
+                                        day: t('labelDay'),
+                                    }}
+                                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                                    headerToolbar={{
+                                        left: 'prev,next today',
+                                        center: 'title',
+                                        right: 'dayGridMonth,timeGridWeek,timeGridDay',
+                                    }}
+                                    initialView="timeGridDay"
+                                    editable={true}
+                                    selectable={true}
+                                    selectMirror={true}
+                                    dayMaxEvents={true}
+                                    select={({ startStr, endStr }) => {
+                                        createEditRef?.current?.open({
+                                            appointmentStart: startStr,
+                                            appointmentEnd: endStr,
+                                        })
+                                    }}
+                                    eventClick={({ event }) => {
+                                        const appointment = event?.extendedProps
+                                        const editable = canEdit(appointment?.status)
+                                        editable && createEditRef?.current?.open(appointment)
+                                    }}
+                                />
+                            </Box>
                         )}
                         {/*<StyledMenu
                             id="customized-menu"
@@ -304,8 +280,8 @@ export default Appointments
 
 export const getStaticProps = async ({ locale }) => {
     return {
-      props: {
-        ...(await serverSideTranslations(locale, ["doctor"])),
-      },
-    };
-  };
+        props: {
+            ...(await serverSideTranslations(locale, ['doctor'])),
+        },
+    }
+}

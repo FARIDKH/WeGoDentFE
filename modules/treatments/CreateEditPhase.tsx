@@ -1,22 +1,22 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, CircularProgress } from '@material-ui/core'
 
 import axios from '../../utils/axios'
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import FolderIcon from '@mui/icons-material/Folder';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { styled } from '@mui/material/styles'
+import Box from '@mui/material/Box'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemAvatar from '@mui/material/ListItemAvatar'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import Avatar from '@mui/material/Avatar'
+import IconButton from '@mui/material/IconButton'
+import FormGroup from '@mui/material/FormGroup'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
+import Grid from '@mui/material/Grid'
+import Typography from '@mui/material/Typography'
+import FolderIcon from '@mui/icons-material/Folder'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 import { Formik } from 'formik'
 import React from 'react'
@@ -30,27 +30,23 @@ import { useOpenState } from '../../ui-component/hooks/useOpenState'
 import { useQuery } from 'react-query'
 // import Autocomplete from '../Autocomplete'
 
-
-
 interface IProps {
     onSuccess?: () => void
 }
-
 
 const CreateEditPhaseForm = forwardRef(({ onSuccess }: IProps, ref) => {
     const { user } = useUser()
     const { isOpen, open, close } = useOpenState()
     const [data, setData] = useState(null)
 
-    const [dense, setDense] = React.useState(false);
-    const [secondary, setSecondary] = React.useState(false);
+    const [dense, setDense] = React.useState(false)
+    const [secondary, setSecondary] = React.useState(false)
     // function generate(id: number, element: React.ReactElement) {
 
     // const { data : phases } = useQuery(['Phases'], async ({ signal }) => {
     //     const result = await axios(`/api/treatment/${id}/phase`, { signal })
     //     return result.data
     // })
-
 
     //     if( id != null ){
     //         console.log(data)
@@ -61,29 +57,24 @@ const CreateEditPhaseForm = forwardRef(({ onSuccess }: IProps, ref) => {
     //         );
     //     }
     //     return []
-        
+
     // }
 
+    const { isLoading, mutate } = useMutation((values: any) => axios.post(`/api/treatment/${data?.id}/phase`, values), {
+        onSuccess: () => {
+            store.dispatch({
+                type: SNACKBAR_OPEN,
+                open: true,
+                message: 'Phase has been updated successfully',
+                variant: 'alert',
+                alertSeverity: 'success',
+                anchorOrigin: { vertical: 'top', horizontal: 'center' },
+            })
 
-
-    const { isLoading, mutate } = useMutation(
-        (values: any) => axios.post(`/api/treatment/${data?.id}/phase`, values), 
-        {
-            onSuccess: () => {
-                store.dispatch({
-                    type: SNACKBAR_OPEN,
-                    open: true,
-                    message: 'Phase has been updated successfully' ,
-                    variant: 'alert',
-                    alertSeverity: 'success',
-                    anchorOrigin: { vertical: 'top', horizontal: 'center' },
-                })
-
-                // handleClose()
-                onSuccess()
-            },
-        }
-    )
+            // handleClose()
+            onSuccess()
+        },
+    })
 
     const handleClose = () => {
         setData(null)
@@ -95,8 +86,8 @@ const CreateEditPhaseForm = forwardRef(({ onSuccess }: IProps, ref) => {
         open()
     }
 
-    const handleDelete = async (treatmentId, phaseId)  =>  {
-        const result = await axios.delete(`/api/treatment/${treatmentId}/phase/${phaseId}`);
+    const handleDelete = async (treatmentId, phaseId) => {
+        const result = await axios.delete(`/api/treatment/${treatmentId}/phase/${phaseId}`)
         store.dispatch({
             type: SNACKBAR_OPEN,
             open: true,
@@ -116,17 +107,15 @@ const CreateEditPhaseForm = forwardRef(({ onSuccess }: IProps, ref) => {
         []
     )
     const Demo = styled('div')(({ theme }) => ({
-      backgroundColor: theme.palette.background.paper,
-    }));
-
-
+        backgroundColor: theme.palette.background.paper,
+    }))
 
     return (
-        <Dialog sx={{ '& .MuiDialog-paper': { width: '30%', maxHeight: 600 } }} maxWidth="lg" open={isOpen}>
+        <Dialog sx={{ '& .MuiDialog-paper': { width: '30rem', maxHeight: 600 } }} maxWidth="lg" open={isOpen}>
             <Formik
                 initialValues={{
                     name: '',
-                    description:   ''
+                    description: '',
                 }}
                 onSubmit={(values) => mutate(values)}
             >
@@ -137,26 +126,29 @@ const CreateEditPhaseForm = forwardRef(({ onSuccess }: IProps, ref) => {
                         </DialogTitle>
                         <DialogContent dividers>
                             <Grid item xs={12} md={1}>
-                              <Typography sx={{ mt: 1, mb: 2 }} variant="h6" component="div">
-                                List of phases
-                              </Typography>
-                              <Demo>
-                                <List dense={dense}>
-                                    {data?.treatmentPhaseList.map((value) => (
-                                    <ListItem key={value}
-                                      secondaryAction={
-                                        <IconButton edge="end" onClick={() => handleDelete(data?.id,value?.id)} aria-label="delete">
-                                          <DeleteIcon />
-                                        </IconButton>
-                                      }
-                                    >
-                                      <ListItemText 
-                                        primary={`${value?.name}`}  
-                                      />
-                                    </ListItem>
-                                  ))}
-                                </List>
-                              </Demo>
+                                <Typography sx={{ mt: 1, mb: 2 }} variant="h6" component="div">
+                                    List of phases
+                                </Typography>
+                                <Demo>
+                                    <List dense={dense}>
+                                        {data?.treatmentPhaseList.map((value) => (
+                                            <ListItem
+                                                key={value}
+                                                secondaryAction={
+                                                    <IconButton
+                                                        edge="end"
+                                                        onClick={() => handleDelete(data?.id, value?.id)}
+                                                        aria-label="delete"
+                                                    >
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                }
+                                            >
+                                                <ListItemText primary={`${value?.name}`} />
+                                            </ListItem>
+                                        ))}
+                                    </List>
+                                </Demo>
                             </Grid>
                             <Input
                                 id="name"
