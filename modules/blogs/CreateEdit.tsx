@@ -59,7 +59,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
     )
 
     return (
-        <Dialog sx={{ '& .MuiDialog-paper': { width: '30%', maxHeight: 600 } }} maxWidth="lg" open={isOpen}>
+        <Dialog sx={{ '& .MuiDialog-paper': { width: '30rem', maxHeight: 600 } }} maxWidth="lg" open={isOpen}>
             <Formik
                 initialValues={{
                     title: data?.title ?? '',

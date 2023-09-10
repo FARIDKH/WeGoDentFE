@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from 'react'
 
 import { makeStyles } from '@material-ui/core/styles'
 import { Avatar, Box, ButtonBase } from '@material-ui/core'
@@ -8,13 +8,7 @@ import ProfileSection from './ProfileSection'
 import { IconMenu2 } from '@tabler/icons'
 import Logo from '../../../../ui-component/Logo'
 
-import { FormControl, InputLabel } from '@mui/material';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-
-import { useTranslation } from 'next-i18next';
-import { useRouter } from 'next/router';
-
+import LanguagaSelect from '../../../LanguageSelect'
 
 const useStyles = makeStyles((theme: any) => ({
     grow: {
@@ -42,17 +36,6 @@ const useStyles = makeStyles((theme: any) => ({
 
 const Header = ({ handleLeftDrawerToggle }) => {
     const classes = useStyles()
-    const router = useRouter();
-    const { t } = useTranslation('doctor');
-    
-    const [language, setLanguage] = React.useState('hu');
-
-    const handleChange = (event: SelectChangeEvent) => {
-        const newLang = event.target.value as string;
-        setLanguage(newLang);
-        router.push(router.pathname, router.asPath, { locale: newLang });
-    };
-
 
     return (
         <>
@@ -65,27 +48,13 @@ const Header = ({ handleLeftDrawerToggle }) => {
                         <IconMenu2 stroke={1.5} size="1.3rem" />
                     </Avatar>
                 </ButtonBase>
-                
             </div>
 
             <div className={classes.grow} />
             <div className={classes.grow} />
-                <Box sx={{ minWidth: 120 }} mr={5}>
-                    <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">Language</InputLabel>
-                        <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        label="Language"
-                        value={language}
-                        onChange={handleChange}
-                        defaultValue={'en'}
-                        >
-                            <MenuItem value={'en'}>EN</MenuItem>
-                            <MenuItem value={'hu'}>HU</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Box>
+            <Box mr={1}>
+                <LanguagaSelect />
+            </Box>
             <ProfileSection />
         </>
     )

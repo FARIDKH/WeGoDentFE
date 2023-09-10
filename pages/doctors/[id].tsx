@@ -97,7 +97,7 @@ const SingleDoctor = () => {
 
     return (
         <Layout>
-            <Header2 />
+            <Header2 showForm={false} />
             <Container maxWidth="lg">
                 <Box minHeight="50vh" my={4}>
                     {isFetching && id != undefined ? (
@@ -129,7 +129,7 @@ const SingleDoctor = () => {
                                             display="flex"
                                             sx={{
                                                 flexDirection: {
-                                                    sm: 'row',
+                                                    md: 'row',
                                                     xs: 'column',
                                                 },
                                             }}
@@ -137,6 +137,8 @@ const SingleDoctor = () => {
                                             <Box
                                                 className="doctorInfo"
                                                 display="flex"
+                                                flexWrap="wrap"
+                                                alignItems="center"
                                                 flex={1}
                                                 sx={{
                                                     mt: 3,
@@ -154,17 +156,19 @@ const SingleDoctor = () => {
                                                         <strong>Dr. {doctorName}</strong>
                                                     </Typography>
                                                     <Typography my={1}>{doctor?.doctorType?.replaceAll('_', ' ')}</Typography>
-                                                    <Typography sx={{ "width" : "75%", "textAlign" : "justify", "textJustify" : "innerWord" }} my={1}>{doctor?.experience}</Typography>
+                                                    <Typography sx={{ width: '75%', textAlign: 'justify' }} my={1}>
+                                                        {doctor?.experience}
+                                                    </Typography>
                                                     <Rating name="read-only" value={value} readOnly />
                                                     <Typography>Office Location: {doctor?.officeLocationName}</Typography>
                                                     {/* <Divider /> */}
-                                                    <Box sx={{ marginTop: '25px', borderBottom: 1, borderColor: 'divider' }}>
-                                                        <Tabs value={tabValue} onChange={handleChange} aria-label="basic tabs example">
-                                                            <Tab label="Address" {...a11yProps(0)} />
-                                                            <Tab label="Treatments" {...a11yProps(1)} />
-                                                            <Tab label="Reviews" {...a11yProps(2)} />
-                                                        </Tabs>
-                                                    </Box>
+                                                </Box>
+                                                <Box sx={{ marginTop: '25px', width: '100%' }}>
+                                                    <Tabs value={tabValue} onChange={handleChange} aria-label="basic tabs example">
+                                                        <Tab label="Address" {...a11yProps(0)} />
+                                                        <Tab label="Treatments" {...a11yProps(1)} />
+                                                        <Tab label="Reviews" {...a11yProps(2)} />
+                                                    </Tabs>
                                                     <CustomTabPanel value={tabValue} index={0}>
                                                         {/* <Box> */}
                                                         <List>
@@ -385,11 +389,11 @@ const SingleDoctor = () => {
                                                 flex={1}
                                                 sx={{
                                                     borderLeft: {
-                                                        sm: '1px solid #eeeeee',
+                                                        md: '1px solid #eeeeee',
                                                         xs: '0',
                                                     },
                                                     borderTop: {
-                                                        sm: '0',
+                                                        md: '0',
                                                         xs: '1px solid #eeeeee',
                                                     },
                                                 }}
@@ -409,6 +413,12 @@ const SingleDoctor = () => {
                                                                     doctorId: doctor?.id,
                                                                 }))
                                                             }
+                                                            sx={{
+                                                                width: {
+                                                                    sm: 320,
+                                                                    xs: 290,
+                                                                },
+                                                            }}
                                                         />
                                                     </Box>
                                                     <Box flex={1}>
@@ -419,12 +429,17 @@ const SingleDoctor = () => {
                                                             // timeStep={60}
                                                             // skipDisabled
                                                             // disablePast={!isFuture}
+
                                                             sx={{
                                                                 maxHeight: '300px',
                                                                 '& .MuiDigitalClock-item': {
                                                                     padding: {
                                                                         sm: '8px 16px',
                                                                         xs: 0,
+                                                                    },
+                                                                    fontSize: {
+                                                                        sm: 'inherit',
+                                                                        xs: '0.75rem',
                                                                     },
                                                                 },
                                                             }}

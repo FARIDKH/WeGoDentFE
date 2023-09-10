@@ -1,9 +1,7 @@
 import { IconUsers, IconHome, IconCalendarEvent, IconBoxMultiple, IconNotes, IconPill } from '@tabler/icons'
 import useUser from '../lib/useUser'
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
-
-
 
 const icons = {
     IconDashboard: IconHome,
@@ -11,14 +9,13 @@ const icons = {
     IconAppointments: IconCalendarEvent,
     IconCategory: IconBoxMultiple,
     IconBlog: IconNotes,
-    IconPill: IconPill
+    IconPill: IconPill,
 }
 
 const useMenuItems = () => {
     const { isDoctor, isPatient, isAdmin, isBlogger } = useUser()
 
-    const { t } = useTranslation('doctor');
-
+    const { t } = useTranslation('doctor')
 
     return [
         {

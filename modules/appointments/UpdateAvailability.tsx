@@ -33,7 +33,9 @@ const UpdateAvailability = forwardRef(({ onSuccess }: IProps, ref) => {
                 timeSlotEnd: format(new Date(values?.timeSlotEnd), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
             }
 
-            return data?.id ? axios.put(`/api/doctor/${info?.id}/availability`, requestBody) : axios.post(`/api/doctor/${info?.id}/availability`, requestBody)
+            return data?.id
+                ? axios.put(`/api/doctor/${info?.id}/availability`, requestBody)
+                : axios.post(`/api/doctor/${info?.id}/availability`, requestBody)
         },
         {
             onSuccess: () => {
@@ -78,11 +80,11 @@ const UpdateAvailability = forwardRef(({ onSuccess }: IProps, ref) => {
         : Object.keys(ENUM_APPOINTMENT_STATUSES)
 
     return (
-        <Dialog sx={{ '& .MuiDialog-paper': { width: '30%', maxHeight: 600 } }} maxWidth="lg" open={isOpen}>
+        <Dialog sx={{ '& .MuiDialog-paper': { width: '30rem', maxHeight: 600 } }} maxWidth="lg" open={isOpen}>
             <Formik
                 initialValues={{
                     timeSlotStart: data?.timeSlotStart ?? '',
-                    timeSlotEnd: data?.timeSlotEnd ?? ''
+                    timeSlotEnd: data?.timeSlotEnd ?? '',
                 }}
                 // validationSchema={blogValidationSchema}
                 onSubmit={(values) => mutate(values)}
@@ -92,12 +94,9 @@ const UpdateAvailability = forwardRef(({ onSuccess }: IProps, ref) => {
                     return (
                         <form noValidate onSubmit={handleSubmit}>
                             <DialogTitle>
-                                <span style={{ fontSize: 18, fontWeight: 'bold' }}>{data?.id ? 'Update' : 'Create'}</span>                                                                   
+                                <span style={{ fontSize: 18, fontWeight: 'bold' }}>{data?.id ? 'Update' : 'Create'}</span>
                             </DialogTitle>
                             <DialogContent dividers>
-
-                                
-                                
                                 <DateTimePicker
                                     id="timeSlotStart"
                                     label="Start Date"
@@ -123,8 +122,6 @@ const UpdateAvailability = forwardRef(({ onSuccess }: IProps, ref) => {
                                     minDate={new Date()}
                                     value={values?.timeSlotEnd}
                                 />
-
-                                
                             </DialogContent>
                             <DialogActions>
                                 <Button disableElevation disabled={isLoading} onClick={handleClose}>
