@@ -13,7 +13,7 @@ const icons = {
 }
 
 const useMenuItems = () => {
-    const { isDoctor, isPatient, isAdmin, isBlogger } = useUser()
+    const { isDoctor, isPatient, isAdmin, isBlogger, isManager } = useUser()
 
     const { t } = useTranslation('doctor')
 
@@ -37,7 +37,7 @@ const useMenuItems = () => {
                     url: '/admin/appointments',
                     icon: icons['IconAppointments'],
                     breadcrumbs: false,
-                    hide: !isDoctor && !isPatient,
+                    hide: !isDoctor && !isPatient && !isManager,
                 },
                 {
                     id: 'availabilities',
@@ -64,7 +64,34 @@ const useMenuItems = () => {
                     url: '/admin/doctors',
                     icon: icons['IconUsers'],
                     breadcrumbs: false,
+                    hide: !isAdmin && !isManager,
+                },
+                {
+                    id: 'users',
+                    title: 'User List',
+                    type: 'item',
+                    url: '/admin/users',
+                    icon: icons['IconUsers'],
+                    breadcrumbs: false,
                     hide: !isAdmin,
+                },
+                {
+                    id: 'role_managements',
+                    title: 'Role Managements',
+                    type: 'item',
+                    url: '/admin/role_managements',
+                    icon: icons['IconUsers'],
+                    breadcrumbs: false,
+                    hide: !isAdmin,
+                },
+                {
+                    id: 'clinics',
+                    title: 'Clinics',
+                    type: 'item',
+                    url: '/admin/clinics',
+                    icon: icons['IconDashboard'],
+                    breadcrumbs: false,
+                    hide: !isAdmin && !isManager,
                 },
                 {
                     id: 'treatments',

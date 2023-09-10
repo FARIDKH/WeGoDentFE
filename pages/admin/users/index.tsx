@@ -7,7 +7,7 @@ import MainLayout from '../../../layout/admin/MainLayout'
 import MainCard from '../../../ui-component/cards/MainCard'
 import PaginatedTableGenerator from '../../../ui-component/PaginatedTableGenerator'
 import CreateButtonFab from '../../../ui-component/CreateButtonFab'
-import CreateEditForm from '../../../modules/Doctor/CreateEdit'
+import CreateEditForm from '../../../modules/manager/CreateEdit'
 import DeleteForm from '../../../modules/Doctor/Delete'
 import { trimString } from '../../../utils/string'
 
@@ -15,20 +15,20 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 
 
-const Doctors = () => {
+const Users = () => {
     const createEditRef = useRef(null)
     const deleteRef = useRef(null)
 
-    const { data, isFetching, isError, refetch } = useQuery(['Doctors'], async ({ signal }) => {
-        const result = await axios(`/api/doctor`, { signal })
-        return result.data
+    const { data, isFetching, isError, refetch } = useQuery(['Users'], async ({ signal }) => {
+        const result = await axios(`/api/allUsers`, { signal })
+        return result.data.data
     })
 
     return (
         <>
             <MainLayout>
                 <Typography variant="h1" mb={2}>
-                    List of dentists
+                    List of users in platfrom
                 </Typography>
 
                 <MainCard>
@@ -47,38 +47,20 @@ const Doctors = () => {
                                     align: 'left',
                                 },
                                 {
-                                    id: 'Doctor',
+                                    id: 'username',
                                     numeric: false,
-                                    label: 'Doctor',
+                                    label: 'User',
                                     align: 'left',
-                                    renderAs: ({ userDTO }) => ("Dr. " + userDTO?.firstName + " " + userDTO?.lastName).toString()
+                                    // renderAs: ({ userDTO }) => ("Dr. " + data.firstName + " " + data.lastName).toString()
                                 },
                                 {
-                                    id: 'clinicName',
+                                    id: 'Type',
                                     numeric: false,
-                                    label: 'Associated Clinic',
+                                    label: 'Type',
                                     align: 'left',
+                                    renderAs: ({ groupRoleResponseDTOS }) => (groupRoleResponseDTOS?.[0]?.code)
+
                                 },
-                                // {
-                                //     id: 'title',
-                                //     numeric: false,
-                                //     label: 'Title',
-                                //     align: 'left',
-                                // },
-                                // {
-                                //     id: 'categories',
-                                //     numeric: false,
-                                //     label: 'Cateogies',
-                                //     align: 'left',
-                                //     renderAs: ({ blogCategoryDTOS }) => blogCategoryDTOS?.map(({ name }) => name)?.toString(),
-                                // },
-                                // {
-                                //     id: 'content',
-                                //     numeric: false,
-                                //     label: 'Content',
-                                //     align: 'left',
-                                //     renderAs: ({ content }) => trimString(content, 50),
-                                // },
                             ]}
                             actions={[
                                 {
@@ -105,12 +87,12 @@ const Doctors = () => {
     )
 }
 
-export default Doctors
+export default Users
 
 export const getStaticProps = async ({ locale }) => {
     return {
       props: {
-        ...(await serverSideTranslations(locale, ["doctor"])),
+        ...(await serverSideTranslations(locale, ["users"])),
       },
     };
   };
