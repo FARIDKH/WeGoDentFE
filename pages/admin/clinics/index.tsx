@@ -10,6 +10,8 @@ import CreateButtonFab from '../../../ui-component/CreateButtonFab'
 import CreateEditForm from '../../../modules/clinics/CreateEdit'
 import DeleteForm from '../../../modules/clinics/Delete'
 import { trimString } from '../../../utils/string'
+import { ENUM_SUBSCRIPTION_STATUSES } from '../../../modules/subscription/constants'
+import Chip from '../../../ui-component/extended/Chip'
 
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
@@ -18,6 +20,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 const Clinics = () => {
     const createEditRef = useRef(null)
     const deleteRef = useRef(null)
+    const subCreateEditRef = useRef(null)
 
     const { data, isFetching, isError, refetch } = useQuery(['Clinics'], async ({ signal }) => {
         const result = await axios(`/api/clinics`, { signal })
@@ -61,10 +64,15 @@ const Clinics = () => {
                                 {
                                     id: 'isEnabled',
                                     numeric: false,
-                                    label: 'isEnabled',
+                                    label: 'Subscription status',
                                     align: 'left',
                                     // renderAs: ({ groupRoleResponseDTOS }) => (groupRoleResponseDTOS?.[0]?.code)
-
+                                    renderAs: ({ isEnabled }) => {
+                                        const status = isEnabled ? ENUM_SUBSCRIPTION_STATUSES.ACTIVE : ENUM_SUBSCRIPTION_STATUSES.NOTACTIVE;
+                                        return (
+                                            <Chip label={status} chipcolor={ENUM_SUBSCRIPTION_STATUSES[status]} />
+                                        );
+                                    },
                                 },
                                 {
                                     id: 'email',
@@ -103,6 +111,12 @@ const Clinics = () => {
                                         deleteRef?.current?.open(clinicId)
                                     },
                                 },
+                                {
+                                    label: 'Subscription',
+                                    onClick: ({ clinic }) => {
+                                        subCreateEditRef?.current?.open(clinic)
+                                    },
+                                },
                             ]}
                         />
                     </Box>
@@ -112,6 +126,7 @@ const Clinics = () => {
 
                 <CreateEditForm ref={createEditRef} onSuccess={refetch} />
                 <DeleteForm ref={deleteRef} onSuccess={refetch} />
+                
             </MainLayout>
         </>
     )
