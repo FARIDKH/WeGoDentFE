@@ -22,9 +22,8 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
 
     const { isLoading, mutate } = useMutation(
         (values: any) => (data?.id ? axios.patch(`/api/doctor/${data?.id}`, values) : axios.post('/api/doctor', values)),
-        
+
         {
-            
             onSuccess: () => {
                 store.dispatch({
                     type: SNACKBAR_OPEN,
@@ -40,11 +39,9 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
             },
             onError: (err) => {
                 console.log(err)
-            }
+            },
         }
     )
-
-    
 
     const handleClose = () => {
         setData(null)
@@ -65,7 +62,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
     )
 
     return (
-        <Dialog sx={{ '& .MuiDialog-paper': { width: '30%', maxHeight: 600 } }} maxWidth="lg" open={isOpen}>
+        <Dialog sx={{ '& .MuiDialog-paper': { width: '30rem', maxHeight: 600 } }} maxWidth="lg" open={isOpen}>
             <Formik
                 initialValues={{
                     username: data?.userDTO?.username ?? '',
@@ -82,23 +79,23 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                 // validationSchema={blogValidationSchema}
                 onSubmit={(values) => {
                     const payload = {
-                      userDTO: {
-                        username: values.username,
-                        firstName: values.firstName,
-                        lastName: values.lastName,
-                        password: values.password,
-                        email: values.email,
-                        roleIds: [0],  // you need to determine how to handle this part
-                        phoneNumber: values.phoneNumber,
-                      },
-                      experience: values.experience,
-                      language: values.language,
-                      hourlyRate: values.hourlyRate,
-                      doctorType: "General_Dentist", // if this is a fixed value
-                      officeLocationName: values.officeLocationName,
-                    };
-                    mutate(payload);
-                  }}
+                        userDTO: {
+                            username: values.username,
+                            firstName: values.firstName,
+                            lastName: values.lastName,
+                            password: values.password,
+                            email: values.email,
+                            roleIds: [0], // you need to determine how to handle this part
+                            phoneNumber: values.phoneNumber,
+                        },
+                        experience: values.experience,
+                        language: values.language,
+                        hourlyRate: values.hourlyRate,
+                        doctorType: 'General_Dentist', // if this is a fixed value
+                        officeLocationName: values.officeLocationName,
+                    }
+                    mutate(payload)
+                }}
             >
                 {({ errors, handleBlur, handleChange, handleSubmit, touched, values, setFieldValue }) => (
                     <form noValidate onSubmit={handleSubmit}>
@@ -154,8 +151,8 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                                 value={values?.lastName}
                                 multiline
                                 rows={4}
-                            />  
-                            
+                            />
+
                             <Input
                                 id="password"
                                 label="password"
@@ -168,8 +165,8 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                                 value={values?.password}
                                 multiline
                                 rows={4}
-                            />  
-                            
+                            />
+
                             <Input
                                 id="email"
                                 label="email"
@@ -182,8 +179,8 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                                 value={values?.email}
                                 multiline
                                 rows={4}
-                            />  
-                            
+                            />
+
                             <Input
                                 id="phoneNumber"
                                 label="phoneNumber"
@@ -196,8 +193,8 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                                 value={values?.phoneNumber}
                                 multiline
                                 rows={4}
-                            />  
-                            
+                            />
+
                             <Input
                                 id="experience"
                                 label="experience"
@@ -210,8 +207,8 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                                 value={values?.experience}
                                 multiline
                                 rows={4}
-                            />  
-                            
+                            />
+
                             <Input
                                 id="hourlyRate"
                                 label="hourlyRate"
@@ -224,8 +221,8 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                                 value={values?.hourlyRate}
                                 multiline
                                 rows={4}
-                            />  
-                            
+                            />
+
                             <Input
                                 id="language"
                                 label="language"
@@ -238,8 +235,8 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                                 value={values?.language}
                                 multiline
                                 rows={4}
-                            />  
-                            
+                            />
+
                             <Input
                                 id="officeLocationName"
                                 label="officeLocationName"
@@ -252,9 +249,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                                 value={values?.officeLocationName}
                                 multiline
                                 rows={4}
-                            />  
-
-
+                            />
                         </DialogContent>
                         <DialogActions>
                             <Button disableElevation disabled={isLoading} onClick={handleClose}>
@@ -270,7 +265,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                                 style={{ margin: '0 10px' }}
                             >
                                 Submit
-                                {isLoading && <CircularProgress size={20}  />}
+                                {isLoading && <CircularProgress size={20} />}
                             </Button>
                         </DialogActions>
                     </form>

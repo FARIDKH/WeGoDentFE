@@ -13,7 +13,9 @@ import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import { useEffect, useRef, useState } from 'react'
 import CreateAppointment from '../modules/main/appointments/CreateAppointment'
-import Header2 from '../layout/main/Header2'
+import Header2, { HeaderSearchForm } from '../layout/main/Header2'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useMobile } from '../ui-component/hooks/useMobile'
 
 dayjs.extend(isBetween)
 
@@ -38,6 +40,8 @@ const DoctorsPage = () => {
         checkAuth: false,
     })
 
+    const isMobile = useMobile()
+
     useEffect(() => {
         if (Object.values(selected).every((val) => !!val)) {
             ref?.current?.open(selected)
@@ -47,9 +51,29 @@ const DoctorsPage = () => {
     return (
         <Layout>
             <Header2 />
+
             <Container maxWidth="lg">
+                {isMobile && (
+                    <Box mt={3}>
+                        <HeaderSearchForm />
+                        <Divider
+                            sx={{
+                                marginY: 3,
+                            }}
+                        />
+                    </Box>
+                )}
+
                 <Box minHeight="50vh" my={4}>
-                    <Box mb={2}>
+                    <Box
+                        mb={2}
+                        sx={{
+                            textAlign: {
+                                sm: 'left',
+                                xs: 'center',
+                            },
+                        }}
+                    >
                         <Typography variant="h2" mb={1}>
                             {(doctorType as string)?.replaceAll('_', ' ')}, {officeLocation}
                         </Typography>
@@ -115,7 +139,16 @@ const DoctorsPage = () => {
                                                         </Link>
                                                     </Typography>
                                                     <Typography my={1}>{doctor?.doctorType?.replaceAll('_', ' ')}</Typography>
-                                                    <Typography sx={{ "width" : "75%", "textAlign" : "justify", "textJustify" : "innerWord" }} my={1}>{doctor?.experience}</Typography>
+                                                    <Typography
+                                                        my={1}
+                                                        sx={{
+                                                            width: '75%',
+                                                            textAlign: 'justify',
+                                                            // textJustify: 'innerWord'
+                                                        }}
+                                                    >
+                                                        {doctor?.experience}
+                                                    </Typography>
                                                     <Typography>Office Location: {doctor?.officeLocationName}</Typography>
                                                 </Box>
                                             </Box>
@@ -149,6 +182,12 @@ const DoctorsPage = () => {
                                                                     doctorId: doctor?.id,
                                                                 }))
                                                             }
+                                                            sx={{
+                                                                width: {
+                                                                    sm: 320,
+                                                                    xs: 290,
+                                                                },
+                                                            }}
                                                         />
                                                     </Box>
                                                     <Box flex={1}>
@@ -165,6 +204,10 @@ const DoctorsPage = () => {
                                                                     padding: {
                                                                         sm: '8px 16px',
                                                                         xs: 0,
+                                                                    },
+                                                                    fontSize: {
+                                                                        sm: 'inherit',
+                                                                        xs: '0.75rem',
                                                                     },
                                                                 },
                                                             }}
@@ -196,3 +239,11 @@ const DoctorsPage = () => {
 }
 
 export default DoctorsPage
+
+export const getStaticProps = async ({ locale }) => {
+    return {
+        props: {
+            ...(await serverSideTranslations(locale, ['common'])),
+        },
+    }
+}

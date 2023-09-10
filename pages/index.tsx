@@ -1,11 +1,6 @@
-import { Box, Button, Container, InputAdornment, makeStyles, TextField, Typography, Grid } from '@material-ui/core'
-import { ENUM_DOCTOR_TYPES } from '../hooks/useDoctors'
-import { Formik } from 'formik'
-import IconSelect from '@material-ui/icons/ExpandMore'
+import { Box, Button, Container, InputAdornment, makeStyles, Typography, Grid } from '@material-ui/core'
 import IconSearch from '@material-ui/icons/Search'
 import Layout from '../layout/main/Layout'
-import { useRouter } from 'next/router'
-import DoctorTypeSelect from '../ui-component/main/DoctorTypeSelect'
 
 import Image from 'next/image'
 
@@ -27,14 +22,20 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from 'next-i18next'
 
 import Header from '../layout/main/Header'
+import SearchForm from '../layout/main/SearchForm'
 
 const useStyle = makeStyles((theme) => ({
     searchWrapper: {
         border: '1px solid white',
         borderRadius: '50px',
         width: '73%',
-        [theme.breakpoints.down('sm')]: {
+        boxShadow: theme.shadows[4],
+        [theme.breakpoints.down('md')]: {
             width: '100%',
+        },
+        [theme.breakpoints.down('sm')]: {
+            border: 0,
+            boxShadow: 'none',
         },
     },
     selectDoctorType: {
@@ -53,6 +54,16 @@ const useStyle = makeStyles((theme) => ({
         '& fieldset': {
             border: 0,
         },
+        [theme.breakpoints.down('sm')]: {
+            width: '100%',
+            border: '.5px solid black',
+            borderRadius: '50px',
+            '& .MuiSvgIcon-root': {
+                fill: 'black',
+            },
+            marginBottom: 10,
+            boxShadow: theme.shadows[4],
+        },
     },
     inputOfficeLocation: {
         width: 'calc(70% - 10px)',
@@ -68,11 +79,19 @@ const useStyle = makeStyles((theme) => ({
                 border: 0,
             },
         },
+        [theme.breakpoints.down('sm')]: {
+            width: '100%',
+            border: '.5px solid black',
+            borderRadius: '50px',
+            boxShadow: theme.shadows[4],
+            '& .MuiOutlinedInput-input::placeholder': {
+                color: 'white',
+            },
+        },
     },
     bookFormControl: {
         fontSize: '20px',
-        color: 'white',
-        width: '550px',
+        width: '100%',
         [theme.breakpoints.down('sm')]: {
             width: '100%',
         },
@@ -89,7 +108,6 @@ declare global {
 
 const HomePage = () => {
     const classes = useStyle()
-    const router = useRouter()
 
     const { t } = useTranslation('common')
 
@@ -103,69 +121,35 @@ const HomePage = () => {
                         <Typography variant="h1" fontSize="45px" mb={3}>
                             {t('welcome')}
                         </Typography>
-                        <Typography variant="h3" color="#808080">
-                            {t('welcome_h3')}
-                        </Typography>
+                        <Typography variant="h3">{t('welcome_h3')}</Typography>
                         <Box mt={5}>
-                            <Formik
-                                initialValues={{
-                                    doctorType: ENUM_DOCTOR_TYPES.General_Dentist,
-                                    officeLocation: '',
+                            <SearchForm
+                                classNames={{
+                                    wrapper: classes.searchWrapper,
+                                    doctorSelect: classes.selectDoctorType,
+                                    locationInput: classes.inputOfficeLocation,
                                 }}
-                                onSubmit={(values) => {
-                                    if (values?.doctorType && values?.officeLocation)
-                                        router.push({
-                                            pathname: '/doctors',
-                                            query: values,
-                                        })
-                                }}
-                            >
-                                {({ handleSubmit, values, handleChange }) => (
-                                    <form autoComplete="off" noValidate onSubmit={handleSubmit}>
-                                        <Box sx={{ boxShadow: 4 }} className={classes.searchWrapper}>
-                                            <DoctorTypeSelect
-                                                className={classes.selectDoctorType}
-                                                name="doctorType"
-                                                value={values?.doctorType}
-                                                variant="outlined"
-                                                IconComponent={() => <IconSelect />}
-                                                handleChange={handleChange}
-                                            />
-
-                                            <TextField
-                                                className={classes.inputOfficeLocation}
-                                                name="officeLocation"
-                                                value={values?.officeLocation}
-                                                onChange={handleChange}
-                                                placeholder="Budapest I. Kerulet"
-                                                variant="outlined"
-                                                InputProps={{
-                                                    endAdornment: (
-                                                        <InputAdornment position="end">
-                                                            <Button
-                                                                onClick={() => handleSubmit()}
-                                                                variant="contained"
-                                                                startIcon={<IconSearch />}
-                                                                sx={{
-                                                                    background: '#205738',
-                                                                    color: 'white',
-                                                                    borderRadius: 2,
-                                                                    height: '24px',
-                                                                    '&:hover': {
-                                                                        background: '#205738',
-                                                                    },
-                                                                }}
-                                                            >
-                                                                {t('buttonSearch')}
-                                                            </Button>
-                                                        </InputAdornment>
-                                                    ),
-                                                }}
-                                            />
-                                        </Box>
-                                    </form>
-                                )}
-                            </Formik>
+                                searchButton={
+                                    <InputAdornment position="end">
+                                        <Button
+                                            variant="contained"
+                                            type="submit"
+                                            startIcon={<IconSearch />}
+                                            sx={{
+                                                background: '#205738',
+                                                color: 'white',
+                                                borderRadius: 2,
+                                                height: '24px',
+                                                '&:hover': {
+                                                    background: '#205738',
+                                                },
+                                            }}
+                                        >
+                                            {t('buttonSearch')}
+                                        </Button>
+                                    </InputAdornment>
+                                }
+                            />
                         </Box>
                     </Box>
                 </Container>
@@ -372,37 +356,44 @@ const HomePage = () => {
                 </Container>
             </Box>
 
-            <Box className="background-round-2">
+            <Box
+                className="background-round-2"
+                sx={{
+                    padding: '100px 0 !important',
+                }}
+            >
                 <Container>
                     <Grid container>
                         <Grid item md={6} xs={12}>
-                            <h1>{t('bookADemo')} </h1>
-                            <p>{t('bookADemoInfo')} </p>
+                            <Typography variant="h1" my={2}>
+                                {t('bookADemo')}
+                            </Typography>
+
+                            <Typography component="p" mb={3} color="#000">
+                                {t('bookADemoInfo')}
+                            </Typography>
                         </Grid>
                         <Grid item md={6} xs={12}>
                             <Box
                                 sx={{
                                     color: 'white',
-                                    padding: {
-                                        md: '25px',
-                                    },
                                     textAlign: 'right',
                                 }}
                             >
                                 <Box>
                                     <FormControl className={classes.bookFormControl}>
-                                        <InputLabel sx={{ color: 'white' }} htmlFor="my-input">
+                                        <InputLabel sx={{ color: '#000' }} htmlFor="my-input">
                                             Email address
                                         </InputLabel>
-                                        <Input sx={{ color: 'white' }} id="my-input" aria-describedby="my-helper-text" />
-                                        <FormHelperText sx={{ color: 'white' }} id="my-helper-text">
+                                        <Input sx={{ color: '#000' }} id="my-input" aria-describedby="my-helper-text" />
+                                        <FormHelperText sx={{ color: '#000' }} id="my-helper-text">
                                             We'll never share your email.
                                         </FormHelperText>
                                     </FormControl>
                                 </Box>
                                 <Box mt={5}>
                                     <FormControl className={classes.bookFormControl}>
-                                        <InputLabel sx={{ color: 'white' }} htmlFor="my-input">
+                                        <InputLabel sx={{ color: '#000' }} htmlFor="my-input">
                                             Your full name
                                         </InputLabel>
                                         <Input sx={{ color: 'white' }} id="my-input" aria-describedby="my-helper-text" />

@@ -1,17 +1,22 @@
-import { Box, Container, Paper, TextField, InputAdornment, IconButton, makeStyles } from '@material-ui/core'
+import { Box, Container, InputAdornment, IconButton, makeStyles } from '@material-ui/core'
 import { IconSearch } from '@tabler/icons'
-import { Formik } from 'formik'
-import { useRouter } from 'next/router'
-import { ENUM_DOCTOR_TYPES } from '../../hooks/useDoctor'
+import { useMobile } from '../../ui-component/hooks/useMobile'
 import Logo from '../../ui-component/Logo'
-import DoctorTypeSelect from '../../ui-component/main/DoctorTypeSelect'
+import LanguagaSelect from '../LanguageSelect'
 import LoginButton from './LoginButton'
+import MobileMenu from './MobileMenu'
+import SearchForm from './SearchForm'
 
-const useStyle = makeStyles(() => ({
-    paper: {
+const useStyle = makeStyles((theme) => ({
+    wrapper: {
         height: '45px',
         borderRadius: '50px',
         display: 'flex',
+        background: 'white',
+        [theme.breakpoints.down('sm')]: {
+            height: 'auto',
+            flexDirection: 'column',
+        },
     },
     selectDoctorType: {
         height: '100%',
@@ -26,6 +31,17 @@ const useStyle = makeStyles(() => ({
         },
         '& fieldset': {
             border: 0,
+        },
+        [theme.breakpoints.down('sm')]: {
+            height: '32px',
+            border: '.5px solid black',
+            borderRadius: '50px',
+            marginBottom: 10,
+            boxShadow: theme.shadows[3],
+
+            '& .MuiSvgIcon-root': {
+                marginRight: '12px',
+            },
         },
     },
     inputOfficeLocation: {
@@ -42,13 +58,54 @@ const useStyle = makeStyles(() => ({
             '& fieldset': {
                 border: 0,
             },
+            [theme.breakpoints.down('sm')]: {
+                height: '32px',
+                border: '.5px solid black',
+                borderRadius: '50px',
+                boxShadow: theme.shadows[3],
+
+                '& .MuiButtonBase-root svg': {
+                    width: 20,
+                },
+            },
         },
     },
 }))
 
-const Header2 = () => {
-    const { query, push } = useRouter()
+export const HeaderSearchForm = () => {
     const classes = useStyle()
+    const isMobile = useMobile()
+
+    return (
+        <SearchForm
+            selectProps={
+                !isMobile && {
+                    IconComponent: () => null,
+                }
+            }
+            classNames={{
+                wrapper: classes.wrapper,
+                doctorSelect: classes.selectDoctorType,
+                locationInput: classes.inputOfficeLocation,
+            }}
+            searchButton={
+                <InputAdornment position="end">
+                    <IconButton
+                        type="submit"
+                        sx={{
+                            padding: 0,
+                        }}
+                    >
+                        <IconSearch />
+                    </IconButton>
+                </InputAdornment>
+            }
+        />
+    )
+}
+
+const Header2 = ({ showForm = true }) => {
+    const isMobile = useMobile()
 
     return (
         <Box className="mainBlueBgGradient" paddingY={2}>
@@ -60,69 +117,45 @@ const Header2 = () => {
                         }}
                     />
 
-                    <Formik
-                        enableReinitialize
-                        initialValues={{
-                            doctorType: (query?.doctorType ?? ENUM_DOCTOR_TYPES.General_Dentist) as string,
-                            officeLocation: query?.officeLocation as string,
-                        }}
-                        onSubmit={(values) => {
-                            if (values?.doctorType && values?.officeLocation)
-                                push({
-                                    pathname: '/doctors',
-                                    query: values,
-                                })
-                        }}
-                    >
-                        {({ handleSubmit, values, handleChange }) => (
-                            <form autoComplete="off" noValidate onSubmit={handleSubmit}>
-                                <Paper className={classes.paper}>
-                                    <DoctorTypeSelect
-                                        className={classes.selectDoctorType}
-                                        name="doctorType"
-                                        value={values?.doctorType}
-                                        variant="outlined"
-                                        IconComponent={() => null}
-                                        handleChange={handleChange}
-                                    />
+                    {!isMobile && showForm && <HeaderSearchForm />}
 
-                                    <TextField
-                                        className={classes.inputOfficeLocation}
-                                        name="officeLocation"
-                                        value={values?.officeLocation}
-                                        onChange={handleChange}
-                                        placeholder="Budapest I. Kerulet"
-                                        variant="outlined"
-                                        InputProps={{
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                    <IconButton
-                                                        onClick={() => handleSubmit()}
-                                                        sx={{
-                                                            padding: 0,
-                                                        }}
-                                                    >
-                                                        <IconSearch />
-                                                    </IconButton>
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                    />
-                                </Paper>
-                            </form>
+                    <Box display="flex" gap={3}>
+                        <LanguagaSelect
+                            selectProps={{
+                                sx: {
+                                    '& div': {
+                                        background: 'none',
+                                        color: 'white',
+                                    },
+                                    '& .MuiSvgIcon-root': {
+                                        fill: 'white',
+                                    },
+                                },
+                            }}
+                        />
+
+                        {isMobile ? (
+                            <MobileMenu
+                                buttonProps={{
+                                    sx: {
+                                        color: 'white',
+                                    },
+                                }}
+                            />
+                        ) : (
+                            <LoginButton
+                                variant="outlined"
+                                sx={{
+                                    color: 'white',
+                                    borderColor: 'white',
+                                    '&:hover': {
+                                        borderColor: 'white',
+                                    },
+                                    height: 'auto',
+                                }}
+                            />
                         )}
-                    </Formik>
-
-                    <LoginButton
-                        variant="outlined"
-                        sx={{
-                            color: 'white',
-                            borderColor: 'white',
-                            '&:hover': {
-                                borderColor: 'white',
-                            },
-                        }}
-                    />
+                    </Box>
                 </Box>
             </Container>
         </Box>

@@ -36,7 +36,7 @@ const CreateAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref) => {
         open()
     }
 
-    var resultStartDate = "2021-09-01T10:00:00.000Z"
+    var resultStartDate = '2021-09-01T10:00:00.000Z'
 
     const { mutate: createAppointment } = useMutation(
         async () => {
@@ -57,8 +57,8 @@ const CreateAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref) => {
                 appointmentStart: startDate,
                 appointmentEnd: endDate,
             }
-            resultStartDate = dayjs(startDate).subtract(1, 'day').format('ddd MMM DD YYYY HH:mm:ss');
-            
+            resultStartDate = dayjs(startDate).subtract(1, 'day').format('ddd MMM DD YYYY HH:mm:ss')
+
             return await axios.post('/api/appointment', requestBody)
         },
         {
@@ -87,7 +87,7 @@ const CreateAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref) => {
     )
 
     return (
-        <Dialog sx={{ '& .MuiDialog-paper': { width: '30%', maxHeight: 600 } }} maxWidth="lg" open={isOpen} onBackdropClick={handleClose}>
+        <Dialog sx={{ '& .MuiDialog-paper': { width: '30rem', maxHeight: 600 } }} maxWidth="lg" open={isOpen} onBackdropClick={handleClose}>
             <DialogTitle
                 sx={{
                     textAlign: 'center',

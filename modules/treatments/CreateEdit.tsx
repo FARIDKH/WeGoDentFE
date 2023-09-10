@@ -31,7 +31,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                     alertSeverity: 'success',
                     anchorOrigin: { vertical: 'top', horizontal: 'center' },
                 })
-                
+
                 handleClose()
                 onSuccess()
             },
@@ -57,13 +57,13 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
     )
 
     return (
-        <Dialog sx={{ '& .MuiDialog-paper': { width: '30%', maxHeight: 600 } }} maxWidth="lg" open={isOpen}>
+        <Dialog sx={{ '& .MuiDialog-paper': { width: '30rem', maxHeight: 600 } }} maxWidth="lg" open={isOpen}>
             <Formik
                 initialValues={{
                     name: data?.name ?? '',
                     description: data?.description ?? '',
                     cost: data?.cost ?? '',
-                    creatorId : user?.id ?? '',
+                    creatorId: user?.id ?? '',
                 }}
                 onSubmit={(values) => mutate(values)}
             >
@@ -73,7 +73,6 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                             <span style={{ fontSize: 22, fontWeight: 'bold' }}>{data?.id ? 'Update' : 'Create'}</span>
                         </DialogTitle>
                         <DialogContent dividers>
-                            
                             <Input
                                 id="name"
                                 label="Name"
@@ -112,9 +111,6 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                                 disabled={isLoading}
                                 value={values?.cost}
                             />
-
-
-
                         </DialogContent>
                         <DialogActions>
                             <Button disableElevation disabled={isLoading} onClick={handleClose}>

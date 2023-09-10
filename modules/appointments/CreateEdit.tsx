@@ -17,7 +17,6 @@ import TreatmentPhaseSelect from '../../ui-component/Form/selects/TreatmentPhase
 import { useOpenState } from '../../ui-component/hooks/useOpenState'
 import { ENUM_APPOINTMENT_STATUSES } from './constants'
 
-
 interface IProps {
     onSuccess?: () => void
 }
@@ -36,17 +35,26 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                 appointmentEnd: format(new Date(values?.appointmentEnd), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
             }
             const requestTreatmentSessionBody = {
-                status: "SCHEDULED",
+                status: 'SCHEDULED',
                 doctorId: values?.doctor_id,
                 patientId: values?.patient_id,
                 appointmentStart: format(new Date(values?.appointmentStart), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
                 appointmentEnd: format(new Date(values?.appointmentEnd), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
             }
-            if(values?.appointmentStatus === ENUM_APPOINTMENT_STATUSES.REJECTED || values?.appointmentStatus === ENUM_APPOINTMENT_STATUSES.CANCELLED || values?.appointmentStatus === ENUM_APPOINTMENT_STATUSES.COMPLETED){
-               return axios.put(`/api/appointment/${data?.id}`, requestBody);
+            if (
+                values?.appointmentStatus === ENUM_APPOINTMENT_STATUSES.REJECTED ||
+                values?.appointmentStatus === ENUM_APPOINTMENT_STATUSES.CANCELLED ||
+                values?.appointmentStatus === ENUM_APPOINTMENT_STATUSES.COMPLETED
+            ) {
+                return axios.put(`/api/appointment/${data?.id}`, requestBody)
             }
             console.log(values)
-            return data?.id ? axios.put(`/api/doctor/appointment/${data?.id}/treatment-phase/${values?.treatment_phase_id}`, requestTreatmentSessionBody) : axios.put(`/api/doctor/treatment-phase/${values?.treatment_phase_id}`, requestTreatmentSessionBody)
+            return data?.id
+                ? axios.put(
+                      `/api/doctor/appointment/${data?.id}/treatment-phase/${values?.treatment_phase_id}`,
+                      requestTreatmentSessionBody
+                  )
+                : axios.put(`/api/doctor/treatment-phase/${values?.treatment_phase_id}`, requestTreatmentSessionBody)
         },
         {
             onSuccess: () => {
@@ -85,21 +93,17 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
 
     const doctorId = data?.doctorDTO?.id
     const patientId = data?.patientDTO?.id
-    const treatmentId : any = '';
-    const treatmentPhaseId : any = '';
+    const treatmentId: any = ''
+    const treatmentPhaseId: any = ''
 
     const statuses = isPatient
         ? [ENUM_APPOINTMENT_STATUSES.REQUESTED, ENUM_APPOINTMENT_STATUSES.CANCELLED]
         : Object.keys(ENUM_APPOINTMENT_STATUSES)
 
-    const [selectedTreatment, setSelectedTreatment] = useState(null);
-
-
-    
-
+    const [selectedTreatment, setSelectedTreatment] = useState(null)
 
     return (
-        <Dialog sx={{ '& .MuiDialog-paper': { width: '30%', maxHeight: 600 } }} maxWidth="lg" open={isOpen}>
+        <Dialog sx={{ '& .MuiDialog-paper': { width: '30rem', maxHeight: 600 } }} maxWidth="lg" open={isOpen}>
             <Formik
                 initialValues={{
                     appointmentStart: data?.appointmentStart ?? '',
@@ -110,8 +114,8 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                     doctorType: data?.doctorDTO?.doctorType ?? '',
                     officeLocation: data?.doctorDTO?.officeLocationName ?? '',
                     patient_id: patientId ?? (isPatient ? info?.id : ''),
-                    treatment_id : treatmentId,
-                    treatment_phase_id :  treatmentPhaseId,
+                    treatment_id: treatmentId,
+                    treatment_phase_id: treatmentPhaseId,
                 }}
                 // validationSchema={blogValidationSchema}
                 onSubmit={(values) => mutate(values)}
@@ -121,7 +125,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                     return (
                         <form noValidate onSubmit={handleSubmit}>
                             <DialogTitle>
-                                <span style={{ fontSize: 18, fontWeight: 'bold' }}>{data?.id ? 'Update' : 'Create'}</span>                                                                   
+                                <span style={{ fontSize: 18, fontWeight: 'bold' }}>{data?.id ? 'Update' : 'Create'}</span>
                             </DialogTitle>
                             <DialogContent dividers>
                                 {isDoctor && (
@@ -135,7 +139,6 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                                         disabled={patientId || isLoading}
                                         value={values?.patient_id}
                                     />
-                                    
                                 )}
                                 {isDoctor && (
                                     <TreatmentSelect
@@ -148,10 +151,9 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                                         // disabled={treatment_id || isLoading}
                                         value={values?.treatment_id}
                                     />
+                                )}
 
-                                )} 
-                                
-                                {isDoctor  && (
+                                {isDoctor && (
                                     <TreatmentPhaseSelect
                                         fetch={isOpen}
                                         name="treatment_phase_id"
@@ -164,7 +166,6 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                                         value={values?.treatment_phase_id}
                                     />
                                 )}
-
 
                                 {isPatient && (
                                     <DoctorSelect fetch={isOpen} form={form} name="doctor_id" disabled={!!doctorId || isLoading} />
