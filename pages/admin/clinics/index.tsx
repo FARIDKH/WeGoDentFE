@@ -7,7 +7,9 @@ import MainLayout from '../../../layout/admin/MainLayout'
 import MainCard from '../../../ui-component/cards/MainCard'
 import PaginatedTableGenerator from '../../../ui-component/PaginatedTableGenerator'
 import CreateButtonFab from '../../../ui-component/CreateButtonFab'
-import CreateEditForm from '../../../modules/clinics/CreateEdit'
+import ClinicCreateEditForm from '../../../modules/clinics/CreateEdit'
+
+import SubscriptionCreateEditForm from '../../../modules/subscription/CreateEdit'
 import DeleteForm from '../../../modules/clinics/Delete'
 import { trimString } from '../../../utils/string'
 import { ENUM_SUBSCRIPTION_STATUSES } from '../../../modules/subscription/constants'
@@ -113,8 +115,8 @@ const Clinics = () => {
                                 },
                                 {
                                     label: 'Subscription',
-                                    onClick: ({ clinic }) => {
-                                        subCreateEditRef?.current?.open(clinic)
+                                    onClick: ({ email }) => {
+                                        subCreateEditRef?.current?.open(email)
                                     },
                                 },
                             ]}
@@ -124,7 +126,8 @@ const Clinics = () => {
 
                 <CreateButtonFab onClick={() => createEditRef?.current?.open()} />
 
-                <CreateEditForm ref={createEditRef} onSuccess={refetch} />
+                <SubscriptionCreateEditForm ref={subCreateEditRef} onSuccess={refetch} />
+                <ClinicCreateEditForm ref={createEditRef} onSuccess={refetch} />
                 <DeleteForm ref={deleteRef} onSuccess={refetch} />
                 
             </MainLayout>
