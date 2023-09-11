@@ -127,19 +127,19 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                     if (data?.id) {
                         // When updating
                         payload = {
-                            name: values?.clinicId,
+                            clinicId: values?.clinicId,
                             planType: selectedCard
                         };
                     } else {
                         // When creating
                         payload = {
-                            name: values?.clinicId,
+                            clinicId: values?.clinicId,
                             planType: selectedCard
                         };
                     }
                     
                     console.log(payload)
-                    
+
                     mutate(payload);
                 }}
                 enableReinitialize={true} 

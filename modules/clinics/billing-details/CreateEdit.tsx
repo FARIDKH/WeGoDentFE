@@ -50,7 +50,9 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
         {
             
             onSuccess: async (response, variables) => {
-                await createCustomer(variables);
+                if (!data?.id) { // If data.id doesn't exist, it's a new creation
+                    await createCustomer(variables);
+                }
                 store.dispatch({
                     type: SNACKBAR_OPEN,
                     open: true,
