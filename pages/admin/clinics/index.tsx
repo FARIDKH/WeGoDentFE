@@ -8,6 +8,7 @@ import MainCard from '../../../ui-component/cards/MainCard'
 import PaginatedTableGenerator from '../../../ui-component/PaginatedTableGenerator'
 import CreateButtonFab from '../../../ui-component/CreateButtonFab'
 import ClinicCreateEditForm from '../../../modules/clinics/CreateEdit'
+import BillingCreateEditForm from '../../../modules/clinics/billing-details/CreateEdit'
 
 import SubscriptionCreateEditForm from '../../../modules/subscription/CreateEdit'
 import DeleteForm from '../../../modules/clinics/Delete'
@@ -23,6 +24,7 @@ const Clinics = () => {
     const createEditRef = useRef(null)
     const deleteRef = useRef(null)
     const subCreateEditRef = useRef(null)
+    const billingCreateEditRef = useRef(null)
 
     const { data, isFetching, isError, refetch } = useQuery(['Clinics'], async ({ signal }) => {
         const result = await axios(`/api/clinics`, { signal })
@@ -108,15 +110,19 @@ const Clinics = () => {
                                     onClick: (clinic) => createEditRef?.current?.open(clinic),
                                 },
                                 {
-                                    label: 'Delete',
-                                    onClick: ({ clinicId }) => {
-                                        deleteRef?.current?.open(clinicId)
-                                    },
+                                    label: 'Billing details',
+                                    onClick: (clinic) => billingCreateEditRef?.current?.open(clinic),
                                 },
                                 {
                                     label: 'Subscription',
-                                    onClick: ({ email }) => {
-                                        subCreateEditRef?.current?.open(email)
+                                    onClick: ({ clinicId }) => {
+                                        subCreateEditRef?.current?.open(clinicId)
+                                    },
+                                },
+                                {
+                                    label: 'Delete',
+                                    onClick: ({ clinicId }) => {
+                                        deleteRef?.current?.open(clinicId)
                                     },
                                 },
                             ]}
@@ -128,6 +134,9 @@ const Clinics = () => {
 
                 <SubscriptionCreateEditForm ref={subCreateEditRef} onSuccess={refetch} />
                 <ClinicCreateEditForm ref={createEditRef} onSuccess={refetch} />
+                <BillingCreateEditForm ref={billingCreateEditRef} onSuccess={refetch} />
+
+
                 <DeleteForm ref={deleteRef} onSuccess={refetch} />
                 
             </MainLayout>

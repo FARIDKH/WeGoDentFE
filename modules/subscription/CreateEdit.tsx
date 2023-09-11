@@ -30,20 +30,50 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
         }
     }, []);
 
+    const checkBillingDetails = async () => {
+        try {
+            console.log("23232")
+            console.log(data)
+            const response = await axios.get(`/api/clinic/${data}/billing`);
+            if (!response.data) {
+                store.dispatch({
+                    type: SNACKBAR_OPEN,
+                    open: true,
+                    message: 'Please update billing details',
+                    variant: 'alert',
+                    alertSeverity: 'warning',
+                    anchorOrigin: { vertical: 'top', horizontal: 'center' },
+                });
+                return false;
+            }
+            return true;
+        } catch (error) {
+            console.error("Error fetching billing details:", error);
+            store.dispatch({
+                type: SNACKBAR_OPEN,
+                open: true,
+                message: 'Please update billing details',
+                variant: 'alert',
+                alertSeverity: 'warning',
+                anchorOrigin: { vertical: 'top', horizontal: 'center' },
+            });
+            return false;
+        }
+    };
+
     const handleCardClick = (priceId) => {
+        
         setSelectedCard(priceId);
         localStorage.setItem('selectedCard', priceId);
     };
     
     
     const { isLoading, mutate } = useMutation(
-
-        
-
-        (values: any) => (data?.id ? axios.patch(`/api/stripe/create-subscription/${data?.id}`, values) : axios.post('/api/create-subscription', values)),
-        
+        async (values: any) => {
+            await checkBillingDetails();
+            return data?.id ? axios.patch(`/api/stripe/create-subscription`, values) : axios.post('/api/stripe/create-subscription', values);
+        },
         {
-            
             onSuccess: () => {
                 store.dispatch({
                     type: SNACKBAR_OPEN,
@@ -52,24 +82,15 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                     variant: 'alert',
                     alertSeverity: 'success',
                     anchorOrigin: { vertical: 'top', horizontal: 'center' },
-                })
-
-                handleClose()
-                onSuccess()
+                });
+                handleClose();
+                onSuccess();
             },
             onError: (err) => {
-                console.log(err)
-                store.dispatch({
-                    type: SNACKBAR_OPEN,
-                    open: true,
-                    message: 'Please update billing details',
-                    variant: 'alert',
-                    alertSeverity: 'warning',
-                    anchorOrigin: { vertical: 'top', horizontal: 'center' },
-                })
+                console.log(err);
             }
         }
-    )
+    );
 
     
 
@@ -96,31 +117,29 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
         <Dialog sx={{ '& .MuiDialog-paper': { width: '60%', minHeight: 400, textAlign : 'center' } }} maxWidth="lg" open={isOpen}>
             <Formik
                 initialValues={{
-                    customerId: data?.name ?? '',
-                    priceId: data?.priceId ?? '' 
+                    clinicId: data ?? '',
+                    planType: data?.planType ?? '' 
                 }}
                 onSubmit={(values) => {
                     let payload;
-                    console.log("data: ")
-                    console.log(data)
-
-                    console.log("values")
-                    console.log(values)
-                    console.log(selectedCard)
+                    
 
                     if (data?.id) {
                         // When updating
                         payload = {
-                            name: values?.customerId,
-                            officeLocationName: values?.priceId
+                            name: values?.clinicId,
+                            planType: selectedCard
                         };
                     } else {
                         // When creating
                         payload = {
-                            name: values?.customerId,
-                            officeLocationName: values?.priceId
+                            name: values?.clinicId,
+                            planType: selectedCard
                         };
                     }
+                    
+                    console.log(payload)
+                    
                     mutate(payload);
                 }}
                 enableReinitialize={true} 
@@ -135,14 +154,14 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                         <Grid  container spacing={10}>
                             
                             <Grid  item xs={1}></Grid>
-                            <Grid onClick={() => handleCardClick("price_BASIC_xxxx")} sx={{ color : 'white' }} item xs={5}>
+                            <Grid onClick={() => handleCardClick("PLAN_ECONOMIC")} sx={{ color : 'white' }} item xs={5}>
                                 <Box
                                     
                                     sx={{
                                         width: '100%',
                                         height: 450,
                                         
-                                        backgroundColor: selectedCard === "price_BASIC_xxxx" ? '#069E71': 'primary.dark',
+                                        backgroundColor: selectedCard === "PLAN_ECONOMIC" ? '#069E71': 'primary.dark',
                         
                                         padding: 2,
                                         '&:hover': {
@@ -176,13 +195,13 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                                 </Box>
                             </Grid>
 
-                            <Grid onClick={() => handleCardClick("price_PREMIUM_xxxx")} sx={{ color : 'white' }} item xs={5}>
+                            <Grid onClick={() => handleCardClick("PLAN_PREMIUM")} sx={{ color : 'white' }} item xs={5}>
 
                                 <Box
                                     sx={{
                                         width: '100%',
                                         height: 450,
-                                        backgroundColor: selectedCard === "price_PREMIUM_xxxx" ? '#069E71' :'primary.dark',
+                                        backgroundColor: selectedCard === "PLAN_PREMIUM" ? '#069E71' :'primary.dark',
                         
                                         padding: 2,
                                         '&:hover': {
@@ -218,54 +237,6 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
 
                             <Grid  item xs={1}></Grid>
                         </Grid>
-                        {/* <Input
-                            id="name"
-                            label="Clinic name"
-                            name="name"
-                            isTouched={touched.name}
-                            error={errors.name}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            disabled={isLoading}
-                            value={values?.name}
-                        />
-
-                        <Input
-                            id="officeLocationName"
-                            label="Office Location"
-                            name="officeLocationName"
-                            isTouched={touched.officeLocationName}
-                            error={errors.officeLocationName}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            disabled={isLoading}
-                            value={values?.officeLocationName}
-                        />
-
-
-                        <ManagerSelect
-                                name="managerId"
-                                value={values?.managerId}
-                                onChange={(value) => setFieldValue('managerId',value?.target?.value)}
-                                isLoading={isLoading}
-                                onBlur={handleBlur}
-                                error={errors?.managerId as string}
-                                isTouched={!!touched.managerId} /> */}
-
-
-                        {/* <Input
-                            id="email"
-                            label="Email"
-                            name="email"
-                            type="email"
-                            isTouched={touched.email}
-                            error={errors.email}
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            disabled={isLoading}
-                            value={values?.email}
-                        /> */}
-
 
                     </DialogContent>
                     <DialogActions>
