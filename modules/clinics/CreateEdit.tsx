@@ -73,7 +73,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                 initialValues={{
                     name: data?.name ?? '',
                     officeLocationName: data?.officeLocationName ?? '',
-                    managerId: data?.id ? data?.manager?.id : data?.managerId ?? '',
+                    managerId: data?.id ? data?.manager?.id : data?.managerId ?? [],
                     email: data?.email ?? '',
                 }}
                 onSubmit={(values) => {
@@ -83,7 +83,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                         payload = {
                             name: values?.name,
                             officeLocationName: values?.officeLocationName,
-                            manager: { id: values?.managerId },
+                            managersId: [{ id: values?.managerId }],
                             email: values?.email,
                         };
                     } else {
@@ -91,7 +91,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                         payload = {
                             name: values?.name,
                             officeLocationName: values?.officeLocationName,
-                            managerId: values?.managerId,
+                            managersId: [values?.managerId],
                             email: values?.email,
                         };
                     }

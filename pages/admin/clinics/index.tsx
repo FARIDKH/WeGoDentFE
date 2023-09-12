@@ -8,6 +8,7 @@ import MainCard from '../../../ui-component/cards/MainCard'
 import PaginatedTableGenerator from '../../../ui-component/PaginatedTableGenerator'
 import CreateButtonFab from '../../../ui-component/CreateButtonFab'
 import ClinicCreateEditForm from '../../../modules/clinics/CreateEdit'
+import AddDoctorForm from '../../../modules/clinics/AddDoctor'
 import BillingCreateEditForm from '../../../modules/clinics/billing-details/CreateEdit'
 
 import SubscriptionCreateEditForm from '../../../modules/subscription/CreateEdit'
@@ -25,6 +26,7 @@ const Clinics = () => {
     const deleteRef = useRef(null)
     const subCreateEditRef = useRef(null)
     const billingCreateEditRef = useRef(null)
+    const addDoctorRef = useRef(null)
 
     const { data, isFetching, isError, refetch } = useQuery(['Clinics'], async ({ signal }) => {
         const result = await axios(`/api/clinics`, { signal })
@@ -120,11 +122,16 @@ const Clinics = () => {
                                     },
                                 },
                                 {
-                                    label: 'Delete',
-                                    onClick: ({ clinicId }) => {
-                                        deleteRef?.current?.open(clinicId)
-                                    },
+                                    label: 'Doctors of clinic',
+                                    onClick: (clinic) => addDoctorRef?.current?.open(clinic)
                                 },
+                                
+                                // {
+                                //     label: 'Delete',
+                                //     onClick: ({ clinicId }) => {
+                                //         deleteRef?.current?.open(clinicId)
+                                //     },
+                                // },
                             ]}
                         />
                     </Box>
@@ -135,6 +142,7 @@ const Clinics = () => {
                 <SubscriptionCreateEditForm ref={subCreateEditRef} onSuccess={refetch} />
                 <ClinicCreateEditForm ref={createEditRef} onSuccess={refetch} />
                 <BillingCreateEditForm ref={billingCreateEditRef} onSuccess={refetch} />
+                <AddDoctorForm ref={addDoctorRef} onSuccess={refetch} />
 
 
                 <DeleteForm ref={deleteRef} onSuccess={refetch} />
