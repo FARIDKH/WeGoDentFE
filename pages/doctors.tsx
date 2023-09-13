@@ -94,15 +94,14 @@ const DoctorsPage = () => {
                                     dayjs(new Date()).isBetween(item?.startDateTime, item?.endDateTime)
                                 )
 
-                                const startDate = dayjs(availableRange ? new Date() : availabilityList?.[0]?.startDateTime ?? new Date())
+                                const startDate = dayjs(new Date())
                                 const isFuture = startDate?.isAfter(new Date())
-
+                                console.log("startDate" , startDate)
                                 const endDateTime = dayjs(availableRange?.endDateTime ?? availabilityList?.[0]?.endDateTime)
                                 const availableFutureDays = startDate.add(25, 'days')
                                 const endDate = endDateTime && availableFutureDays?.isAfter(endDateTime) ? endDateTime : availableFutureDays
 
                                 const doctorName = `${doctor?.userDTO?.firstName} ${doctor?.userDTO?.lastName}`
-
                                 const isSelectedDoctor = doctor?.id === selected?.doctorId
                                 const doctorLink = '/doctors/' + doctor?.id
                                 return (

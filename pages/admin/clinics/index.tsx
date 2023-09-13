@@ -49,12 +49,7 @@ const Clinics = () => {
                                 data,
                             }}
                             columns={[
-                                {
-                                    id: 'clinicId',
-                                    numeric: false,
-                                    label: 'Clinic Id',
-                                    align: 'left',
-                                },
+                                
                                 {
                                     id: 'name',
                                     numeric: false,
@@ -87,11 +82,16 @@ const Clinics = () => {
                                     align: 'left',
                                 },
                                 {
-                                    id: 'Manager',
+                                    id: 'managers',
                                     numeric: false,
-                                    label: 'Manager',
+                                    label: 'Managers',
                                     align: 'left',
-                                    renderAs: ({ manager }) => (manager?.firstName + " " + manager?.lastName).toString()
+                                    renderAs: ({ managers }) => {
+                                        if (managers && managers.length > 0) {
+                                            return managers.map(manager => `${manager?.firstName} ${manager?.lastName}`).join(' • ');
+                                        }
+                                        return "N/A";
+                                    },
                                 },
                                 {
                                     id: 'doctorQuota',
