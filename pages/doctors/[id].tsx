@@ -122,7 +122,7 @@ const SingleDoctor = () => {
                                 const doctorName = `${doctor?.userDTO?.firstName} ${doctor?.userDTO?.lastName}`
 
                                 const isSelectedDoctor = doctor?.id === selected?.doctorId
-                                const clinicLink = '/clinic/' + doctor?.clinicId
+                                const clinicLink = '/clinics/' + doctor?.clinicId
                                 return (
                                     <Box key={doctor?.id}>
                                         <Box

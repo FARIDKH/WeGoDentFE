@@ -96,7 +96,6 @@ const DoctorsPage = () => {
 
                                 const startDate = dayjs(new Date())
                                 const isFuture = startDate?.isAfter(new Date())
-                                console.log("startDate" , startDate)
                                 const endDateTime = dayjs(availableRange?.endDateTime ?? availabilityList?.[0]?.endDateTime)
                                 const availableFutureDays = startDate.add(25, 'days')
                                 const endDate = endDateTime && availableFutureDays?.isAfter(endDateTime) ? endDateTime : availableFutureDays
