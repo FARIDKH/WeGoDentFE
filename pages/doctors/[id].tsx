@@ -162,9 +162,9 @@ const SingleDoctor = () => {
                                                     </Typography>
                                                     <Rating name="read-only" value={value} readOnly />
                                                     <Typography>Office Location: {doctor?.officeLocationName}</Typography>
-                                                    <Typography>Works at: 
+                                                    <Typography>Works at
                                                         
-                                                        <Link ml={1} key={doctor?.clinicId} href={clinicLink}>
+                                                        <Link key={doctor?.clinicId} href={clinicLink}>
                                                             {doctor?.clinicName}
                                                         </Link>
                                                     </Typography>

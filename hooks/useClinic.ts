@@ -13,7 +13,7 @@ export const useClinic = ({ id, enabled = true, params = null, checkAuth = true 
                 signal,
                 checkAuth,
             })
-            return [result.data]
+            return result.data
         },
         {
             initialData: [],
