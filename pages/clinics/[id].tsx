@@ -1,4 +1,4 @@
-import { Avatar, Box, Container, Divider, Typography, Rating, Tabs, Tab, Grid, Link } from '@material-ui/core'
+import { Avatar, Box, Container, Divider, Typography, Rating, Tabs, Tab, Grid } from '@material-ui/core'
 import { useRouter } from 'next/router'
 // import Rating from '@mui/material/Rating';
 // import Tabs from '@mui/material/Tabs';
@@ -67,7 +67,7 @@ const initialState = {
     doctorId: null,
 }
 
-const SingleDoctor = () => {
+const Clinic = () => {
     const ref = useRef(null)
 
     const [selected, setSelected] = useState(initialState)
@@ -122,7 +122,7 @@ const SingleDoctor = () => {
                                 const doctorName = `${doctor?.userDTO?.firstName} ${doctor?.userDTO?.lastName}`
 
                                 const isSelectedDoctor = doctor?.id === selected?.doctorId
-                                const clinicLink = '/clinic/' + doctor?.clinicId
+
                                 return (
                                     <Box key={doctor?.id}>
                                         <Box
@@ -155,20 +155,12 @@ const SingleDoctor = () => {
                                                     <Typography variant="h4">
                                                         <strong>Dr. {doctorName}</strong>
                                                     </Typography>
-                                                    
                                                     <Typography my={1}>{doctor?.doctorType?.replaceAll('_', ' ')}</Typography>
                                                     <Typography sx={{ width: '75%', textAlign: 'justify' }} my={1}>
                                                         {doctor?.experience}
                                                     </Typography>
                                                     <Rating name="read-only" value={value} readOnly />
                                                     <Typography>Office Location: {doctor?.officeLocationName}</Typography>
-                                                    <Typography>Works at: 
-                                                        
-                                                        <Link ml={1} key={doctor?.clinicId} href={clinicLink}>
-                                                            {doctor?.clinicName}
-                                                        </Link>
-                                                    </Typography>
-                                                    
                                                     {/* <Divider /> */}
                                                 </Box>
                                                 <Box sx={{ marginTop: '25px', width: '100%' }}>
@@ -478,4 +470,4 @@ const SingleDoctor = () => {
     )
 }
 
-export default SingleDoctor
+export default Clinic
