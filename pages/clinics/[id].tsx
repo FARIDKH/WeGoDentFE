@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 // import Tab from '@mui/material/Tab';
 import * as React from 'react'
 
+
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
@@ -31,6 +32,11 @@ import isBetween from 'dayjs/plugin/isBetween'
 import { useEffect, useRef, useState } from 'react'
 import CreateAppointment from '../../modules/main/appointments/CreateAppointment'
 import Header2 from '../../layout/main/Header2'
+import Image from 'next/image';
+import styles from '../assets/scss/CustomBox.module.scss';
+import defaultClinicPic from '../../public/clinic.png'  
+
+
 
 dayjs.extend(isBetween)
 
@@ -108,7 +114,23 @@ const SingleClinic = () => {
                     ) : (
                         <>
                             <h1>Here</h1>
-                            <Box sx={{  width: "90%" , height :"90%", textAlign : "center" }}>
+
+                            <div style={{  position: 'relative', width: '600px', height: '600px' }}>
+                                <Image  src={defaultClinicPic}
+                                alt="Picture of the author" layout="fill" objectFit="cover"/>
+                                {/* <div className={styles.container}>
+                                <div className={styles.content}>
+                                    <h1>Text 1</h1>
+                                    <h2>Text 2</h2>
+                                    <h3>Text 3</h3>
+                                    <div className={styles.buttons}>
+                                    <button>Button 1</button>
+                                    <button>Button 2</button>
+                                    </div>
+                                </div>
+                                </div> */}
+                            </div>
+                            <Box sx={{ height :"50%"}}>
                                     {
                                         clinic?.doctorList?.map((doctor, i) => {
                                         
@@ -168,13 +190,7 @@ const SingleClinic = () => {
                                                                 {doctor?.experience}
                                                             </Typography>
                                                             <Rating name="read-only" value={value} readOnly />
-                                                            <Typography>Office Location: {doctor?.officeLocationName}</Typography>
-                                                            <Typography>Works at
-                                                                
-                                                                <Link key={doctor?.clinicId} href={clinicLink}>
-                                                                    {doctor?.clinicName}
-                                                                </Link>
-                                                            </Typography>
+                                                            
                                                             
                                                             {/* <Divider /> */}
                                                         </Box>
