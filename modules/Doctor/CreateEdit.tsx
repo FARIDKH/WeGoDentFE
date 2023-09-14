@@ -10,12 +10,13 @@ import { SNACKBAR_OPEN } from '../../store/actions'
 import Input from '../../ui-component/Form/Input'
 import BlogCategorySelect from '../../ui-component/Form/selects/BlogCategorySelect'
 import { useOpenState } from '../../ui-component/hooks/useOpenState'
-
 interface IProps {
-    onSuccess?: () => void
+    onSuccess?: () => void;
+    selectedClinicId?: number; // Add this line
 }
 
-const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
+
+const CreateEditForm = forwardRef(({ onSuccess, selectedClinicId  }: IProps, ref) => {
     const { user } = useUser()
     const { isOpen, open, close } = useOpenState()
     const [data, setData] = useState(null)
@@ -24,7 +25,14 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
         (values: any) => (data?.id ? axios.patch(`/api/doctor/${data?.id}`, values) : axios.post('/api/doctor', values)),
 
         {
-            onSuccess: () => {
+            onSuccess: (response) => {
+                const doctorId = response.data.id; // Assuming the response contains the doctor's ID
+                console.log("doctorId:" + doctorId)
+                console.log("selectedClinicId:" + selectedClinicId)
+                if (!data?.id) { // Only if it's a new doctor
+                    console.log("doctorId:" + doctorId)
+                    handleDoctorCreated([doctorId]);
+                }
                 store.dispatch({
                     type: SNACKBAR_OPEN,
                     open: true,
@@ -42,6 +50,17 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
             },
         }
     )
+
+    const handleDoctorCreated = async (doctorId) => {
+        try {
+            await axios.post(`/api/clinics/${selectedClinicId}/doctors`, doctorId );
+            // Handle success, maybe show a notification or something
+        } catch (error) {
+            console.error("Error associating doctor with clinic:", error);
+            // Handle error, maybe show a notification or something
+        }
+    };
+    
 
     const handleClose = () => {
         setData(null)
