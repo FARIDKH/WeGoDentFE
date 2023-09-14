@@ -26,7 +26,7 @@ const SearchForm = ({ selectProps, inputProps, searchButton, classNames }: IProp
             enableReinitialize
             initialValues={{
                 doctorType: (query?.doctorType ?? ENUM_DOCTOR_TYPES.General_Dentist) as string,
-                officeLocation: query?.officeLocation as string,
+                officeLocation: query?.officeLocation ?? "" as string,
             }}
             onSubmit={(values) => {
                 if (values?.doctorType && values?.officeLocation)

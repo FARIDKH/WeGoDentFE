@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 
 import { Box, Typography } from '@material-ui/core'
 import { useQuery } from 'react-query'
@@ -8,21 +8,73 @@ import MainCard from '../../../ui-component/cards/MainCard'
 import PaginatedTableGenerator from '../../../ui-component/PaginatedTableGenerator'
 import CreateButtonFab from '../../../ui-component/CreateButtonFab'
 import CreateEditForm from '../../../modules/Doctor/CreateEdit'
+import ClinicSelectionModal from '../../../modules/clinics/ClinicSelectionModal'
 import DeleteForm from '../../../modules/Doctor/Delete'
 import { trimString } from '../../../utils/string'
+import { store } from '../../_app'
+
+import { SNACKBAR_OPEN } from '../../../store/actions'
 
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 
 
-const Blogs = () => {
+const Doctors = () => {
     const createEditRef = useRef(null)
     const deleteRef = useRef(null)
+    const clinicSelectionRef = useRef(null);
+
 
     const { data, isFetching, isError, refetch } = useQuery(['Doctors'], async ({ signal }) => {
         const result = await axios(`/api/doctor`, { signal })
         return result.data
     })
+    const [selectedClinicId, setSelectedClinicId] = useState<number | null>(null);
+    
+
+    const fetchClinicData = async (clinicId) => {
+        const response = await axios.get(`/api/clinics/${clinicId}`);
+        const data = response.data;
+        console.log("clinic")
+        console.log(data)
+        return {
+            id: data?.clinicId,
+            quota: data?.doctorQuota,
+            currentCount: data?.currentDoctorCount,
+        };
+    };
+
+    const handleClinicSelected = async (clinicId) => {
+        // Fetch the clinic's quota and current doctor count
+        // This is a placeholder, replace with your actual API call or method
+        const { id, quota, currentCount } = await fetchClinicData(clinicId);
+
+
+        
+        
+        if (quota > currentCount) {
+            
+            setSelectedClinicId(id)
+            createEditRef?.current?.open();
+            store.dispatch({
+                type: SNACKBAR_OPEN,
+                open: true,
+                message: 'Clinic has been selected!',
+                variant: 'alert',
+                alertSeverity: 'success',
+                anchorOrigin: { vertical: 'top', horizontal: 'center' },
+            })
+        } else {
+            store.dispatch({
+                type: SNACKBAR_OPEN,
+                open: true,
+                message: 'Increase the quota!',
+                variant: 'alert',
+                alertSeverity: 'error',
+                anchorOrigin: { vertical: 'top', horizontal: 'center' },
+            })
+        }
+    };
 
     return (
         <>
@@ -53,26 +105,12 @@ const Blogs = () => {
                                     align: 'left',
                                     renderAs: ({ userDTO }) => ("Dr. " + userDTO?.firstName + " " + userDTO?.lastName).toString()
                                 },
-                                // {
-                                //     id: 'title',
-                                //     numeric: false,
-                                //     label: 'Title',
-                                //     align: 'left',
-                                // },
-                                // {
-                                //     id: 'categories',
-                                //     numeric: false,
-                                //     label: 'Cateogies',
-                                //     align: 'left',
-                                //     renderAs: ({ blogCategoryDTOS }) => blogCategoryDTOS?.map(({ name }) => name)?.toString(),
-                                // },
-                                // {
-                                //     id: 'content',
-                                //     numeric: false,
-                                //     label: 'Content',
-                                //     align: 'left',
-                                //     renderAs: ({ content }) => trimString(content, 50),
-                                // },
+                                {
+                                    id: 'clinicName',
+                                    numeric: false,
+                                    label: 'Associated Clinic',
+                                    align: 'left',
+                                }, 
                             ]}
                             actions={[
                                 {
@@ -89,17 +127,18 @@ const Blogs = () => {
                         />
                     </Box>
                 </MainCard>
-
-                <CreateButtonFab onClick={() => createEditRef?.current?.open()} />
-
-                <CreateEditForm ref={createEditRef} onSuccess={refetch} />
+                
+                <CreateButtonFab onClick={() => clinicSelectionRef?.current?.open()} />
+                <ClinicSelectionModal ref={clinicSelectionRef} onSuccess={handleClinicSelected} />
+            
+                <CreateEditForm selectedClinicId={selectedClinicId} ref={createEditRef} onSuccess={refetch} />
                 <DeleteForm ref={deleteRef} onSuccess={refetch} />
             </MainLayout>
         </>
     )
 }
 
-export default Blogs
+export default Doctors
 
 export const getStaticProps = async ({ locale }) => {
     return {
