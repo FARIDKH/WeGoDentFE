@@ -88,7 +88,7 @@ const DoctorsPage = () => {
                         <NoResult />
                     ) : (
                         <Box>
-                            {doctors?.map((doctor, i) => {
+                            {doctors?.filter(doctor => doctor?.clinicId)?.map((doctor, i) => {
                                 const availabilityList = doctor?.doctorAvailabilityDTOList
                                 const availableRange = availabilityList?.find((item) =>
                                     dayjs(new Date()).isBetween(item?.startDateTime, item?.endDateTime)
