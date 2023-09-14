@@ -7,9 +7,15 @@ import MainLayout from '../../../layout/admin/MainLayout'
 import MainCard from '../../../ui-component/cards/MainCard'
 import PaginatedTableGenerator from '../../../ui-component/PaginatedTableGenerator'
 import CreateButtonFab from '../../../ui-component/CreateButtonFab'
-import CreateEditForm from '../../../modules/clinics/CreateEdit'
+import ClinicCreateEditForm from '../../../modules/clinics/CreateEdit'
+import AddDoctorForm from '../../../modules/clinics/AddDoctor'
+import BillingCreateEditForm from '../../../modules/clinics/billing-details/CreateEdit'
+
+import SubscriptionCreateEditForm from '../../../modules/subscription/CreateEdit'
 import DeleteForm from '../../../modules/clinics/Delete'
 import { trimString } from '../../../utils/string'
+import { ENUM_SUBSCRIPTION_STATUSES } from '../../../modules/subscription/constants'
+import Chip from '../../../ui-component/extended/Chip'
 
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
@@ -18,6 +24,9 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 const Clinics = () => {
     const createEditRef = useRef(null)
     const deleteRef = useRef(null)
+    const subCreateEditRef = useRef(null)
+    const billingCreateEditRef = useRef(null)
+    const addDoctorRef = useRef(null)
 
     const { data, isFetching, isError, refetch } = useQuery(['Clinics'], async ({ signal }) => {
         const result = await axios(`/api/clinics`, { signal })
@@ -40,12 +49,7 @@ const Clinics = () => {
                                 data,
                             }}
                             columns={[
-                                {
-                                    id: 'clinicId',
-                                    numeric: false,
-                                    label: 'Clinic Id',
-                                    align: 'left',
-                                },
+                                
                                 {
                                     id: 'name',
                                     numeric: false,
@@ -61,10 +65,15 @@ const Clinics = () => {
                                 {
                                     id: 'isEnabled',
                                     numeric: false,
-                                    label: 'isEnabled',
+                                    label: 'Subscription status',
                                     align: 'left',
                                     // renderAs: ({ groupRoleResponseDTOS }) => (groupRoleResponseDTOS?.[0]?.code)
-
+                                    renderAs: ({ isEnabled }) => {
+                                        const status = isEnabled ? ENUM_SUBSCRIPTION_STATUSES.ACTIVE : ENUM_SUBSCRIPTION_STATUSES.NOTACTIVE;
+                                        return (
+                                            <Chip label={status} chipcolor={ENUM_SUBSCRIPTION_STATUSES[status]} />
+                                        );
+                                    },
                                 },
                                 {
                                     id: 'email',
@@ -73,11 +82,16 @@ const Clinics = () => {
                                     align: 'left',
                                 },
                                 {
-                                    id: 'Manager',
+                                    id: 'managers',
                                     numeric: false,
-                                    label: 'Manager',
+                                    label: 'Managers',
                                     align: 'left',
-                                    renderAs: ({ manager }) => (manager?.firstName + " " + manager?.lastName).toString()
+                                    renderAs: ({ managers }) => {
+                                        if (managers && managers.length > 0) {
+                                            return managers.map(manager => `${manager?.firstName} ${manager?.lastName}`).join(' • ');
+                                        }
+                                        return "N/A";
+                                    },
                                 },
                                 {
                                     id: 'doctorQuota',
@@ -98,11 +112,26 @@ const Clinics = () => {
                                     onClick: (clinic) => createEditRef?.current?.open(clinic),
                                 },
                                 {
-                                    label: 'Delete',
+                                    label: 'Billing details',
+                                    onClick: (clinic) => billingCreateEditRef?.current?.open(clinic),
+                                },
+                                {
+                                    label: 'Subscription',
                                     onClick: ({ clinicId }) => {
-                                        deleteRef?.current?.open(clinicId)
+                                        subCreateEditRef?.current?.open(clinicId)
                                     },
                                 },
+                                {
+                                    label: 'Doctors of clinic',
+                                    onClick: (clinic) => addDoctorRef?.current?.open(clinic)
+                                },
+                                
+                                // {
+                                //     label: 'Delete',
+                                //     onClick: ({ clinicId }) => {
+                                //         deleteRef?.current?.open(clinicId)
+                                //     },
+                                // },
                             ]}
                         />
                     </Box>
@@ -110,8 +139,14 @@ const Clinics = () => {
 
                 <CreateButtonFab onClick={() => createEditRef?.current?.open()} />
 
-                <CreateEditForm ref={createEditRef} onSuccess={refetch} />
+                <SubscriptionCreateEditForm ref={subCreateEditRef} onSuccess={refetch} />
+                <ClinicCreateEditForm ref={createEditRef} onSuccess={refetch} />
+                <BillingCreateEditForm ref={billingCreateEditRef} onSuccess={refetch} />
+                <AddDoctorForm ref={addDoctorRef} onSuccess={refetch} />
+
+
                 <DeleteForm ref={deleteRef} onSuccess={refetch} />
+                
             </MainLayout>
         </>
     )

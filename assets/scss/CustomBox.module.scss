@@ -1,0 +1,28 @@
+.container {
+  /* background-image: url('/path/to/your/image.jpg'); */ /* This line is removed */
+  background-size: cover;
+  background-position: center;
+  width: 70vw;
+  height: 70vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+  
+  .content {
+    text-align: left;
+  }
+  
+  .buttons {
+    margin-top: 20px;
+  }
+  
+  /* Mobile styles */
+  @media (max-width: 768px) {
+    .container {
+      width: 100vw;
+      height: 100vh;
+    }
+  }
+  
