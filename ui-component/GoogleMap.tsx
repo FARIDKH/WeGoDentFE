@@ -67,7 +67,7 @@ function GoogleMap({ address, pinpointAddresses = [], clinics }) {
   }, [address, clinics]);
 
   return (
-    <div ref={mapRef} style={{ width: '100%', height: '400px' }}></div>
+    <div ref={mapRef} style={{ width: '100%', height: '400px', borderRadius: "20px" }}></div>
   );
 }
 
