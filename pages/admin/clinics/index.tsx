@@ -29,7 +29,7 @@ const Clinics = () => {
     const addDoctorRef = useRef(null)
 
     const { data, isFetching, isError, refetch } = useQuery(['Clinics'], async ({ signal }) => {
-        const result = await axios(`/api/clinics`, { signal })
+        const result = await axios(`/api/clinics/all`, { signal })
         return result.data
     })
 

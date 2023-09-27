@@ -35,8 +35,6 @@ const Doctors = () => {
     const fetchClinicData = async (clinicId) => {
         const response = await axios.get(`/api/clinics/${clinicId}`);
         const data = response.data;
-        console.log("clinic")
-        console.log(data)
         return {
             id: data?.clinicId,
             quota: data?.doctorQuota,

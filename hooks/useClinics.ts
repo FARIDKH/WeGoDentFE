@@ -8,7 +8,7 @@ export const useClinics = ({  enabled = true, params = null, checkAuth = true })
     return useQuery(
         ['Clinics'],
         async ({ signal }) => {
-            const result = await axios(`/api/clinics`, {
+            const result = await axios(`/api/clinics/all`, {
                 params: {   },
                 signal,
                 checkAuth,
