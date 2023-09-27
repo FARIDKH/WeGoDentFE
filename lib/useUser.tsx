@@ -13,7 +13,7 @@ export const fetchCurrentUser = async () => {
 }
 
 export default function useUser(redirect = true) {
-    const { data, isLoading } = useQuery('GetUserDetails', fetchCurrentUser, {
+    const { data, isLoading, refetch } = useQuery('GetUserDetails', fetchCurrentUser, {
         refetchOnMount: false,
         onError: (err: any) => {
             redirect && err.response.status == 401 && axios.post('/api/logout').finally(() => (location.href = `/admin/login`))
@@ -42,6 +42,7 @@ export default function useUser(redirect = true) {
         isDoctor,
         isPatient,
         isBlogger,
-        isManager
+        isManager,
+        refetch
     }
 }

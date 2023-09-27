@@ -84,8 +84,8 @@ const Footer = () => {
                                 Contact
                             </Typography>
                             <List>
-                                <ListItem disableGutters>Phone: +(34)1234567</ListItem>
-                                <ListItem disableGutters>Email: wegodent@support.com</ListItem>
+                                <ListItem disableGutters>Phone: +(36)203590741</ListItem>
+                                <ListItem disableGutters>Email: info.wegodent@gmail.com</ListItem>
                             </List>
                         </Box>
                     </Box>

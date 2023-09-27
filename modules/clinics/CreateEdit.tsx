@@ -8,6 +8,8 @@ import useUser from '../../lib/useUser'
 import { store } from '../../pages/_app'
 import { SNACKBAR_OPEN } from '../../store/actions'
 import Input from '../../ui-component/Form/Input'
+import ClinicTypeSelect from '../../ui-component/Form/selects/ClinicTypeSelect'
+
 import ManagerSelect from '../../ui-component/Form/selects/ManagerSelect'
 import { useOpenState } from '../../ui-component/hooks/useOpenState'
 
@@ -75,6 +77,8 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                     officeLocationName: data?.officeLocationName ?? '',
                     managerId: data?.id ? data?.manager?.id : data?.managerId ?? [],
                     email: data?.email ?? '',
+                    doctorTypes : data?.doctorType ?? [],
+                    phoneNumber: data?.phoneNumber ?? ''
                 }}
                 onSubmit={(values) => {
                     let payload;
@@ -85,6 +89,8 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                             officeLocationName: values?.officeLocationName,
                             managersId: [{ id: values?.managerId }],
                             email: values?.email,
+                            doctorTypes : values?.doctorTypes,
+                            phoneNumber: data?.phoneNumber
                         };
                     } else {
                         // When creating
@@ -93,6 +99,8 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                             officeLocationName: values?.officeLocationName,
                             managersId: [values?.managerId],
                             email: values?.email,
+                            doctorTypes : values?.doctorTypes,
+                            phoneNumber: data?.phoneNumber
                         };
                     }
                     mutate(payload);
@@ -105,6 +113,19 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                         <span style={{ fontSize: 22, fontWeight: 'bold' }}>{data?.id ? 'Update' : 'Create'} Clinic</span>
                     </DialogTitle>
                     <DialogContent dividers>
+
+
+                        <ClinicTypeSelect
+                            name="doctorTypes"
+                            value={values?.doctorTypes}
+                            onChange={(value) => setFieldValue('doctorTypes',value)}
+                            isLoading={isLoading}
+                            onBlur={handleBlur}
+                            error={errors?.doctorTypes as string}
+                            isTouched={!!touched.managerId} />
+                            
+
+
 
                         <Input
                             id="name"
@@ -128,6 +149,18 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                             onChange={handleChange}
                             disabled={isLoading}
                             value={values?.officeLocationName}
+                        />
+
+                        <Input
+                            id="phoneNumber"
+                            label="Phone Number"
+                            name="phoneNumber"
+                            isTouched={touched.phoneNumber}
+                            error={errors.phoneNumber}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            disabled={isLoading}
+                            value={values?.phoneNumber}
                         />
 
 

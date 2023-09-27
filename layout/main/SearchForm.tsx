@@ -32,7 +32,7 @@ const SearchForm = ({ selectProps, inputProps, searchButton, classNames }: IProp
                 if (values?.doctorType && values?.officeLocation)
                     push(
                         {
-                            pathname: '/doctors',
+                            pathname: '/clinics',
                             query: values,
                         },
                         null,
