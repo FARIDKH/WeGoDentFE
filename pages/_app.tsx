@@ -117,7 +117,7 @@ function App({ Component, pageProps }: AppProps) {
     return (
         <>
             <Head>
-                <title>WeGoDent</title>
+                <title>A fogorvos elérése egyszerűen</title>
             </Head>
             <Provider store={store}>
                 <QueryClientProvider client={queryClient}>

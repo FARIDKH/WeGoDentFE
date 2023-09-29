@@ -21,11 +21,13 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
     const { isOpen, open, close } = useOpenState()
     const [data, setData] = useState(null)
 
+    console.log(data)
+
     const { isLoading, mutate } = useMutation(
 
         
 
-        (values: any) => (data?.id ? axios.patch(`/api/clinics/${data?.id}`, values) : axios.post('/api/clinics', values)),
+        (values: any) => (data?.clinicId ? axios.put(`/api/clinics/${data?.clinicId}`, values) : axios.post('/api/clinics', values)),
         
         {
             
@@ -33,7 +35,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                 store.dispatch({
                     type: SNACKBAR_OPEN,
                     open: true,
-                    message: data?.id ? 'Clinic has been updated successfully' : 'Doctor has been created successfully',
+                    message: data?.clinicId ? 'Clinic has been updated successfully' : 'Doctor has been created successfully',
                     variant: 'alert',
                     alertSeverity: 'success',
                     anchorOrigin: { vertical: 'top', horizontal: 'center' },
@@ -75,22 +77,24 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                 initialValues={{
                     name: data?.name ?? '',
                     officeLocationName: data?.officeLocationName ?? '',
-                    managerId: data?.id ? data?.manager?.id : data?.managerId ?? [],
+                    managerId: data?.clinicId ? data?.manager?.id : data?.managerId ?? [],
                     email: data?.email ?? '',
-                    doctorTypes : data?.doctorType ?? [],
+                    doctorTypes : data?.doctorTypes ?? [],
+                    description: data?.description ?? '',
                     phoneNumber: data?.phoneNumber ?? ''
                 }}
                 onSubmit={(values) => {
                     let payload;
-                    if (data?.id) {
+                    if (data?.clinicId) {
                         // When updating
                         payload = {
                             name: values?.name,
                             officeLocationName: values?.officeLocationName,
-                            managersId: [{ id: values?.managerId }],
+                            // managersId: [{ id: values?.managerId }],
                             email: values?.email,
                             doctorTypes : values?.doctorTypes,
-                            phoneNumber: data?.phoneNumber
+                            phoneNumber: values?.phoneNumber,
+                            description: values?.description,
                         };
                     } else {
                         // When creating
@@ -100,7 +104,8 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                             managersId: [values?.managerId],
                             email: values?.email,
                             doctorTypes : values?.doctorTypes,
-                            phoneNumber: data?.phoneNumber
+                            phoneNumber: values?.phoneNumber,
+                            description: values?.description,
                         };
                     }
                     mutate(payload);
@@ -110,7 +115,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                 {({ errors, handleBlur, handleChange, handleSubmit, touched, values,setFieldValue }) => (
                 <form noValidate onSubmit={handleSubmit}>
                     <DialogTitle>
-                        <span style={{ fontSize: 22, fontWeight: 'bold' }}>{data?.id ? 'Update' : 'Create'} Clinic</span>
+                        <span style={{ fontSize: 22, fontWeight: 'bold' }}>{data?.clinicId ? 'Update' : 'Create'} Clinic</span>
                     </DialogTitle>
                     <DialogContent dividers>
 
@@ -185,6 +190,19 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                             onChange={handleChange}
                             disabled={isLoading}
                             value={values?.email}
+                        />
+
+                        <Input
+                            id="description"
+                            label="Description"
+                            name="description"
+                            type="description"
+                            isTouched={touched.description}
+                            error={errors.description}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            disabled={isLoading}
+                            value={values?.description}
                         />
 
 
