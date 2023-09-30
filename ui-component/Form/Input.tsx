@@ -1,7 +1,26 @@
 import { FormControl, InputLabel, OutlinedInput, FormHelperText } from '@material-ui/core'
 import React from 'react'
 
-const Input = ({
+interface InputProps {
+    id: string;
+    label?: string;
+    name: string;
+    isTouched?: any ;
+    error?: any ;
+    onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    disabled?: boolean;
+    value?: string | number;  // <-- make this optional
+    type?: string;
+    size?: string;
+    classNames?: {
+        formControl?: string;
+    };
+    helperText?: string | null;
+    [x: string]: any;  // this line allows extra properties
+}
+
+const Input: React.FC<InputProps> = ({
     id,
     label = null,
     name,
@@ -22,7 +41,7 @@ const Input = ({
         <OutlinedInput
             id={id}
             type={type}
-            value={value}
+            {...(type !== 'file' ? { value } : {})}
             name={name}
             onBlur={onBlur}
             onChange={onChange}

@@ -160,7 +160,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                             id="phoneNumber"
                             label="Phone Number"
                             name="phoneNumber"
-                            isTouched={touched.phoneNumber}
+                            isTouched={!!touched.phoneNumber}
                             error={errors.phoneNumber}
                             onBlur={handleBlur}
                             onChange={handleChange}
