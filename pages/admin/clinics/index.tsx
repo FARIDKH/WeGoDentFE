@@ -11,11 +11,14 @@ import ClinicCreateEditForm from '../../../modules/clinics/CreateEdit'
 import AddDoctorForm from '../../../modules/clinics/AddDoctor'
 import BillingCreateEditForm from '../../../modules/clinics/billing-details/CreateEdit'
 
+import CreateEditPictureForm from '../../../modules/clinics/CreateEditPicture'
 import SubscriptionCreateEditForm from '../../../modules/subscription/CreateEdit'
 import DeleteForm from '../../../modules/clinics/Delete'
 import { trimString } from '../../../utils/string'
 import { ENUM_SUBSCRIPTION_STATUSES } from '../../../modules/subscription/constants'
 import Chip from '../../../ui-component/extended/Chip'
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
@@ -27,11 +30,33 @@ const Clinics = () => {
     const subCreateEditRef = useRef(null)
     const billingCreateEditRef = useRef(null)
     const addDoctorRef = useRef(null)
+    const addPictureRef = useRef(null)
+    
+    const [filter, setFilter] = React.useState('');
+
+    
+    
 
     const { data, isFetching, isError, refetch } = useQuery(['Clinics'], async ({ signal }) => {
         const result = await axios(`/api/clinics/all`, { signal })
         return result.data
     })
+
+
+    
+
+    const allDoctorTypes = data 
+    ? data.flatMap(clinic => clinic.doctorTypes ?? [])
+    : [];
+
+    const distinctDoctorTypes = [...new Set(allDoctorTypes)];
+
+
+    const filteredData = filter
+    ? data?.filter(clinic => clinic?.doctorTypes?.includes(filter))
+    : data;
+
+
 
     return (
         <>
@@ -39,15 +64,30 @@ const Clinics = () => {
                 <Typography variant="h1" mb={2}>
                     List of clinics in platfrom
                 </Typography>
+                <Autocomplete
+                    options={distinctDoctorTypes}
+                    value={filter}
+                    onChange={(event, value) => {
+                        if (typeof value === 'string') {
+                            setFilter(value);
+                        }
+                        // if value can be an array and you want to extract a string from it
+                        // else if (Array.isArray(value) && value.length > 0) {
+                        //     setFilter(value[0]); // or some other logic to get the string
+                        // }
+                    }}
+                    freeSolo
+                    renderInput={(params) => (
+                        <TextField {...params} label="Filter by Doctor Type" variant="outlined" margin="normal" />
+                    )}
+                />
 
                 <MainCard>
                     <Box px={2}>
                         <PaginatedTableGenerator
                             isLoading={isFetching}
                             isError={isError}
-                            data={{
-                                data,
-                            }}
+                            data={{ data: filteredData }}
                             columns={[
                                 
                                 {
@@ -108,8 +148,11 @@ const Clinics = () => {
                             ]}
                             actions={[
                                 {
-                                    label: 'Edit',
+                                    label: 'Basic informations',
                                     onClick: (clinic) => createEditRef?.current?.open(clinic),
+                                },{
+                                    label: 'Profile picture',
+                                    onClick: (clinic) => addPictureRef?.current?.open(clinic),
                                 },
                                 {
                                     label: 'Billing details',
@@ -125,6 +168,7 @@ const Clinics = () => {
                                     label: 'Doctors of clinic',
                                     onClick: (clinic) => addDoctorRef?.current?.open(clinic)
                                 },
+                                
                                 
                                 // {
                                 //     label: 'Delete',
@@ -143,6 +187,8 @@ const Clinics = () => {
                 <ClinicCreateEditForm ref={createEditRef} onSuccess={refetch} />
                 <BillingCreateEditForm ref={billingCreateEditRef} onSuccess={refetch} />
                 <AddDoctorForm ref={addDoctorRef} onSuccess={refetch} />
+                <CreateEditPictureForm ref={addPictureRef} onSuccess={refetch} />
+                
 
 
                 <DeleteForm ref={deleteRef} onSuccess={refetch} />
