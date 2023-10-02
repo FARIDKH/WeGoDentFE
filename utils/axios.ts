@@ -31,7 +31,9 @@ apiClient.interceptors.request.use(
     function (config) {
         config.headers = {
             'check-auth': config?.checkAuth,
+            ...config.headers
         }
+
 
         return config
     },

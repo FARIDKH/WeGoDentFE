@@ -39,28 +39,25 @@ const CreateEditPictureForm = forwardRef(({ onSuccess }: IProps, ref) => {
     }, [data?.clinicId]); // Re-run the effect whenever clinicId changes
 
 
-    const uploadClinicPicture = async (clinicId: number, file: File) => {
-        try {
+    
+
+    const { isLoading, mutate } = useMutation(
+        async (values: any) => 
+        
+        {
             const formData = new FormData();
-            formData.append('profilePicture', file);
-            await axios.post(`/api/clinics/${clinicId}/picture`, formData, {
+            formData.append('profilePicture', values?.profilePicture);
+            return await axios.post(`/api/clinics/${data?.clinicId}/picture`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-        } catch (error) {
-            console.error("Error uploading clinic picture:", error);
         }
-    };
-
-    const { isLoading, mutate } = useMutation(
-        (values: any) => (data?.clinicId ? axios.put(`/api/clinics/${data?.clinicId}`, values) : axios.post('/api/clinics', values)),
+        ,
         {
             onSuccess: (responseData) => {
-                const clinicId = responseData?.data?.clinicId || responseData?.data?.id;
-                if (clinicPicture && clinicId) {
-                    uploadClinicPicture(clinicId, clinicPicture);
-                }
+                
+                
 
                 store.dispatch({
                     type: SNACKBAR_OPEN,
@@ -96,26 +93,11 @@ const CreateEditPictureForm = forwardRef(({ onSuccess }: IProps, ref) => {
         <Dialog sx={{ '& .MuiDialog-paper': { width: '30%', maxHeight: 600 } }} maxWidth="lg" open={isOpen}>
             <Formik
                 initialValues={{
-                    name: data?.name ?? '',
-                    officeLocationName: data?.officeLocationName ?? '',
-                    managerId: data?.clinicId ? data?.manager?.id : data?.managerId ?? [],
-                    email: data?.email ?? '',
-                    doctorTypes: data?.doctorTypes ?? [],
-                    description: data?.description ?? '',
-                    phoneNumber: data?.phoneNumber ?? '',
                     profilePicture: null,
                 }}
                 onSubmit={(values) => {
-                    const payload = {
-                        name: values?.name,
-                        officeLocationName: values?.officeLocationName,
-                        managersId: data?.clinicId ? undefined : [values?.managerId],
-                        email: values?.email,
-                        doctorTypes: values?.doctorTypes,
-                        phoneNumber: values?.phoneNumber,
-                        description: values?.description,
-                    };
-                    mutate(payload);
+                    
+                    mutate(values);
                 }}
                 enableReinitialize={true}
             >
@@ -157,11 +139,14 @@ const CreateEditPictureForm = forwardRef(({ onSuccess }: IProps, ref) => {
                                 onChange={(event) => {
                                     const file = event?.target?.files?.[0];
                                     if (file) {
-                                        const reader = new FileReader();
-                                        reader.onload = (e) => {
-                                            setFieldValue('profilePicture', e.target?.result as string);
-                                        }
-                                        reader.readAsDataURL(file);
+                                        // const reader = new FileReader();
+                                        // reader.onload = (e) => {
+                                        //     setFieldValue('profilePicture', e.target?.result as string);
+                                        // }
+                                        // reader.readAsDataURL(file);
+                                        
+                                        setFieldValue('profilePicture', file);
+
                                     }
                                 }}
                                 isTouched={touched.profilePicture}

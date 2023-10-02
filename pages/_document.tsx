@@ -41,7 +41,7 @@ export default class MyDocument extends Document {
                         `,
                         }}
                     />
-                    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDie3vhIC31IVaOVs7Qd3_CcQZTFjWGlns"></script>
+                    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDie3vhIC31IVaOVs7Qd3_CcQZTFjWGlns&libraries=places"></script>
 
 
                     {/* End Google Tag Manager (noscript) */}
