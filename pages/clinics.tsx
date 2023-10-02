@@ -1,4 +1,5 @@
-import { Link, Avatar, Box, Container, Divider, Typography, Rating, Tooltip } from '@material-ui/core'
+import { Link, Avatar, Box, Container, Divider, Typography, Rating, Tooltip, Pagination, Button, useTheme, makeStyles } from '@material-ui/core'
+
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import VerifiedIcon from '@mui/icons-material/Verified'
 import { useRouter } from 'next/router'
@@ -31,12 +32,33 @@ const initialState = {
     clinicIsSubscribed: false
 }
 
+
+const useStyles = makeStyles((theme) => ({
+    showNumberButton: {
+        marginTop: theme.spacing(1),
+        backgroundColor: theme.palette.primary.main,
+        color: '#fff',
+        '&:hover': {
+            backgroundColor: theme.palette.primary.dark,
+        },
+        textTransform: 'none',
+        fontSize: '0.8rem',
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+        borderRadius: '4px'
+    },
+}));
+
+
 const ClinicsPage = () => {
+    
     const ref = useRef(null)
     const { isLoggedIn, refetch } = useUser(false)
+    const [page, setPage] = useState(1);
+    const ITEMS_PER_PAGE = 4;
 
     const [selected, setSelected] = useState(initialState)
 
+    
     const { query } = useRouter()
 
     const { doctorType, officeLocation } = query ?? {}
@@ -46,6 +68,11 @@ const ClinicsPage = () => {
         officeLocation,
         checkAuth: false,
     })
+
+    const handlePageChange = (event, value) => {
+        setPage(value);
+    };
+    
 
     const officeLocations = clinics?.map((clinic) => clinic.officeLocationName) ?? []
 
@@ -60,6 +87,9 @@ const ClinicsPage = () => {
     }, [selected])
 
     
+
+    
+    const classes = useStyles();
 
     const phoneStyles = {
         filter: !isLoggedIn ? 'blur(4px)' : 'none',
@@ -96,6 +126,22 @@ const ClinicsPage = () => {
         )
     }
 
+    // First, add an index to each item using reduce
+    const clinicsWithIndex = clinics.reduce((acc, clinic, index) => {
+        acc.push({ ...clinic, index });
+        return acc;
+    }, []);
+
+    // Sort the clinics array, prioritizing the enabled clinics
+    const sortedClinics = clinicsWithIndex.sort((a, b) => {
+        if (a.isEnabled && !b.isEnabled) return -1; // a comes first
+        if (!a.isEnabled && b.isEnabled) return 1; // b comes first
+        return a.index - b.index; // otherwise keep the original order
+    });
+
+    const displayedClinics = sortedClinics.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+
+
     return (
         <Layout>
             <Header2 />
@@ -120,7 +166,7 @@ const ClinicsPage = () => {
                     ) : (
                         <>
                             <Box>
-                                <GoogleMap pinpointAddresses={officeLocations} clinics={clinics}  address="Budapest, Hungary" />
+                                <GoogleMap pinpointAddresses={officeLocations} clinics={clinics}  address={officeLocation} />
                             </Box>
                             <Box
                                 my={5}
@@ -141,16 +187,9 @@ const ClinicsPage = () => {
 
                             <Box>
                                 <Box>
-                                    {clinics
-                                        ?.sort((a, b) => {
-                                            if (a.isEnabled && !b.isEnabled) {
-                                                return -1
-                                            }
-                                            if (!a.isEnabled && b.isEnabled) {
-                                                return 1
-                                            }
-                                            return 0
-                                        })
+                                <Pagination count={Math.ceil(clinics.length / ITEMS_PER_PAGE)} page={page} onChange={handlePageChange} />
+                                    
+                                    {displayedClinics
                                         ?.map((clinic, i) => {
                                             const startDate = dayjs(new Date())
                                             const isFuture = startDate?.isAfter(new Date())
@@ -213,7 +252,7 @@ const ClinicsPage = () => {
                                                                                 key={index}
                                                                                 mt={2}
                                                                                 sx={{
-                                                                                    width: '100px',
+                                                                                    
                                                                                     display: 'inline-block',
                                                                                     color: 'lightgray',
                                                                                     cursor: 'pointer',
@@ -317,17 +356,30 @@ const ClinicsPage = () => {
                                                                 <Box>
                                                                     <Typography variant="h1">
                                                                         {!isLoggedIn ? (
-                                                                            <Typography onClick={ () => {
-                                                                                ref?.current?.open({
-                                                                                    clinicIsSubscribed: false
-                                                                                })
-                                                                            } } style={phoneStyles} variant="h1">
-                                                                                {blurPhoneNumber(clinic?.phoneNumber)}
-                                                                            </Typography>
+                                                                            <div>
+                                                                                <Typography style={phoneStyles} variant="h1">
+                                                                                    {blurPhoneNumber(clinic?.phoneNumber)}
+                                                                                </Typography>
+                                                                                <Box display="flex" justifyContent="center" mt={1}>
+                                                                                    <Button 
+                                                                                        size="small" 
+                                                                                        className={classes.showNumberButton}
+                                                                                        onClick={() => {
+                                                                                            ref?.current?.open({
+                                                                                                clinicIsSubscribed: false
+                                                                                            })
+                                                                                        }}
+                                                                                    >
+                                                                                        Show number
+                                                                                    </Button>
+                                                                                </Box>
+                                                                            </div>
                                                                         ) : (
                                                                             <Typography variant="h1">{clinic?.phoneNumber}</Typography>
                                                                         )}
                                                                     </Typography>
+
+
                                                                 </Box>
                                                             )}
                                                         </Box>
@@ -337,6 +389,8 @@ const ClinicsPage = () => {
                                                 </Box>
                                             )
                                         })}
+
+                                    {/* <Pagination count={Math.ceil(clinics.length / ITEMS_PER_PAGE)} page={page} onChange={handlePageChange} /> */}
                                 </Box>
                             </Box>
                         </>
