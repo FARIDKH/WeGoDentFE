@@ -1,5 +1,5 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, CircularProgress } from '@material-ui/core'
-import axios from 'axios'
+import axios from '../../utils/axios'
 import { Formik } from 'formik'
 import React from 'react'
 import { forwardRef, useState } from 'react'
@@ -18,8 +18,11 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
     const { isOpen, open, close } = useOpenState()
     const [data, setData] = useState(null)
 
+
+    
+
     const { isLoading, mutate } = useMutation(
-        (values : any) => axios.post('/api/account/roles', { values }),
+        (values : any) => axios.post('/api/account/roles', values ),
         {
             onSuccess: () => {
                 store.dispatch({
@@ -55,16 +58,17 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
         []
     )
 
+    const username = data?.username
+    
+
     return (
         <Dialog sx={{ '& .MuiDialog-paper': { width: '30%', maxHeight: 600 } }} maxWidth="lg" open={isOpen}>
             <Formik
-                initialValues={{
-                    userId: data?.userId ?? '',
-                    roles: data?.roles ?? '',
+                initialValues = {{
+                    userId: data?.id ?? '',
+                    roles: data?.groupRoleResponseDTOS?.map(role => role?.code) ?? [],  // assuming you want an array of role codes
                 }}
-                
-
-                onSubmit={(values) => mutate(values.userId)}
+                onSubmit={(values) => mutate(values)}
             >
                 {({ errors, handleBlur, handleChange, handleSubmit, touched, values, setFieldValue }) => (
                     <form noValidate onSubmit={handleSubmit}>
@@ -81,7 +85,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                                 onBlur={handleBlur}
                                 onChange={handleChange}
                                 disabled={true}
-                                value={values?.userId}
+                                value={username}
                             />
                             
                             <RoleSelect

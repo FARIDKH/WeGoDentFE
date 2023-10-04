@@ -36,6 +36,7 @@ const Clinics = () => {
 
     
     
+    
 
     const { data, isFetching, isError, refetch } = useQuery(['Clinics'], async ({ signal }) => {
         const result = await axios(`/api/clinics/all`, { signal })
@@ -203,7 +204,8 @@ export default Clinics
 export const getStaticProps = async ({ locale }) => {
     return {
       props: {
-        ...(await serverSideTranslations(locale, ["users"])),
+        ...(await serverSideTranslations(locale, ["doctor"])),
       },
     };
   };
+

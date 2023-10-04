@@ -59,7 +59,8 @@ const useMenuItems = () => {
                 },
                 {
                     id: 'doctors',
-                    title: 'Doctor List',
+                    title: 
+                    t('labelMenuItemDoctorList'),
                     type: 'item',
                     url: '/admin/doctors',
                     icon: icons['IconUsers'],
@@ -68,7 +69,7 @@ const useMenuItems = () => {
                 },
                 {
                     id: 'users',
-                    title: 'User List',
+                    title:  t('labelMenuItemUserList'),
                     type: 'item',
                     url: '/admin/users',
                     icon: icons['IconUsers'],
@@ -77,7 +78,7 @@ const useMenuItems = () => {
                 },
                 {
                     id: 'role_managements',
-                    title: 'Role Managements',
+                    title: t('labelMenuItemRoleManagemenet'),
                     type: 'item',
                     url: '/admin/role_managements',
                     icon: icons['IconUsers'],
@@ -86,7 +87,7 @@ const useMenuItems = () => {
                 },
                 {
                     id: 'clinics',
-                    title: 'Clinics',
+                    title:  t('labelMenuItemClinics'),
                     type: 'item',
                     url: '/admin/clinics',
                     icon: icons['IconDashboard'],

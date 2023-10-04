@@ -92,7 +92,7 @@ export default Users
 export const getStaticProps = async ({ locale }) => {
     return {
       props: {
-        ...(await serverSideTranslations(locale, ["users"])),
+        ...(await serverSideTranslations(locale, ["doctor"])),
       },
     };
   };
