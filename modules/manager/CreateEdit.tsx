@@ -21,7 +21,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
     const [data, setData] = useState(null)
 
     const { isLoading, mutate } = useMutation(
-        (values: any) => (data?.id ? axios.post(`/api/account`, values) : axios.post('/api/account', values)),
+        (values: any) => (data?.id ? axios.put(`/api/account/${data?.id}`, values) : axios.post('/api/account', values)),
         
         {
             
@@ -29,7 +29,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                 store.dispatch({
                     type: SNACKBAR_OPEN,
                     open: true,
-                    message: data?.id ? 'Manager has been updated successfully' : 'Manager has been created successfully',
+                    message: data?.id ? 'User has been updated successfully' : 'User has been created successfully',
                     variant: 'alert',
                     alertSeverity: 'success',
                     anchorOrigin: { vertical: 'top', horizontal: 'center' },
