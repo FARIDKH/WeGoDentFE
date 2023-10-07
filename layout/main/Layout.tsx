@@ -1,12 +1,20 @@
 import { Box } from '@material-ui/core'
+import Head from 'next/head'
 import Footer from './Footer'
 
-const Layout = ({ children }) => {
+const Layout = ({ children, title = null }) => {
     return (
-        <Box>
-            <Box>{children}</Box>
-            <Footer />
-        </Box>
+        <>
+            {title && (
+                <Head>
+                    <title>{title}</title>
+                </Head>
+            )}
+            <Box>
+                <Box>{children}</Box>
+                <Footer />
+            </Box>
+        </>
     )
 }
 

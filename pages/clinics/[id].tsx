@@ -1,18 +1,4 @@
-import {
-    Avatar,
-    Box,
-    Container,
-    Divider,
-    Typography,
-    Rating,
-    Tabs,
-    Tab,
-    Grid,
-    Link,
-    Button,
-    ListItemAvatar,
-    Tooltip,
-} from '@material-ui/core'
+import { Avatar, Box, Container, Divider, Typography, Rating, Grid, Link, Button, Tooltip } from '@material-ui/core'
 import { useRouter } from 'next/router'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import VerifiedIcon from '@mui/icons-material/Verified'
@@ -22,21 +8,9 @@ import VerifiedIcon from '@mui/icons-material/Verified'
 import * as React from 'react'
 import axios from '../../utils/axios'
 
-import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
-import ShieldIcon from '@mui/icons-material/Shield'
-import LocationCityIcon from '@mui/icons-material/LocationCity'
-import CreditCardIcon from '@mui/icons-material/CreditCard'
-import PeopleIcon from '@mui/icons-material/People'
-import BackHandIcon from '@mui/icons-material/BackHand'
-import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import ShareLocationIcon from '@mui/icons-material/ShareLocation'
-import BeachAccessIcon from '@mui/icons-material/BeachAccess'
 import GoogleMap from '../../ui-component/GoogleMap'
 
 import { useClinic } from '../../hooks/useClinic'
@@ -57,38 +31,8 @@ import isBetween from 'dayjs/plugin/isBetween'
 import { useEffect, useRef, useState } from 'react'
 import CreateAppointment from '../../modules/main/appointments/CreateAppointment'
 import Header2 from '../../layout/main/Header2'
-import Image from 'next/image'
-import styles from '../../assets/scss/CustomBox.module.scss'
-import defaultClinicPic from '../../public/clinic.png'
 
 dayjs.extend(isBetween)
-
-interface TabPanelProps {
-    children?: React.ReactNode
-    index: number
-    value: number
-}
-
-function CustomTabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props
-
-    return (
-        <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`} aria-labelledby={`simple-tab-${index}`} {...other}>
-            {value === index && (
-                <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    )
-}
-
-function a11yProps(index: number) {
-    return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
-    }
-}
 
 const initialState = {
     day: null,
@@ -114,7 +58,6 @@ const SingleClinic = () => {
         id,
         checkAuth: false,
     })
-    const [tabValue, setTabValue] = useState(0)
 
     const fetchClinicPicture = async () => {
         try {
@@ -133,10 +76,6 @@ const SingleClinic = () => {
     }, [clinic?.clinicId])
 
     // const isSelectedDoctor = clinic?.clinicId === selected?.clinicId
-
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setTabValue(newValue)
-    }
 
     useEffect(() => {
         if (Object.values(selected).every((val) => !!val)) {
@@ -158,31 +97,10 @@ const SingleClinic = () => {
         return `${hiddenDigits}${visibleDigits}`
     }
 
-    const getDescriptionSnippet = (description: string, href: string) => {
-        const maxLength = 255
-        if (description.length <= maxLength) {
-            return description
-        }
-
-        // Truncate description and ensure it doesn't cut off in the middle of a word
-        const truncated = description.substring(0, description.lastIndexOf(' ', maxLength)) + '... '
-
-        return (
-            <>
-                <Typography variant="body1" component="span">
-                    {truncated}
-                </Typography>
-                <Link href={href} color="primary">
-                    More info
-                </Link>
-            </>
-        )
-    }
-
     const startDate = dayjs(new Date())
 
     return (
-        <Layout>
+        <Layout title={clinic?.name}>
             <Header2 showForm={false} />
 
             <Box minHeight="50vh" my={4}>
@@ -273,7 +191,7 @@ const SingleClinic = () => {
                                 </Typography>
                                 <Grid direction="row" justifyContent="center" alignItems="center" mt={5} mb={5} container spacing={5}>
                                     {clinic?.doctorList?.slice(0, 3).map((doctor, i) => (
-                                        <Grid item xs={4}>
+                                        <Grid key={doctor?.id} item xs={4}>
                                             <Box
                                                 width="100%"
                                                 height="400px"
@@ -352,17 +270,39 @@ const SingleClinic = () => {
 
                         <Box>
                             <Grid container spacing={2}>
-                                <Grid item xs={12} sm={6}  sx={{ display: 'flex', justifyContent: 'flex-end', textAlign: 'right' }} >
+                                <Grid item xs={12} sm={6} sx={{ display: 'flex', justifyContent: 'flex-end', textAlign: 'right' }}>
                                     <Box sx={{ padding: '11px' }}>
-                                        <div style={{ marginBottom:"15px", display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                            <ShareLocationIcon sx={{ color: '#00624F', marginRight:"8px", fontSize: 40 }} />
-                                            <Typography variant="h5">{ clinic?.officeLocationName }</Typography>
+                                        <div
+                                            style={{
+                                                marginBottom: '15px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'flex-end',
+                                            }}
+                                        >
+                                            <ShareLocationIcon sx={{ color: '#00624F', marginRight: '8px', fontSize: 40 }} />
+                                            <Typography variant="h5">{clinic?.officeLocationName}</Typography>
                                         </div>
-                                        <div style={{  marginBottom:"15px", display: 'flex', alignItems: 'center',  marginRight:"8px",justifyContent: 'flex-end' }}>
+                                        <div
+                                            style={{
+                                                marginBottom: '15px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                marginRight: '8px',
+                                                justifyContent: 'flex-end',
+                                            }}
+                                        >
                                             <PhoneIphoneIcon sx={{ color: '#00624F', fontSize: 40 }} />
-                                            <Typography variant="h5">{ clinic?.phoneNumber }</Typography>
+                                            <Typography variant="h5">{clinic?.phoneNumber}</Typography>
                                         </div>
-                                        <div style={{ display: 'flex', alignItems: 'center', marginRight:"8px",justifyContent: 'flex-end' }}>
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                marginRight: '8px',
+                                                justifyContent: 'flex-end',
+                                            }}
+                                        >
                                             <CalendarMonthIcon sx={{ color: '#00624F', fontSize: 40 }} />
                                             <Typography variant="h5">
                                                 <ul style={{ listStyleType: 'none', padding: 5 }}>
