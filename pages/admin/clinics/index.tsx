@@ -32,7 +32,10 @@ const Clinics = () => {
     const addDoctorRef = useRef(null)
     const addPictureRef = useRef(null)
     
+    
     const [filter, setFilter] = React.useState('');
+    const [selectedClinicId, setSelectedClinicId] = React.useState(null);
+
 
     
     
@@ -161,22 +164,15 @@ const Clinics = () => {
                                 },
                                 {
                                     label: 'Subscription',
-                                    onClick: ({ clinicId }) => {
-                                        subCreateEditRef?.current?.open(clinicId)
+                                    onClick: (clinic) => {
+                                        setSelectedClinicId(clinic?.clinicId); 
+                                        subCreateEditRef?.current?.open(clinic?.clinicId); 
                                     },
                                 },
                                 {
                                     label: 'Doctors of clinic',
                                     onClick: (clinic) => addDoctorRef?.current?.open(clinic)
                                 },
-                                
-                                
-                                // {
-                                //     label: 'Delete',
-                                //     onClick: ({ clinicId }) => {
-                                //         deleteRef?.current?.open(clinicId)
-                                //     },
-                                // },
                             ]}
                         />
                     </Box>
@@ -184,7 +180,7 @@ const Clinics = () => {
 
                 <CreateButtonFab onClick={() => createEditRef?.current?.open()} />
 
-                <SubscriptionCreateEditForm ref={subCreateEditRef} onSuccess={refetch} />
+                <SubscriptionCreateEditForm  ref={subCreateEditRef} onSuccess={refetch} />
                 <ClinicCreateEditForm ref={createEditRef} onSuccess={refetch} />
                 <BillingCreateEditForm ref={billingCreateEditRef} onSuccess={refetch} />
                 <AddDoctorForm ref={addDoctorRef} onSuccess={refetch} />

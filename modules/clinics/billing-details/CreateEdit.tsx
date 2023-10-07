@@ -3,7 +3,7 @@ import axios from '../../../utils/axios'
 import { Formik } from 'formik'
 import React from 'react'
 import { forwardRef, useState, useEffect } from 'react'
-import { useMutation } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import useUser from '../../../lib/useUser'
 import { store } from '../../../pages/_app'
 import { SNACKBAR_OPEN } from '../../../store/actions'
@@ -20,37 +20,47 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
     const [data, setData] = useState(null)
 
 
-    const [initialValues, setInitialValues] = useState({
-        city: '',
-        country: '',
-        zip: '',
-        street: '',
-        state: '',
-    });
+    // const [initialValues,setInitialValues] = useState({
+    //     id : '',
+    //     city: '',
+    //     country: '',
+    //     zip: '',
+    //     street: '',
+    //     state: '',
+    // });
 
-    useEffect(() => {
-        if (data?.clinicId) {
-            axios.get(`/api/clinic/${data?.clinicId}/billing`)
-                .then(response => {
-                    const { city, country, zip, street, state } = response.data;
-                    setInitialValues({ city, country, zip, street, state });
-                })
-                .catch(error => {
-                    console.error("Error fetching billing details:", error);
-                });
+    
+
+    
+
+
+
+    const { data: initialValues , isFetching, isError, refetch } = useQuery(['Billings', data?.clinicId], async ({ signal }) => {
+        const result = await axios(`/api/clinic/${data?.clinicId}/billing`, { signal, showErrorResponse: false })
+        return result.data
+        
+    }, {
+        enabled: !!data?.clinicId,
+        initialData : {
+            id : '',
+            city: '',
+            country: '',
+            zip: '',
+            street: '',
+            state: '',
         }
-    }, [data?.clinicId]);
+    } )
 
+    
+    
     const { isLoading, mutate } = useMutation(
 
-        
-
-        (values: any) => (data?.id ? axios.patch(`/api/clinic/${data?.clinicId}/billing`, values) : axios.post(`/api/clinic/${data?.clinicId}/billing`, values)),
+        (values: any) => (initialValues?.id ? axios.put(`/api/clinic/${data?.clinicId}/billing`, values) : axios.post(`/api/clinic/${data?.clinicId}/billing`, values)),
         
         {
             
             onSuccess: async (response, variables) => {
-                if (!data?.id) { // If data.id doesn't exist, it's a new creation
+                if (!initialValues?.id) {
                     await createCustomer(variables);
                 }
                 store.dispatch({
@@ -102,7 +112,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
             name: data?.name,   // Assuming data contains the clinic name
             ...values
         };
-        console.log(payload)
+        
         try {
             await axios.post('/api/stripe/create-customer', payload);
         } catch (error) {
@@ -118,14 +128,15 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                             initialValues={initialValues}
                             onSubmit={(values) => {
                                 let payload;
-                                if (data?.id) {
+                                if (initialValues?.id) {
                                     // When updating
                                     payload = {
                                         city: values?.city,
                                         country: values?.country,
                                         zip: values?.zip,
                                         street: values?.street,
-                                        state: values?.state
+                                        state: values?.state,
+                                        id: initialValues?.id
                                     };
                                 } else {
                                     // When creating
@@ -145,7 +156,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                                 
                                 <form noValidate onSubmit={handleSubmit}>
                                     <DialogTitle>
-                                        <span style={{ fontSize: 22, fontWeight: 'bold' }}>{data?.id ? 'Update' : 'Create'} details of clinic for billing</span>
+                                        <span style={{ fontSize: 22, fontWeight: 'bold' }}>{initialValues?.id ? 'Update' : 'Create'} details of clinic for billing</span>
                                     </DialogTitle>
                                     <DialogContent dividers>
                                         <Input

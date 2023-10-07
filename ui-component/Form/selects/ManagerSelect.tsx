@@ -9,21 +9,31 @@ interface IProps {
     isTouched?: boolean
     onBlur: any
     error: string
+    isAdmin?: boolean;
+    currentManagerId?: number | null;
     [key: string]: any
 }
 
-const ManagerSelect = ({  name, isTouched, error, onBlur, onChange, value, disabled }: IProps) => {
+const ManagerSelect = ({  name, isTouched, error, onBlur, onChange, value, disabled, isAdmin, currentManagerId, ...otherProps }: IProps) => {
     const { data: managers, isFetching: isManagerFetching } = useManager()
-
-    const managerOptions = managers?.data 
-        ? managers.data.map((item) => ({
-            label: `${item?.username}`,
-            value: item?.id,
-          }))
-        : [];
     
-//     console.log("ManagerSelect value:", value);
-    console.log("Manager options:", managerOptions);
+    let filteredManagers = managers?.data || [];
+
+
+    
+    if (!isAdmin && currentManagerId) {
+        filteredManagers = filteredManagers.filter(manager => manager.id === currentManagerId);
+    }
+    
+    const managerOptions = filteredManagers.map((item) => ({
+        label: `${item?.username}`,
+        value: item?.id,
+    }));
+
+    const finalValue = !isAdmin && currentManagerId ? currentManagerId : value;
+    const finalDisabled = !isAdmin || disabled || isManagerFetching;
+
+    
 
 
     return (
@@ -34,9 +44,12 @@ const ManagerSelect = ({  name, isTouched, error, onBlur, onChange, value, disab
             isTouched={isTouched}
             error={error}
             onBlur={onBlur}
-            onChange={onChange}
-            disabled={disabled || isManagerFetching }
-            value={value}
+            onChange={(e) => {
+                console.log("Selected value:", e.target.value);
+                onChange(e.target.value);
+            }}
+            disabled={finalDisabled}
+            value={finalValue}
             data={managerOptions}
         />
     )
