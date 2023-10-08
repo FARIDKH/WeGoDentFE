@@ -1,4 +1,17 @@
-import { Link, Avatar, Box, Container, Divider, Typography, Rating, Tooltip, Pagination, Button, useTheme, makeStyles } from '@material-ui/core'
+import {
+    Link,
+    Avatar,
+    Box,
+    Container,
+    Divider,
+    Typography,
+    Rating,
+    Tooltip,
+    Pagination,
+    Button,
+    useTheme,
+    makeStyles,
+} from '@material-ui/core'
 
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import VerifiedIcon from '@mui/icons-material/Verified'
@@ -21,7 +34,6 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useMobile } from '../ui-component/hooks/useMobile'
 import GoogleMap from '../ui-component/GoogleMap'
 import useUser from '../lib/useUser'
-import { cl } from '@fullcalendar/core/internal-common'
 
 dayjs.extend(isBetween)
 
@@ -29,9 +41,8 @@ const initialState = {
     day: null,
     time: null,
     clinicId: null,
-    clinicIsSubscribed: false
+    clinicIsSubscribed: false,
 }
-
 
 const useStyles = makeStyles((theme) => ({
     showNumberButton: {
@@ -44,21 +55,18 @@ const useStyles = makeStyles((theme) => ({
         textTransform: 'none',
         fontSize: '0.8rem',
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-        borderRadius: '4px'
+        borderRadius: '4px',
     },
-}));
-
+}))
 
 const ClinicsPage = () => {
-    
     const ref = useRef(null)
     const { isLoggedIn, refetch } = useUser(false)
-    const [page, setPage] = useState(1);
-    const ITEMS_PER_PAGE = 4;
+    const [page, setPage] = useState(1)
+    const ITEMS_PER_PAGE = 4
 
     const [selected, setSelected] = useState(initialState)
 
-    
     const { query } = useRouter()
 
     const { doctorType, officeLocation } = query ?? {}
@@ -70,9 +78,8 @@ const ClinicsPage = () => {
     })
 
     const handlePageChange = (event, value) => {
-        setPage(value);
-    };
-    
+        setPage(value)
+    }
 
     const officeLocations = clinics?.map((clinic) => clinic.officeLocationName) ?? []
 
@@ -86,10 +93,7 @@ const ClinicsPage = () => {
         }
     }, [selected])
 
-    
-
-    
-    const classes = useStyles();
+    const classes = useStyles()
 
     const phoneStyles = {
         filter: !isLoggedIn ? 'blur(4px)' : 'none',
@@ -128,22 +132,21 @@ const ClinicsPage = () => {
 
     // First, add an index to each item using reduce
     const clinicsWithIndex = clinics.reduce((acc, clinic, index) => {
-        acc.push({ ...clinic, index });
-        return acc;
-    }, []);
+        acc.push({ ...clinic, index })
+        return acc
+    }, [])
 
     // Sort the clinics array, prioritizing the enabled clinics
     const sortedClinics = clinicsWithIndex.sort((a, b) => {
-        if (a.isEnabled && !b.isEnabled) return -1; // a comes first
-        if (!a.isEnabled && b.isEnabled) return 1; // b comes first
-        return a.index - b.index; // otherwise keep the original order
-    });
+        if (a.isEnabled && !b.isEnabled) return -1 // a comes first
+        if (!a.isEnabled && b.isEnabled) return 1 // b comes first
+        return a.index - b.index // otherwise keep the original order
+    })
 
-    const displayedClinics = sortedClinics.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
-
+    const displayedClinics = sortedClinics.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE)
 
     return (
-        <Layout>
+        <Layout title="Clinics">
             <Header2 />
 
             <Container maxWidth="lg">
@@ -166,7 +169,7 @@ const ClinicsPage = () => {
                     ) : (
                         <>
                             <Box>
-                                <GoogleMap pinpointAddresses={officeLocations} clinics={clinics}  address={officeLocation} />
+                                <GoogleMap pinpointAddresses={officeLocations} clinics={clinics} address={officeLocation} />
                             </Box>
                             <Box
                                 my={5}
@@ -187,208 +190,203 @@ const ClinicsPage = () => {
 
                             <Box>
                                 <Box>
-                                <Pagination count={Math.ceil(clinics.length / ITEMS_PER_PAGE)} page={page} onChange={handlePageChange} />
-                                    
-                                    {displayedClinics
-                                        ?.map((clinic, i) => {
-                                            const startDate = dayjs(new Date())
-                                            const isFuture = startDate?.isAfter(new Date())
-                                            // const endDate = endDateTime && availableFutureDays?.isAfter(endDateTime) ? endDateTime : availableFutureDays
+                                    <Pagination
+                                        count={Math.ceil(clinics.length / ITEMS_PER_PAGE)}
+                                        page={page}
+                                        onChange={handlePageChange}
+                                    />
 
-                                            // const doctorName = `${doctor?.userDTO?.firstName} ${doctor?.userDTO?.lastName}`
-                                            const clinicName = clinic?.name
-                                            const clinicId = clinic?.clinicId
-                                            const isSelectedDoctor = clinic?.clinicId === selected?.clinicId
-                                            const clinicLink = '/clinics/' + clinicId
-                                            return (
-                                                <Box key={clinicId}>
-                                                    <Box
-                                                        display="flex"
-                                                        sx={{
-                                                            flexDirection: {
-                                                                sm: 'row',
-                                                                xs: 'column',
-                                                            },
-                                                        }}
-                                                    >
-                                                        <Box padding="25px" paddingLeft="0" flex={1}>
-                                                            <Box
-                                                                className="doctorInfo"
-                                                                display="flex"
-                                                                sx={{
-                                                                    mt: 3,
-                                                                    mb: {
-                                                                        sm: 0,
-                                                                        xs: 3,
-                                                                    },
-                                                                }}
-                                                            >
-                                                                <Box>
-                                                                    <Avatar
-                                                                        src={avatar?.src}
-                                                                        alt={clinicName}
-                                                                        sx={{ width: 75, height: 75 }}
-                                                                    />
-                                                                </Box>
-                                                                <Box ml="12px">
-                                                                    <Typography variant="h4">
-                                                                        <Link underline="none" key={clinicId} href={clinicLink}>
-                                                                            <Box display="flex" alignItems="center">
-                                                                            
-                                                                                <strong style={{ marginRight: '10px', color: 'black' }}>
-                                                                                    {clinicName}
-                                                                                </strong>
-                                                                                {clinic?.isEnabled && (
-                                                                                    <Tooltip title="This clinic has been verified by Wegodent">
-                                                                                        <VerifiedIcon sx={{ color: '#329DFF' }} />
-                                                                                    </Tooltip>
-                                                                                )}
-                                                                            </Box>
-                                                                        </Link>
-                                                                    </Typography>
-                                                                    <div>
-                                                                        {clinic?.doctorTypes?.map((type, index) => (
-                                                                            <Typography
-                                                                                key={index}
-                                                                                mt={2}
-                                                                                sx={{
-                                                                                    
-                                                                                    display: 'inline-block',
-                                                                                    color: 'lightgray',
-                                                                                    cursor: 'pointer',
-                                                                                    marginRight: '5px',
-                                                                                    transition: 'color 0.3s',
-                                                                                    '&:hover': {
-                                                                                        color: 'black',
-                                                                                    },
-                                                                                }}
-                                                                            >
-                                                                                {type}
-                                                                            </Typography>
-                                                                        ))}
-                                                                    </div>
-                                                                    <Box sx={{ marginTop: 2 }} gap={2} display="flex" alignItems="center">
-                                                                        <Rating name="read-only" value={value} readOnly />
-                                                                        <Typography>0 appointment </Typography>
-                                                                    </Box>
-                                                                </Box>
-                                                            </Box>
+                                    {displayedClinics?.map((clinic, i) => {
+                                        const startDate = dayjs(new Date())
+                                        const isFuture = startDate?.isAfter(new Date())
+                                        // const endDate = endDateTime && availableFutureDays?.isAfter(endDateTime) ? endDateTime : availableFutureDays
 
-                                                            <Box mt={3} mb={3} gap={1} display="flex" alignItems="center">
-                                                                <LocationOnIcon sx={{ color: '#329DFF' }}></LocationOnIcon>
-                                                                <Typography> {clinic?.officeLocationName} </Typography>
-                                                            </Box>
-
-                                                            <Box>
-                                                                <Typography>
-                                                                    {getDescriptionSnippet(clinic?.description || '', clinicLink)}
-                                                                </Typography>
-                                                            </Box>
-                                                        </Box>
+                                        // const doctorName = `${doctor?.userDTO?.firstName} ${doctor?.userDTO?.lastName}`
+                                        const clinicName = clinic?.name
+                                        const clinicId = clinic?.clinicId
+                                        const isSelectedDoctor = clinic?.clinicId === selected?.clinicId
+                                        const clinicLink = '/clinics/' + clinicId
+                                        return (
+                                            <Box key={clinicId}>
+                                                <Box
+                                                    display="flex"
+                                                    sx={{
+                                                        flexDirection: {
+                                                            sm: 'row',
+                                                            xs: 'column',
+                                                        },
+                                                    }}
+                                                >
+                                                    <Box padding="25px" paddingLeft="0" flex={1}>
                                                         <Box
-                                                            className="appointment"
+                                                            className="doctorInfo"
                                                             display="flex"
-                                                            alignItems="center"
-                                                            justifyContent="center"
-                                                            flex={1}
                                                             sx={{
-                                                                borderLeft: {
-                                                                    sm: '1px solid #eeeeee',
-                                                                    xs: '0',
-                                                                },
-                                                                borderTop: {
-                                                                    sm: '0',
-                                                                    xs: '1px solid #eeeeee',
+                                                                mt: 3,
+                                                                mb: {
+                                                                    sm: 0,
+                                                                    xs: 3,
                                                                 },
                                                             }}
                                                         >
-                                                            {clinic?.isEnabled ? (
-                                                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                                    <Box flex={2}>
-                                                                        <DateCalendar
-                                                                            views={['day']}
-                                                                            disablePast
-                                                                            minDate={startDate}
-                                                                            value={isSelectedDoctor ? selected.day : null}
-                                                                            onChange={(value) =>
-                                                                                setSelected((prev) => ({
-                                                                                    ...prev,
-                                                                                    day: value,
-                                                                                    clinicId: clinicId,
-                                                                                    clinicIsSubscribed : true
-                                                                                }))
-                                                                            }
+                                                            <Box>
+                                                                <Avatar src={avatar?.src} alt={clinicName} sx={{ width: 75, height: 75 }} />
+                                                            </Box>
+                                                            <Box ml="12px">
+                                                                <Typography variant="h4">
+                                                                    <Link underline="none" key={clinicId} href={clinicLink}>
+                                                                        <Box display="flex" alignItems="center">
+                                                                            <strong style={{ marginRight: '10px', color: 'black' }}>
+                                                                                {clinicName}
+                                                                            </strong>
+                                                                            {clinic?.isEnabled && (
+                                                                                <Tooltip title="This clinic has been verified by Wegodent">
+                                                                                    <VerifiedIcon sx={{ color: '#329DFF' }} />
+                                                                                </Tooltip>
+                                                                            )}
+                                                                        </Box>
+                                                                    </Link>
+                                                                </Typography>
+                                                                <div>
+                                                                    {clinic?.doctorTypes?.map((type, index) => (
+                                                                        <Typography
+                                                                            key={index}
+                                                                            mt={2}
                                                                             sx={{
-                                                                                width: {
-                                                                                    sm: 320,
-                                                                                    xs: 290,
+                                                                                display: 'inline-block',
+                                                                                color: 'lightgray',
+                                                                                cursor: 'pointer',
+                                                                                marginRight: '5px',
+                                                                                transition: 'color 0.3s',
+                                                                                '&:hover': {
+                                                                                    color: 'black',
                                                                                 },
                                                                             }}
-                                                                        />
-                                                                    </Box>
-                                                                    <Box flex={1}>
-                                                                        <DigitalClock
-                                                                            sx={{
-                                                                                maxHeight: '300px',
-                                                                                '& .MuiDigitalClock-item': {
-                                                                                    padding: {
-                                                                                        sm: '8px 16px',
-                                                                                        xs: 0,
-                                                                                    },
-                                                                                    fontSize: {
-                                                                                        sm: 'inherit',
-                                                                                        xs: '0.75rem',
-                                                                                    },
-                                                                                },
-                                                                            }}
-                                                                            onChange={(value) =>
-                                                                                setSelected((prev) => ({
-                                                                                    ...prev,
-                                                                                    time: value,
-                                                                                    clinicId: clinicId,
-                                                                                    clinicIsSubscribed : true
-                                                                                }))
-                                                                            }
-                                                                        />
-                                                                    </Box>
-                                                                </LocalizationProvider>
-                                                            ) : (
-                                                                <Box>
-                                                                    <Typography variant="h1">
-                                                                        {!isLoggedIn ? (
-                                                                            <div>
-                                                                                <Typography style={phoneStyles} variant="h1">
-                                                                                    {blurPhoneNumber(clinic?.phoneNumber)}
-                                                                                </Typography>
-                                                                                <Box display="flex" justifyContent="center" mt={1}>
-                                                                                    <Button 
-                                                                                        size="small" 
-                                                                                        className={classes.showNumberButton}
-                                                                                        onClick={() => {
-                                                                                            ref?.current?.open({
-                                                                                                clinicIsSubscribed: false
-                                                                                            })
-                                                                                        }}
-                                                                                    >
-                                                                                        Show number
-                                                                                    </Button>
-                                                                                </Box>
-                                                                            </div>
-                                                                        ) : (
-                                                                            <Typography variant="h1">{clinic?.phoneNumber}</Typography>
-                                                                        )}
-                                                                    </Typography>
-
-
+                                                                        >
+                                                                            {type}
+                                                                        </Typography>
+                                                                    ))}
+                                                                </div>
+                                                                <Box sx={{ marginTop: 2 }} gap={2} display="flex" alignItems="center">
+                                                                    <Rating name="read-only" value={value} readOnly />
+                                                                    <Typography>0 appointment </Typography>
                                                                 </Box>
-                                                            )}
+                                                            </Box>
+                                                        </Box>
+
+                                                        <Box mt={3} mb={3} gap={1} display="flex" alignItems="center">
+                                                            <LocationOnIcon sx={{ color: '#329DFF' }}></LocationOnIcon>
+                                                            <Typography> {clinic?.officeLocationName} </Typography>
+                                                        </Box>
+
+                                                        <Box>
+                                                            <Typography>
+                                                                {getDescriptionSnippet(clinic?.description || '', clinicLink)}
+                                                            </Typography>
                                                         </Box>
                                                     </Box>
-
-                                                    {i != clinics?.length - 1 && <Divider />}
+                                                    <Box
+                                                        className="appointment"
+                                                        display="flex"
+                                                        alignItems="center"
+                                                        justifyContent="center"
+                                                        flex={1}
+                                                        sx={{
+                                                            borderLeft: {
+                                                                sm: '1px solid #eeeeee',
+                                                                xs: '0',
+                                                            },
+                                                            borderTop: {
+                                                                sm: '0',
+                                                                xs: '1px solid #eeeeee',
+                                                            },
+                                                        }}
+                                                    >
+                                                        {clinic?.isEnabled ? (
+                                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                                <Box flex={2}>
+                                                                    <DateCalendar
+                                                                        views={['day']}
+                                                                        disablePast
+                                                                        minDate={startDate}
+                                                                        value={isSelectedDoctor ? selected.day : null}
+                                                                        onChange={(value) =>
+                                                                            setSelected((prev) => ({
+                                                                                ...prev,
+                                                                                day: value,
+                                                                                clinicId: clinicId,
+                                                                                clinicIsSubscribed: true,
+                                                                            }))
+                                                                        }
+                                                                        sx={{
+                                                                            width: {
+                                                                                sm: 320,
+                                                                                xs: 290,
+                                                                            },
+                                                                        }}
+                                                                    />
+                                                                </Box>
+                                                                <Box flex={1}>
+                                                                    <DigitalClock
+                                                                        sx={{
+                                                                            maxHeight: '300px',
+                                                                            '& .MuiDigitalClock-item': {
+                                                                                padding: {
+                                                                                    sm: '8px 16px',
+                                                                                    xs: 0,
+                                                                                },
+                                                                                fontSize: {
+                                                                                    sm: 'inherit',
+                                                                                    xs: '0.75rem',
+                                                                                },
+                                                                            },
+                                                                        }}
+                                                                        onChange={(value) =>
+                                                                            setSelected((prev) => ({
+                                                                                ...prev,
+                                                                                time: value,
+                                                                                clinicId: clinicId,
+                                                                                clinicIsSubscribed: true,
+                                                                            }))
+                                                                        }
+                                                                    />
+                                                                </Box>
+                                                            </LocalizationProvider>
+                                                        ) : (
+                                                            <Box>
+                                                                <Typography variant="h1">
+                                                                    {!isLoggedIn ? (
+                                                                        <div>
+                                                                            <Typography style={phoneStyles} variant="h1">
+                                                                                {blurPhoneNumber(clinic?.phoneNumber)}
+                                                                            </Typography>
+                                                                            <Box display="flex" justifyContent="center" mt={1}>
+                                                                                <Button
+                                                                                    size="small"
+                                                                                    className={classes.showNumberButton}
+                                                                                    onClick={() => {
+                                                                                        ref?.current?.open({
+                                                                                            clinicIsSubscribed: false,
+                                                                                        })
+                                                                                    }}
+                                                                                >
+                                                                                    Show number
+                                                                                </Button>
+                                                                            </Box>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <Typography variant="h1">{clinic?.phoneNumber}</Typography>
+                                                                    )}
+                                                                </Typography>
+                                                            </Box>
+                                                        )}
+                                                    </Box>
                                                 </Box>
-                                            )
-                                        })}
+
+                                                {i != clinics?.length - 1 && <Divider />}
+                                            </Box>
+                                        )
+                                    })}
 
                                     {/* <Pagination count={Math.ceil(clinics.length / ITEMS_PER_PAGE)} page={page} onChange={handlePageChange} /> */}
                                 </Box>
@@ -397,7 +395,7 @@ const ClinicsPage = () => {
                     )}
                 </Box>
 
-                <CreateClinicAppointment  ref={ref} onClose={() => setSelected(initialState)} onSuccess={refetch} />
+                <CreateClinicAppointment ref={ref} onClose={() => setSelected(initialState)} onSuccess={refetch} />
             </Container>
         </Layout>
     )
