@@ -17,5 +17,11 @@
     "labelMenuItemAppointment" : "Appointment",
     "labelMenuItemAvailabilities" : "Availabilities",
     "labelMenuItemYourPatients" : "Your Patients",
-    "labelMenuItemAllTreatments" : "All Treatments"
+    "labelMenuItemAllTreatments" : "All Treatments",
+    "labelMenuItemDoctorList" : "Doctors",
+    "labelMenuItemUserList" : "Users",
+    "labelMenuItemRoleManagemenet" : "Role Management",
+    "labelMenuItemClinics" : "Clinics"
+    
+
 }

@@ -27,30 +27,72 @@ const Appointments = () => {
     const [isListView, setIsListView] = useState(false)
     const createEditRef = useRef(null)
 
-    const { isDoctor, isPatient, info } = useUser()
+    const { isDoctor, isPatient, isManager, info } = useUser()
     const id = info?.id
     const router: any = useRouter()
 
     const { t } = useTranslation('doctor')
 
-    const { data, isFetching, isError, refetch } = useQuery(
-        ['Appointments', router.query],
-
+    const { data: clinicsData,  isSuccess: clinicsFetched } = useQuery(
+        'Clinics',
         async ({ signal }) => {
-            const result = await axios(isDoctor ? `/api/doctor/${id}/appointments` : `/api/patient/${id}/appointments`, { signal })
-            const filteredData = result.data.filter((item: any) => item.status !== ENUM_APPOINTMENT_STATUSES.REJECTED)
-            console.log(result.data)
-            return filteredData
+            const result = await axios(`/api/clinics/all`, { signal });
+            return result.data;
         },
         {
             initialData: [],
-            enabled: !!id,
+            enabled: isManager
         }
-    )
+    );
+    
+
+   
+    const { data , isFetching, isError, refetch } = useQuery(
+        ['Appointments', router.query],
+        async ({ signal }) => {
+            if (isDoctor) {
+                const result = await axios(`/api/doctor/${id}/appointments`, { signal });
+                return result.data.filter(item => item.status !== ENUM_APPOINTMENT_STATUSES.REJECTED);
+            }
+    
+            if (isPatient) {
+                const result = await axios(`/api/patient/${id}/appointments`, { signal });
+                return result.data.filter(item => item.status !== ENUM_APPOINTMENT_STATUSES.REJECTED);
+            }
+    
+            if (isManager && clinicsFetched) {
+                const appointmentsPromises = clinicsData.map(clinic => 
+                    axios(`/api/appointment/clinic/${clinic.clinicId}`, { signal })
+                );
+                console.log(appointmentsPromises)
+                const allAppointmentsResults = await Promise.all(appointmentsPromises);
+                
+                return allAppointmentsResults.flatMap(result => 
+                    result.data.filter(item => item.status !== ENUM_APPOINTMENT_STATUSES.REJECTED)
+                );
+            }
+        },
+        {
+            initialData: [],
+            enabled: isDoctor || isPatient || clinicsFetched  // Adjust this based on when you want the query to run
+        }
+    );
+    
+    
+    
+    
 
     const events = data?.map(({ id, ...item }) => {
         const user = isDoctor ? item?.patientDTO?.userDTO : item?.doctorDTO?.userDTO
         // console.log(item?.treatmentSessionDTO?.treatmentPhaseDTO?.name)
+
+        let title = `${user?.firstName} ${user?.lastName}`;
+    
+        // Add clinic info if available.
+        if(item?.clinicDTO) {
+            title += ` | Clinic: ${item.clinicDTO.name}`;
+        }
+
         if (item?.status === ENUM_APPOINTMENT_STATUSES.REJECTED) return []
         return {
             id,
@@ -122,6 +164,24 @@ const Appointments = () => {
                                             </Box>
                                         ),
                                     },
+                                    {
+                                        id: 'clinicName',
+                                        numeric: false,
+                                        label: 'Clinic Name',
+                                        align: 'left',
+                                        renderAs: ({ clinicDTO }) => clinicDTO?.name,
+                                        hide: !isManager // or any condition you see fit
+                                    },
+                                    {
+                                        id: 'clinicLocation',
+                                        numeric: false,
+                                        label: 'Clinic Location',
+                                        align: 'left',
+                                        renderAs: ({ clinicDTO }) => clinicDTO?.officeLocationName,
+                                        hide: !isManager
+                                    },  
+                                    // ... other columns
+                                    
                                     {
                                         id: 'doctor',
                                         numeric: false,

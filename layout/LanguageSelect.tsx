@@ -11,10 +11,9 @@ interface IProps {
 const LanguagaSelect = ({ selectProps }: IProps) => {
     const router = useRouter()
 
-    const [language, setLanguage] = React.useState(router?.locale ?? 'hu')
+    const [language, setLanguage] = React.useState(router?.locale ?? 'en')
 
     const { i18n } = useTranslation('common')
-    console.log('i18n', i18n)
 
     const changeLanguage = (lng: string) => {
         i18n?.changeLanguage(lng)?.then(() => {

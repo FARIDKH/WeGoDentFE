@@ -17,5 +17,9 @@
     "labelMenuItemAppointment" : "Találkozó",
     "labelMenuItemAvailabilities" : "Elérhetőségek",
     "labelMenuItemYourPatients" : "Pácienseid",
-    "labelMenuItemAllTreatments" : "Összes kezelés"
+    "labelMenuItemAllTreatments" : "Összes kezelés",
+    "labelMenuItemDoctorList" : "Orvosok",
+    "labelMenuItemUserList" : "Felhasználók",
+    "labelMenuItemRoleManagemenet" : "Szerepmenedzsment",
+    "labelMenuItemClinics" : "Klinikák"
 }

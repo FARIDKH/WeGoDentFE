@@ -49,7 +49,7 @@ const DoctorsPage = () => {
     }, [selected])
 
     return (
-        <Layout>
+        <Layout title="Our Doctors">
             <Header2 />
 
             <Container maxWidth="lg">
@@ -88,144 +88,147 @@ const DoctorsPage = () => {
                         <NoResult />
                     ) : (
                         <Box>
-                            {doctors?.filter(doctor => doctor?.clinicId)?.map((doctor, i) => {
-                                const availabilityList = doctor?.doctorAvailabilityDTOList
-                                const availableRange = availabilityList?.find((item) =>
-                                    dayjs(new Date()).isBetween(item?.startDateTime, item?.endDateTime)
-                                )
+                            {doctors
+                                ?.filter((doctor) => doctor?.clinicId)
+                                ?.map((doctor, i) => {
+                                    const availabilityList = doctor?.doctorAvailabilityDTOList
+                                    const availableRange = availabilityList?.find((item) =>
+                                        dayjs(new Date()).isBetween(item?.startDateTime, item?.endDateTime)
+                                    )
 
-                                const startDate = dayjs(new Date())
-                                const isFuture = startDate?.isAfter(new Date())
-                                const endDateTime = dayjs(availableRange?.endDateTime ?? availabilityList?.[0]?.endDateTime)
-                                const availableFutureDays = startDate.add(25, 'days')
-                                const endDate = endDateTime && availableFutureDays?.isAfter(endDateTime) ? endDateTime : availableFutureDays
+                                    const startDate = dayjs(new Date())
+                                    const isFuture = startDate?.isAfter(new Date())
+                                    const endDateTime = dayjs(availableRange?.endDateTime ?? availabilityList?.[0]?.endDateTime)
+                                    const availableFutureDays = startDate.add(25, 'days')
+                                    const endDate =
+                                        endDateTime && availableFutureDays?.isAfter(endDateTime) ? endDateTime : availableFutureDays
 
-                                const doctorName = `${doctor?.userDTO?.firstName} ${doctor?.userDTO?.lastName}`
-                                const isSelectedDoctor = doctor?.id === selected?.doctorId
-                                const doctorLink = '/doctors/' + doctor?.id
-                                return (
-                                    <Box key={doctor?.id}>
-                                        <Box
-                                            display="flex"
-                                            sx={{
-                                                flexDirection: {
-                                                    sm: 'row',
-                                                    xs: 'column',
-                                                },
-                                            }}
-                                        >
+                                    const doctorName = `${doctor?.userDTO?.firstName} ${doctor?.userDTO?.lastName}`
+                                    const isSelectedDoctor = doctor?.id === selected?.doctorId
+                                    const doctorLink = '/doctors/' + doctor?.id
+                                    return (
+                                        <Box key={doctor?.id}>
                                             <Box
-                                                className="doctorInfo"
                                                 display="flex"
-                                                flex={1}
                                                 sx={{
-                                                    mt: 3,
-                                                    mb: {
-                                                        sm: 0,
-                                                        xs: 3,
+                                                    flexDirection: {
+                                                        sm: 'row',
+                                                        xs: 'column',
                                                     },
                                                 }}
                                             >
-                                                <Box>
-                                                    <Avatar src={avatar?.src} alt={doctorName} sx={{ width: 75, height: 75 }} />
+                                                <Box
+                                                    className="doctorInfo"
+                                                    display="flex"
+                                                    flex={1}
+                                                    sx={{
+                                                        mt: 3,
+                                                        mb: {
+                                                            sm: 0,
+                                                            xs: 3,
+                                                        },
+                                                    }}
+                                                >
+                                                    <Box>
+                                                        <Avatar src={avatar?.src} alt={doctorName} sx={{ width: 75, height: 75 }} />
+                                                    </Box>
+                                                    <Box ml="12px">
+                                                        <Typography variant="h4">
+                                                            <Link key={doctor.id} href={doctorLink}>
+                                                                {' '}
+                                                                <strong>Dr. {doctorName}</strong>{' '}
+                                                            </Link>
+                                                        </Typography>
+                                                        <Typography my={1}>{doctor?.doctorType?.replaceAll('_', ' ')}</Typography>
+                                                        <Typography
+                                                            my={1}
+                                                            sx={{
+                                                                width: '75%',
+                                                                textAlign: 'justify',
+                                                                // textJustify: 'innerWord'
+                                                            }}
+                                                        >
+                                                            {doctor?.experience}
+                                                        </Typography>
+                                                        <Typography>Office Location: {doctor?.officeLocationName}</Typography>
+                                                    </Box>
                                                 </Box>
-                                                <Box ml="12px">
-                                                    <Typography variant="h4">
-                                                        <Link key={doctor.id} href={doctorLink}>
-                                                            {' '}
-                                                            <strong>Dr. {doctorName}</strong>{' '}
-                                                        </Link>
-                                                    </Typography>
-                                                    <Typography my={1}>{doctor?.doctorType?.replaceAll('_', ' ')}</Typography>
-                                                    <Typography
-                                                        my={1}
-                                                        sx={{
-                                                            width: '75%',
-                                                            textAlign: 'justify',
-                                                            // textJustify: 'innerWord'
-                                                        }}
-                                                    >
-                                                        {doctor?.experience}
-                                                    </Typography>
-                                                    <Typography>Office Location: {doctor?.officeLocationName}</Typography>
+                                                <Box
+                                                    className="appointment"
+                                                    display="flex"
+                                                    flex={1}
+                                                    sx={{
+                                                        borderLeft: {
+                                                            sm: '1px solid #eeeeee',
+                                                            xs: '0',
+                                                        },
+                                                        borderTop: {
+                                                            sm: '0',
+                                                            xs: '1px solid #eeeeee',
+                                                        },
+                                                    }}
+                                                >
+                                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                        <Box flex={2}>
+                                                            <DateCalendar
+                                                                views={['day']}
+                                                                disablePast
+                                                                minDate={startDate}
+                                                                maxDate={endDate}
+                                                                value={isSelectedDoctor ? selected.day : null}
+                                                                onChange={(value) =>
+                                                                    setSelected((prev) => ({
+                                                                        ...prev,
+                                                                        day: value,
+                                                                        doctorId: doctor?.id,
+                                                                    }))
+                                                                }
+                                                                sx={{
+                                                                    width: {
+                                                                        sm: 320,
+                                                                        xs: 290,
+                                                                    },
+                                                                }}
+                                                            />
+                                                        </Box>
+                                                        <Box flex={1}>
+                                                            <DigitalClock
+                                                                // value={isSelectedDoctor ? selected.time : null}
+                                                                // minTime={dayjs(startDate.format('YYYY-MM-DDT07:00'))}
+                                                                // maxTime={dayjs(endDate.format('YYYY-MM-DDT18:00'))}
+                                                                // timeStep={60}
+                                                                // skipDisabled
+                                                                // disablePast={!isFuture}
+                                                                sx={{
+                                                                    maxHeight: '300px',
+                                                                    '& .MuiDigitalClock-item': {
+                                                                        padding: {
+                                                                            sm: '8px 16px',
+                                                                            xs: 0,
+                                                                        },
+                                                                        fontSize: {
+                                                                            sm: 'inherit',
+                                                                            xs: '0.75rem',
+                                                                        },
+                                                                    },
+                                                                }}
+                                                                onChange={(value) =>
+                                                                    setSelected((prev) => ({
+                                                                        ...prev,
+                                                                        time: value,
+                                                                        doctorId: doctor?.id,
+                                                                    }))
+                                                                }
+                                                            />
+                                                        </Box>
+                                                    </LocalizationProvider>
                                                 </Box>
                                             </Box>
-                                            <Box
-                                                className="appointment"
-                                                display="flex"
-                                                flex={1}
-                                                sx={{
-                                                    borderLeft: {
-                                                        sm: '1px solid #eeeeee',
-                                                        xs: '0',
-                                                    },
-                                                    borderTop: {
-                                                        sm: '0',
-                                                        xs: '1px solid #eeeeee',
-                                                    },
-                                                }}
-                                            >
-                                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                    <Box flex={2}>
-                                                        <DateCalendar
-                                                            views={['day']}
-                                                            disablePast
-                                                            minDate={startDate}
-                                                            maxDate={endDate}
-                                                            value={isSelectedDoctor ? selected.day : null}
-                                                            onChange={(value) =>
-                                                                setSelected((prev) => ({
-                                                                    ...prev,
-                                                                    day: value,
-                                                                    doctorId: doctor?.id,
-                                                                }))
-                                                            }
-                                                            sx={{
-                                                                width: {
-                                                                    sm: 320,
-                                                                    xs: 290,
-                                                                },
-                                                            }}
-                                                        />
-                                                    </Box>
-                                                    <Box flex={1}>
-                                                        <DigitalClock
-                                                            // value={isSelectedDoctor ? selected.time : null}
-                                                            // minTime={dayjs(startDate.format('YYYY-MM-DDT07:00'))}
-                                                            // maxTime={dayjs(endDate.format('YYYY-MM-DDT18:00'))}
-                                                            // timeStep={60}
-                                                            // skipDisabled
-                                                            // disablePast={!isFuture}
-                                                            sx={{
-                                                                maxHeight: '300px',
-                                                                '& .MuiDigitalClock-item': {
-                                                                    padding: {
-                                                                        sm: '8px 16px',
-                                                                        xs: 0,
-                                                                    },
-                                                                    fontSize: {
-                                                                        sm: 'inherit',
-                                                                        xs: '0.75rem',
-                                                                    },
-                                                                },
-                                                            }}
-                                                            onChange={(value) =>
-                                                                setSelected((prev) => ({
-                                                                    ...prev,
-                                                                    time: value,
-                                                                    doctorId: doctor?.id,
-                                                                }))
-                                                            }
-                                                        />
-                                                    </Box>
-                                                </LocalizationProvider>
-                                            </Box>
+
+                                            {i != doctors?.length - 1 && <Divider />}
                                         </Box>
-
-                                        {i != doctors?.length - 1 && <Divider />}
-                                    </Box>
-                                )
-                            })}
+                                    )
+                                })}
                         </Box>
                     )}
                 </Box>

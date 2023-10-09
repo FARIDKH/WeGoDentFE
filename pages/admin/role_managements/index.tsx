@@ -19,6 +19,9 @@ const RoleManagements = () => {
     const createEditRef = useRef(null)
     const deleteRef = useRef(null)
 
+
+    
+
     const { data, isFetching, isError, refetch } = useQuery(['Users'], async ({ signal }) => {
         const result = await axios(`/api/allUsers`, { signal })
         return result.data.data
@@ -58,8 +61,15 @@ const RoleManagements = () => {
                                     numeric: false,
                                     label: 'Type',
                                     align: 'left',
-                                    renderAs: ({ groupRoleResponseDTOS }) => (groupRoleResponseDTOS?.[0]?.code)
-
+                                    renderAs: ({ groupRoleResponseDTOS }) => (
+                                        <ul style={{ listStyleType: 'none', padding: 0, margin: 0 }}>
+                                            {groupRoleResponseDTOS?.map((role, index) => (
+                                                <li key={index} style={{ padding: '2px 0' }}>
+                                                    {role.code}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )
                                 },
                             ]}
                             actions={[
@@ -92,7 +102,7 @@ export default RoleManagements
 export const getStaticProps = async ({ locale }) => {
     return {
       props: {
-        ...(await serverSideTranslations(locale, ["users"])),
+        ...(await serverSideTranslations(locale, ["doctor"])),
       },
     };
   };

@@ -1,7 +1,7 @@
 import { Box, SelectProps, TextField, TextFieldProps } from '@material-ui/core'
 import IconSelect from '@material-ui/icons/ExpandMore'
-import MyLocationIcon from '@mui/icons-material/MyLocation';
-import React, { useState } from 'react';
+import MyLocationIcon from '@mui/icons-material/MyLocation'
+import React, { useState } from 'react'
 import { Formik } from 'formik'
 import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
@@ -22,44 +22,46 @@ interface IProps {
 
 const SearchForm = ({ selectProps, inputProps, searchButton, classNames }: IProps) => {
     const { query, push, locale } = useRouter()
+    const [loading, setLoading] = useState(false)
 
-    const [coordinates, setCoordinates] = React.useState(null);
-    const [location, setLocation] = useState(query?.officeLocation ?? "");
+    const [coordinates, setCoordinates] = React.useState(null)
+    const [location, setLocation] = useState(query?.officeLocation ?? '')
 
-    const useCurrentLocation = async (setFieldValue, currentLocationValue) => {
+    const setCurrentLocation = async (setFieldValue, currentLocationValue) => {
         if (navigator.geolocation) {
+            setLoading(true)
+
             navigator.geolocation.getCurrentPosition(async (position) => {
-                const lat = position.coords.latitude;
-                const lng = position.coords.longitude;
-    
+                const lat = position.coords.latitude
+                const lng = position.coords.longitude
+
                 try {
-                    const address = await fetchAddressFromCoordinates(lat, lng);
-                    
+                    const address = await fetchAddressFromCoordinates(lat, lng)
+
                     // Only update the value if it hasn't been manually set.
                     if (!currentLocationValue) {
-                        setFieldValue('officeLocation', address);
+                        setFieldValue('officeLocation', address)
                     }
-    
                 } catch (error) {
-                    console.error("Failed to fetch address:", error);
+                    console.error('Failed to fetch address:', error)
+                } finally {
+                    setLoading(false)
                 }
-            });
+            })
         } else {
-            console.error("Geolocation is not supported by this browser.");
+            console.error('Geolocation is not supported by this browser.')
         }
     }
-    
-
 
     const fetchAddressFromCoordinates = async (lat: number, lng: number) => {
-        const apiKey = "AIzaSyBYvpPFBUtqr8Tw3YIZ4tGXor_ZjQr1qZc";  // Remember to replace with your key!
-        const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`;
+        const apiKey = 'AIzaSyBYvpPFBUtqr8Tw3YIZ4tGXor_ZjQr1qZc' // Remember to replace with your key!
+        const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`
 
-        const response = await fetch(apiUrl);
-        const data = await response.json();
+        const response = await fetch(apiUrl)
+        const data = await response.json()
 
         console.log(data.results[0].formatted_address)
-        return data.results[0].formatted_address;  // Take the first result
+        return data.results[0].formatted_address // Take the first result
     }
 
     return (
@@ -67,12 +69,12 @@ const SearchForm = ({ selectProps, inputProps, searchButton, classNames }: IProp
             enableReinitialize
             initialValues={{
                 doctorType: (query?.doctorType ?? ENUM_DOCTOR_TYPES.General_Dentist) as string,
-                officeLocation: query?.officeLocation ?? "" as string,
+                officeLocation: query?.officeLocation ?? ('' as string),
             }}
             onSubmit={(values) => {
-                if (values?.doctorType && values?.officeLocation){
-                    const searchQuery = coordinates ? { ...values, ...coordinates } : values;
-                     
+                if (values?.doctorType && values?.officeLocation) {
+                    const searchQuery = coordinates ? { ...values, ...coordinates } : values
+
                     push(
                         {
                             pathname: '/clinics',
@@ -86,9 +88,8 @@ const SearchForm = ({ selectProps, inputProps, searchButton, classNames }: IProp
                 }
             }}
         >
-            {({ handleSubmit, values, handleChange , setFieldValue}) => (
+            {({ handleSubmit, values, handleChange, setFieldValue }) => (
                 <form autoComplete="off" noValidate onSubmit={handleSubmit}>
-                    
                     <Box className={classNames.wrapper}>
                         <DoctorTypeSelect
                             className={classNames.doctorSelect}
@@ -105,23 +106,25 @@ const SearchForm = ({ selectProps, inputProps, searchButton, classNames }: IProp
                             name="officeLocation"
                             value={values?.officeLocation}
                             onChange={(e) => {
-                                setLocation(e.target.value);
-                                setFieldValue("officeLocation", e.target.value);
+                                setLocation(e.target.value)
+                                setFieldValue('officeLocation', e.target.value)
                             }}
-                            placeholder="Budapest I. Kerulet"
+                            placeholder={loading ? 'Calculating location..' : 'Budapest I. Kerulet'}
                             variant="outlined"
+                            disabled={loading}
                             InputProps={{
                                 endAdornment: (
                                     <>
-                                        <MyLocationIcon onClick={() => useCurrentLocation(setFieldValue, values?.officeLocation)} style={{cursor: 'pointer', color: 'white'}} />
+                                        <MyLocationIcon
+                                            onClick={() => setCurrentLocation(setFieldValue, values?.officeLocation)}
+                                            style={{ cursor: 'pointer', color: 'white' }}
+                                        />
                                         {searchButton}
                                     </>
                                 ),
                             }}
                             {...inputProps}
                         />
-                        
-
                     </Box>
                 </form>
             )}

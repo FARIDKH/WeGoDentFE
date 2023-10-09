@@ -31,9 +31,8 @@ apiClient.interceptors.request.use(
     function (config) {
         config.headers = {
             'check-auth': config?.checkAuth,
-            ...config.headers
+            ...config.headers,
         }
-
 
         return config
     },
@@ -60,6 +59,11 @@ apiClient.interceptors.response.use(
     },
     async function (error) {
         const originalRequest = error.config
+
+        if (originalRequest?.response?.status == 401) {
+            axios.get('/api/logout').finally(() => (location.href = `/admin/login`))
+        }
+
         if (originalRequest?.showErrorResponse)
             store.dispatch({
                 type: SNACKBAR_OPEN,

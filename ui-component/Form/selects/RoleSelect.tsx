@@ -38,7 +38,7 @@ const RoleSelect = ({
         }
     )
 
-    console.log('error', error)
+    
 
     return (
         <Autocomplete
@@ -54,9 +54,9 @@ const RoleSelect = ({
             isTouched={isTouched}
             error={error}
             disabled={isFetching || disabled}
-            getOptionLabel={(option) => option?.name}
-            getOptionSelected={(option, value) => option?.id === value?.id}
-            data={data}
+            getOptionLabel={(option) => option}  // Use the option itself as label since it's a string
+            getOptionSelected={(option, value) => option === value}  // Compare strings directly
+            data={data}  // Use 'options' prop instead of 'data' for Autocomplete
             loading={isLoading || isFetching}
             {...rest}
         />
