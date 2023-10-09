@@ -22,10 +22,16 @@ interface IProps {
 }
 
 const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
-    const { isDoctor, isPatient, info } = useUser()
+    const { isDoctor, isPatient,isManager, info } = useUser()
 
     const { isOpen, open, close } = useOpenState()
     const [data, setData] = useState(null)
+
+    const doctorId = data?.doctorDTO?.id
+    const patientId = data?.patientDTO?.id
+    const treatmentId: any = ''
+    const treatmentPhaseId: any = ''
+    const clinicId = data?.clinicDTO?.clinicId
 
     const { isLoading, mutate } = useMutation(
         (values: any) => {
@@ -41,20 +47,26 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                 appointmentStart: format(new Date(values?.appointmentStart), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
                 appointmentEnd: format(new Date(values?.appointmentEnd), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
             }
+
+            const clinicRequestBody = {
+                status:  values?.appointmentStatus,
+                clinicId: values?.clinic_id,
+                patientId: values?.patient_id,
+                appointmentStart: format(new Date(values?.appointmentStart), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
+                appointmentEnd: format(new Date(values?.appointmentEnd), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
+            }
+            if( isManager ){
+                console.log(clinicRequestBody)
+                return axios.put(`/api/appointment/clinic/appointment/${data?.id}`, clinicRequestBody)
+            }
             if (
                 values?.appointmentStatus === ENUM_APPOINTMENT_STATUSES.REJECTED ||
                 values?.appointmentStatus === ENUM_APPOINTMENT_STATUSES.CANCELLED ||
-                values?.appointmentStatus === ENUM_APPOINTMENT_STATUSES.COMPLETED
-            ) {
+                values?.appointmentStatus === ENUM_APPOINTMENT_STATUSES.COMPLETED ||
+                values?.appointmentStatus === ENUM_APPOINTMENT_STATUSES.SCHEDULED 
+            ) { 
                 return axios.put(`/api/appointment/${data?.id}`, requestBody)
             }
-            console.log(values)
-            return data?.id
-                ? axios.put(
-                      `/api/doctor/appointment/${data?.id}/treatment-phase/${values?.treatment_phase_id}`,
-                      requestTreatmentSessionBody
-                  )
-                : axios.put(`/api/doctor/treatment-phase/${values?.treatment_phase_id}`, requestTreatmentSessionBody)
         },
         {
             onSuccess: () => {
@@ -90,11 +102,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
         }),
         []
     )
-
-    const doctorId = data?.doctorDTO?.id
-    const patientId = data?.patientDTO?.id
-    const treatmentId: any = ''
-    const treatmentPhaseId: any = ''
+    
 
     const statuses = isPatient
         ? [ENUM_APPOINTMENT_STATUSES.REQUESTED, ENUM_APPOINTMENT_STATUSES.CANCELLED]
@@ -116,6 +124,7 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                     patient_id: patientId ?? (isPatient ? info?.id : ''),
                     treatment_id: treatmentId,
                     treatment_phase_id: treatmentPhaseId,
+                    clinic_id : clinicId ?? ''
                 }}
                 // validationSchema={blogValidationSchema}
                 onSubmit={(values) => mutate(values)}

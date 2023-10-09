@@ -19,8 +19,9 @@ const CreateEditPictureForm = forwardRef(({ onSuccess }: IProps, ref) => {
     const { data: clinicPicture } = useQuery(
         ['ClinicImage', data?.clinicId],
         async () => {
-            const response = await axios.get(`/api/clinics/${data?.clinicId}/picture`, {
+            const response = await axios.get(`/api/clinics/${data?.clinicId}/profile-picture`, {
                 responseType: 'arraybuffer',
+                showErrorResponse: false,
             })
 
             return new Blob([response?.data])
@@ -35,8 +36,8 @@ const CreateEditPictureForm = forwardRef(({ onSuccess }: IProps, ref) => {
     const { isLoading, mutate } = useMutation(
         async () => {
             const formData = new FormData()
-            formData.append('profilePicture', file)
-            return await axios.post(`/api/clinics/${data?.clinicId}/picture`, formData)
+            formData.append('image', file)
+            return await axios.post(`/api/clinics/${data?.clinicId}/profile-picture`, formData)
         },
         {
             onSuccess: () => {
@@ -78,8 +79,8 @@ const CreateEditPictureForm = forwardRef(({ onSuccess }: IProps, ref) => {
             </DialogTitle>
             <DialogContent dividers>
                 <Input
-                    id="profilePicture"
-                    name="profilePicture"
+                    id="image"
+                    name="image"
                     type="file"
                     value={file}
                     onChange={(event) => {

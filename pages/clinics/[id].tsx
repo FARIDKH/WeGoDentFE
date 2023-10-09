@@ -134,54 +134,67 @@ const SingleClinic = () => {
                                                 xs: 3,
                                             },
                                         }}
+                                        mb={10}
                                     >
-                                        <Box>
-                                            <Avatar
-                                                src={clinicPicture || avatarClinic?.src}
-                                                alt={clinic?.clinicName}
-                                                sx={{ width: 250, height: 250 }}
-                                            />
-                                        </Box>
-                                        <Box ml="12px">
-                                            <Typography variant="h1">
-                                                <strong>{clinic?.name}</strong>
-                                            </Typography>
+                                        <Grid container>
+                                            <Grid item xs={6}>
+                                                <Box ml="12px">
+                                                    <Typography variant="h1">
+                                                        <strong>{clinic?.name}</strong>
+                                                    </Typography>
 
-                                            <Typography sx={{ width: '75%', textAlign: 'justify' }} my={1}>
-                                                {clinic?.officeLocationName}
-                                            </Typography>
-                                            <Rating name="read-only" value={value} readOnly />
-
-                                            {/* <Divider /> */}
-                                        </Box>
-                                        <Box mt={5}>
-                                            <Typography
-                                                style={{
-                                                    fontSize: '16px',
-                                                    lineHeight: '1.5',
-                                                    color: '#333',
-                                                    margin: '0 0 16px',
-                                                }}
-                                            >
-                                                At <span style={{ fontWeight: 'bold' }}> {clinic?.name} </span>, we prioritize your dental
-                                                health and smile. Nestled in the heart of{' '}
-                                                <span style={{ fontStyle: 'italic' }}> {clinic?.officeLocationName} </span>, our
-                                                state-of-the-art dental facility offers a serene and welcoming environment, equipped with
-                                                the latest in dental technology. Our team of dedicated professionals is committed to
-                                                providing personalized care, ensuring that each patient experiences optimal oral health and
-                                                a radiant smile. Whether you're in for a routine check-up, a cosmetic procedure, or more
-                                                intensive treatment, we strive to exceed your expectations, making every visit a comfortable
-                                                and rewarding experience.
-                                            </Typography>
-                                        </Box>
+                                                    <Typography mt={2} mb={2} sx={{ width: '75%', textAlign: 'justify' }} my={1}>
+                                                        {clinic?.officeLocationName}
+                                                    </Typography>
+                                                    <Rating name="read-only" value={value} readOnly />
+                                                    <Typography
+                                                        style={{
+                                                            fontSize: '16px',
+                                                            lineHeight: '1.5',
+                                                            color: '#333',
+                                                            margin: '0 0 16px',
+                                                        }}
+                                                    >
+                                                        At <span style={{ fontWeight: 'bold' }}> {clinic?.name} </span>, we prioritize your
+                                                        dental health and smile. Nestled in the heart of{' '}
+                                                        <span style={{ fontStyle: 'italic' }}> {clinic?.officeLocationName} </span>, our
+                                                        state-of-the-art dental facility offers a serene and welcoming environment, equipped
+                                                        with the latest in dental technology. Our team of dedicated professionals is
+                                                        committed to providing personalized care, ensuring that each patient experiences
+                                                        optimal oral health and a radiant smile. Whether you're in for a routine check-up, a
+                                                        cosmetic procedure, or more intensive treatment, we strive to exceed your
+                                                        expectations, making every visit a comfortable and rewarding experience.
+                                                    </Typography>
+                                                    {/* <Divider /> */}
+                                                </Box>
+                                            </Grid>
+                                            <Grid item xs={6} 
+                                                style={{ 
+                                                    display: 'flex', 
+                                                    alignItems: 'center', 
+                                                    justifyContent: 'center'
+                                                }}>
+                                                <div 
+                                                    style={{
+                                                        borderRadius: '25px',
+                                                        width: '450px',  // Specify the fixed width
+                                                        height: '300px', // Specify the fixed height
+                                                        backgroundImage: 'url(https://source.unsplash.com/random?clinic)',
+                                                        backgroundSize: 'cover',
+                                                        backgroundPosition: 'center',
+                                                    }}
+                                                    aria-label="Random dentist clinic from Unsplash" // accessibility attribute as alt alternative
+                                                ></div>
+                                            </Grid>
+                                        </Grid>
                                     </Box>
                                 </Box>
                             </Box>
                         </Container>
 
-                        <Box width="100%" mt={5} mb={5} height="25px" sx={{ backgroundColor: '#0796f5' }}></Box>
-                        <Container maxWidth="lg">
-                            <Box sx={{ textAlign: 'center' }}>
+                        {/* <Box width="100%" mt={5} mb={5} height="25px" sx={{ backgroundColor: '#0796f5' }}></Box> */}
+                        <Container  maxWidth="lg">
+                            <Box mt={10} sx={{ textAlign: 'center' }}>
                                 <Typography sx={{ color: '#00624F' }} variant="h1">
                                     Meet the team
                                 </Typography>
