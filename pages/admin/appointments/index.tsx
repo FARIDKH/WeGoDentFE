@@ -27,7 +27,7 @@ const Appointments = () => {
     const [isListView, setIsListView] = useState(false)
     const createEditRef = useRef(null)
 
-    const { isDoctor, isPatient, isManager, info } = useUser()
+    const { isDoctor, isPatient, isManager, isReceptionist, info } = useUser()
     const id = info?.id
     const router: any = useRouter()
 
@@ -71,6 +71,33 @@ const Appointments = () => {
                     result.data.filter(item => item.status !== ENUM_APPOINTMENT_STATUSES.REJECTED)
                 );
             }
+
+            if (isReceptionist) {
+                const receptionistId = id; // Assuming id is already defined in the scope.
+            
+                try {
+                    // Fetch clinics associated with the receptionist.
+                    const response = await axios(`/api/clinics/receptionist/${receptionistId}`, { signal });
+            
+                    const receptionistClinic = response?.data; // Assuming the API returns the list of clinics in the response's data field.
+            
+                    const appointmentsPromises = receptionistClinic.map(clinic => 
+                        axios(`/api/appointment/clinic/${clinic?.clinicId}`, { signal })
+                    );
+                    
+                    
+                    const allAppointmentsResults = await Promise.all(appointmentsPromises);
+            
+                    return allAppointmentsResults.flatMap(result => 
+                        result.data.filter(item => item.status !== ENUM_APPOINTMENT_STATUSES.REJECTED)
+                    );
+                } catch (error) {
+                    console.error("Error fetching clinics or appointments:", error);
+                    // Handle error appropriately, for example, you might want to return an empty list or throw the error.
+                    return [];
+                }
+            }
+            
         },
         {
             initialData: [],
