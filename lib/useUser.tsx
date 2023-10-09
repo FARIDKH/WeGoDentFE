@@ -31,7 +31,9 @@ export default function useUser(redirect = true) {
     const isPatient = userRoles?.includes('ROLE_PATIENT')
     const isBlogger = userRoles?.includes('ROLE_BLOGGER')
     const isManager = managerRole?.includes('ROLE_MANAGER')
+    const isReceptionist = managerRole?.includes('ROLE_RECEPTIONIST')
 
+    
     return {
         isLoading,
         isLoggedIn: !!data,
@@ -43,6 +45,7 @@ export default function useUser(redirect = true) {
         isPatient,
         isBlogger,
         isManager,
+        isReceptionist,
         refetch
     }
 }

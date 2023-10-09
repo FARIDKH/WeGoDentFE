@@ -13,6 +13,7 @@ import BillingCreateEditForm from '../../../modules/clinics/billing-details/Crea
 
 import CreateEditPictureForm from '../../../modules/clinics/CreateEditPicture'
 import SubscriptionCreateEditForm from '../../../modules/subscription/CreateEdit'
+import ReceptionistCreateEditForm from '../../../modules/receptionists/CreateEdit'
 import DeleteForm from '../../../modules/clinics/Delete'
 import { ENUM_SUBSCRIPTION_STATUSES } from '../../../modules/subscription/constants'
 import Chip from '../../../ui-component/extended/Chip'
@@ -27,6 +28,7 @@ const Clinics = () => {
     const subCreateEditRef = useRef(null)
     const billingCreateEditRef = useRef(null)
     const addDoctorRef = useRef(null)
+    const addReceptionistRef = useRef(null)
     const addPictureRef = useRef(null)
 
     const [filter, setFilter] = React.useState('')
@@ -148,6 +150,10 @@ const Clinics = () => {
                                     label: 'Doctors of clinic',
                                     onClick: (clinic) => addDoctorRef?.current?.open(clinic),
                                 },
+                                {
+                                    label: 'Receptionists',
+                                    onClick: (clinic) => addReceptionistRef?.current?.open(clinic),
+                                },
                             ]}
                         />
                     </Box>
@@ -156,6 +162,7 @@ const Clinics = () => {
                 <CreateButtonFab onClick={() => createEditRef?.current?.open()} />
 
                 <SubscriptionCreateEditForm ref={subCreateEditRef} onSuccess={refetch} />
+                <ReceptionistCreateEditForm ref={addReceptionistRef} onSuccess={refetch} />
                 <ClinicCreateEditForm ref={createEditRef} onSuccess={refetch} />
                 <BillingCreateEditForm ref={billingCreateEditRef} onSuccess={refetch} />
                 <AddDoctorForm ref={addDoctorRef} onSuccess={refetch} />
