@@ -1,17 +1,4 @@
-import {
-    Link,
-    Avatar,
-    Box,
-    Container,
-    Divider,
-    Typography,
-    Rating,
-    Tooltip,
-    Pagination,
-    Button,
-    useTheme,
-    makeStyles,
-} from '@material-ui/core'
+import { Link, Box, Container, Divider, Typography, Rating, Tooltip, Pagination, Button, makeStyles } from '@material-ui/core'
 
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import VerifiedIcon from '@mui/icons-material/Verified'
@@ -24,7 +11,6 @@ import NoResult from '../ui-component/NoResult'
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar'
 import { DigitalClock, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import avatar from '../assets/images/avatar.png'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import { useEffect, useRef, useState } from 'react'
@@ -34,6 +20,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useMobile } from '../ui-component/hooks/useMobile'
 import GoogleMap from '../ui-component/GoogleMap'
 import useUser from '../lib/useUser'
+import ClinicPicture from '../modules/clinics/ClinicPicture'
 
 dayjs.extend(isBetween)
 
@@ -230,7 +217,7 @@ const ClinicsPage = () => {
                                                             }}
                                                         >
                                                             <Box>
-                                                                <Avatar src={avatar?.src} alt={clinicName} sx={{ width: 75, height: 75 }} />
+                                                                <ClinicPicture clinic={clinic} style={{ width: 75, height: 75 }} />
                                                             </Box>
                                                             <Box ml="12px">
                                                                 <Typography variant="h4">
