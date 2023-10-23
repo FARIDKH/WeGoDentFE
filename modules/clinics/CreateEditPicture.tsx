@@ -1,7 +1,7 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, CircularProgress, Box } from '@material-ui/core'
 import axios from '../../utils/axios'
 import React, { useState, forwardRef } from 'react'
-import { useMutation } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import { store } from '../../pages/_app'
 import { SNACKBAR_OPEN } from '../../store/actions'
 import Input from '../../ui-component/Form/Input'
@@ -17,12 +17,28 @@ const CreateEditPictureForm = forwardRef(({ onSuccess }: IProps, ref) => {
     const [data, setData] = useState(null)
     const [file, setFile] = useState(null)
 
+    const { data: clinicPicture } = useQuery(
+        ['ClinicImage', data?.clinicId],
+        async () => {
+            const response = await axios.get(`/api/clinics/${data?.clinicId}/profile-picture`, {
+                responseType: 'arraybuffer',
+                showErrorResponse: false,
+            })
+
+            return new Blob([response?.data])
+        },
+        {
+            enabled: !!data?.clinicId,
+        }
+    )
+
+    const imageUrl = file ? URL.createObjectURL(file) : clinicPicture && URL.createObjectURL(clinicPicture)
+
     const { isLoading, mutate } = useMutation(
         async () => {
             const formData = new FormData()
-
             formData.append('image', file)
-            return await axios.post(`/api/clinic/${data?.clinicId}/upload`, formData)
+            return await axios.post(`/api/clinics/${data?.clinicId}/profile-picture`, formData)
         },
         {
             onSuccess: () => {
@@ -64,8 +80,8 @@ const CreateEditPictureForm = forwardRef(({ onSuccess }: IProps, ref) => {
             </DialogTitle>
             <DialogContent dividers>
                 <Input
-                    id="profilePicture"
-                    name="profilePicture"
+                    id="image"
+                    name="image"
                     type="file"
                     inputProps={{
                         accept: 'image/*',

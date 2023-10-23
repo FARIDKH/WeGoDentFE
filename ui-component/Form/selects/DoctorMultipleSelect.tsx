@@ -39,6 +39,8 @@ const DoctorMultipleSelect = ({
         }
     )
 
+    const selectedDoctors = value.map(id => data.find(doctor => doctor.id === id));
+
     
 
     return (
@@ -46,7 +48,7 @@ const DoctorMultipleSelect = ({
             id={id}
             multiple
             name={name}
-            value={value}
+            value={selectedDoctors}
             onBlur={onBlur}
             onChange={(e, value: any) => {
                 onChange(value)

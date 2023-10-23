@@ -8,13 +8,16 @@ import CurrentUser from '../../ui-component/CurrentUser'
 import DescriptionGridGenerator from '../../ui-component/DescriptionGridGenerator'
 import UpdateDoctor from '../../modules/Doctor/UpdateDoctor'
 import UpdatePatient from '../../modules/patients/UpdatePatient'
+import UpdateAccount from '../../modules/account/UpdateAccount'
+// import UpdatePatient from '../../modules/mnager/CreateEdit'
 
 
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 
 const ProfilePage = () => {
 
-    const { isDoctor, isPatient, info } = useUser()
+    const { isDoctor, isPatient, isManager,isReceptionist, info } = useUser()
     return (
         <CurrentUser>
             {({ info, isDoctor }) => {
@@ -25,6 +28,8 @@ const ProfilePage = () => {
                                 {isDoctor && (<UpdateDoctor doctor={info}  />)}
                                 {/* {isDoctor && (<UpdatePatient doctor={info}  />)} */}
                                 {isPatient && (<UpdatePatient patient={info}  />)}
+                                {isManager && (<UpdateAccount account={info}  />)}
+                                {isReceptionist && (<UpdateAccount account={info}  />)}
                         
 
                             </CardContent>
@@ -37,3 +42,12 @@ const ProfilePage = () => {
 }
 
 export default ProfilePage
+
+export const getStaticProps = async ({ locale }) => {
+    return {
+        props: {
+            ...(await serverSideTranslations(locale, ['doctor'])),
+        },
+    }
+}
+
