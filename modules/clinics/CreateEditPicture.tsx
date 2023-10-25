@@ -64,8 +64,8 @@ const CreateEditPictureForm = forwardRef(({ onSuccess }: IProps, ref) => {
             </DialogTitle>
             <DialogContent dividers>
                 <Input
-                    id="profilePicture"
-                    name="profilePicture"
+                    id="image"
+                    name="image"
                     type="file"
                     inputProps={{
                         accept: 'image/*',

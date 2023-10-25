@@ -13,7 +13,7 @@ const icons = {
 }
 
 const useMenuItems = () => {
-    const { isDoctor, isPatient, isAdmin, isBlogger, isManager } = useUser()
+    const { isDoctor, isPatient, isAdmin, isBlogger, isManager, isReceptionist } = useUser()
 
     const { t } = useTranslation('doctor')
 
@@ -37,7 +37,7 @@ const useMenuItems = () => {
                     url: '/admin/appointments',
                     icon: icons['IconAppointments'],
                     breadcrumbs: false,
-                    hide: !isDoctor && !isPatient && !isManager,
+                    hide: !isDoctor && !isPatient && !isManager && !isReceptionist,
                 },
                 {
                     id: 'availabilities',
@@ -63,6 +63,16 @@ const useMenuItems = () => {
                     t('labelMenuItemDoctorList'),
                     type: 'item',
                     url: '/admin/doctors',
+                    icon: icons['IconUsers'],
+                    breadcrumbs: false,
+                    hide: !isAdmin && !isManager,
+                },
+                {
+                    id: 'receptionists',
+                    title: 
+                    t('labelMenuItemReceptionistsList'),
+                    type: 'item',
+                    url: '/admin/receptionists',
                     icon: icons['IconUsers'],
                     breadcrumbs: false,
                     hide: !isAdmin && !isManager,

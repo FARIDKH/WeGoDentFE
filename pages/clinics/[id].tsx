@@ -116,6 +116,7 @@ const SingleClinic = () => {
                                                 xs: 3,
                                             },
                                         }}
+                                        mb={10}
                                     >
                                         <Box flex={1}>
                                             <Typography variant="h1" fontSize="36px">
