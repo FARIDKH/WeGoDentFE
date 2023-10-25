@@ -6,7 +6,7 @@ import { store } from '../../pages/_app'
 import { SNACKBAR_OPEN } from '../../store/actions'
 import Input from '../../ui-component/Form/Input'
 import { useOpenState } from '../../ui-component/hooks/useOpenState'
-import ClinicPicture from './ClinicPicture'
+import DoctorPicture from './DoctorPicture'
 
 interface IProps {
     onSuccess?: () => void
@@ -22,14 +22,14 @@ const CreateEditPictureForm = forwardRef(({ onSuccess }: IProps, ref) => {
             const formData = new FormData()
 
             formData.append('image', file)
-            return await axios.post(`/api/clinic/${data?.clinicId}/upload`, formData)
+            return await axios.post(`/api/doctor/${data?.id}/upload`, formData)
         },
         {
             onSuccess: () => {
                 store.dispatch({
                     type: SNACKBAR_OPEN,
                     open: true,
-                    message: 'Clinic photo has been updated successfully',
+                    message: 'Doctor photo has been updated successfully',
                     variant: 'alert',
                     alertSeverity: 'success',
                     anchorOrigin: { vertical: 'top', horizontal: 'center' },
@@ -64,8 +64,8 @@ const CreateEditPictureForm = forwardRef(({ onSuccess }: IProps, ref) => {
             </DialogTitle>
             <DialogContent dividers>
                 <Input
-                    id="image"
-                    name="image"
+                    id="profilePicture"
+                    name="profilePicture"
                     type="file"
                     inputProps={{
                         accept: 'image/*',
@@ -81,7 +81,7 @@ const CreateEditPictureForm = forwardRef(({ onSuccess }: IProps, ref) => {
                 />
 
                 <Box mt={2} mx="auto">
-                    <ClinicPicture file={file} clinic={data} />
+                    <DoctorPicture file={file} doctor={data} />
                 </Box>
             </DialogContent>
             <DialogActions>

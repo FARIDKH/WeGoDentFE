@@ -10,50 +10,44 @@ import CreateButtonFab from '../../../ui-component/CreateButtonFab'
 import CreateEditForm from '../../../modules/Doctor/CreateEdit'
 import ClinicSelectionModal from '../../../modules/clinics/ClinicSelectionModal'
 import DeleteForm from '../../../modules/Doctor/Delete'
-import { trimString } from '../../../utils/string'
 import { store } from '../../_app'
 
 import { SNACKBAR_OPEN } from '../../../store/actions'
 
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-
-
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import CreateEditPictureForm from '../../../modules/Doctor/CreateEditPicture'
+import DoctorPicture from '../../../modules/Doctor/DoctorPicture'
 
 const Doctors = () => {
     const createEditRef = useRef(null)
     const deleteRef = useRef(null)
-    const clinicSelectionRef = useRef(null);
-
+    const clinicSelectionRef = useRef(null)
+    const addPictureRef = useRef(null)
 
     const { data, isFetching, isError, refetch } = useQuery(['Doctors'], async ({ signal }) => {
         const result = await axios(`/api/doctor`, { signal })
         return result.data
     })
-    const [selectedClinicId, setSelectedClinicId] = useState<number | null>(null);
-    
+    const [selectedClinicId, setSelectedClinicId] = useState<number | null>(null)
 
     const fetchClinicData = async (clinicId) => {
-        const response = await axios.get(`/api/clinics/${clinicId}`);
-        const data = response.data;
+        const response = await axios.get(`/api/clinics/${clinicId}`)
+        const data = response.data
         return {
             id: data?.clinicId,
             quota: data?.doctorQuota,
             currentCount: data?.currentDoctorCount,
-        };
-    };
+        }
+    }
 
     const handleClinicSelected = async (clinicId) => {
         // Fetch the clinic's quota and current doctor count
         // This is a placeholder, replace with your actual API call or method
-        const { id, quota, currentCount } = await fetchClinicData(clinicId);
+        const { id, quota, currentCount } = await fetchClinicData(clinicId)
 
-
-        
-        
         if (quota > currentCount) {
-            
             setSelectedClinicId(id)
-            createEditRef?.current?.open();
+            createEditRef?.current?.open()
             store.dispatch({
                 type: SNACKBAR_OPEN,
                 open: true,
@@ -72,7 +66,7 @@ const Doctors = () => {
                 anchorOrigin: { vertical: 'top', horizontal: 'center' },
             })
         }
-    };
+    }
 
     return (
         <>
@@ -91,6 +85,17 @@ const Doctors = () => {
                             }}
                             columns={[
                                 {
+                                    id: 'Image',
+                                    numeric: false,
+                                    label: 'image',
+                                    align: 'left',
+                                    renderAs: (doctor) => {
+                                        return (
+                                            <DoctorPicture doctor={doctor} style={{ width: '50px', height: '50px', objectFit: 'cover' }} />
+                                        )
+                                    },
+                                },
+                                {
                                     id: 'id',
                                     numeric: false,
                                     label: 'ID',
@@ -101,19 +106,23 @@ const Doctors = () => {
                                     numeric: false,
                                     label: 'Doctor',
                                     align: 'left',
-                                    renderAs: ({ userDTO }) => ("Dr. " + userDTO?.firstName + " " + userDTO?.lastName).toString()
+                                    renderAs: ({ userDTO }) => ('Dr. ' + userDTO?.firstName + ' ' + userDTO?.lastName).toString(),
                                 },
                                 {
                                     id: 'clinicName',
                                     numeric: false,
                                     label: 'Associated Clinic',
                                     align: 'left',
-                                }, 
+                                },
                             ]}
                             actions={[
                                 {
                                     label: 'Edit',
                                     onClick: (doctor) => createEditRef?.current?.open(doctor),
+                                },
+                                {
+                                    label: 'Profile picture',
+                                    onClick: (doctor) => addPictureRef?.current?.open(doctor),
                                 },
                                 {
                                     label: 'Delete',
@@ -125,12 +134,13 @@ const Doctors = () => {
                         />
                     </Box>
                 </MainCard>
-                
+
                 <CreateButtonFab onClick={() => clinicSelectionRef?.current?.open()} />
                 <ClinicSelectionModal ref={clinicSelectionRef} onSuccess={handleClinicSelected} />
-            
+
                 <CreateEditForm selectedClinicId={selectedClinicId} ref={createEditRef} onSuccess={refetch} />
                 <DeleteForm ref={deleteRef} onSuccess={refetch} />
+                <CreateEditPictureForm ref={addPictureRef} onSuccess={refetch} />
             </MainLayout>
         </>
     )
@@ -140,8 +150,8 @@ export default Doctors
 
 export const getStaticProps = async ({ locale }) => {
     return {
-      props: {
-        ...(await serverSideTranslations(locale, ["doctor"])),
-      },
-    };
-  };
+        props: {
+            ...(await serverSideTranslations(locale, ['doctor'])),
+        },
+    }
+}

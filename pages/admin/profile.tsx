@@ -17,7 +17,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 const ProfilePage = () => {
 
-    const { isDoctor, isPatient, isManager, info } = useUser()
+    const { isDoctor, isPatient, isManager,isReceptionist, info } = useUser()
     return (
         <CurrentUser>
             {({ info, isDoctor }) => {
@@ -29,6 +29,7 @@ const ProfilePage = () => {
                                 {/* {isDoctor && (<UpdatePatient doctor={info}  />)} */}
                                 {isPatient && (<UpdatePatient patient={info}  />)}
                                 {isManager && (<UpdateAccount account={info}  />)}
+                                {isReceptionist && (<UpdateAccount account={info}  />)}
                         
 
                             </CardContent>

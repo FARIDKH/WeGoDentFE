@@ -21,6 +21,7 @@ import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
 
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import ClinicPicture from '../../../modules/clinics/ClinicPicture'
 
 const Clinics = () => {
     const createEditRef = useRef(null)
@@ -73,6 +74,17 @@ const Clinics = () => {
                             isError={isError}
                             data={{ data: filteredData }}
                             columns={[
+                                {
+                                    id: 'Image',
+                                    numeric: false,
+                                    label: 'image',
+                                    align: 'left',
+                                    renderAs: (clinic) => {
+                                        return (
+                                            <ClinicPicture clinic={clinic} style={{ width: '50px', height: '50px', objectFit: 'cover' }} />
+                                        )
+                                    },
+                                },
                                 {
                                     id: 'name',
                                     numeric: false,
