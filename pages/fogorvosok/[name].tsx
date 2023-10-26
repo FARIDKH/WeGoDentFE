@@ -17,7 +17,7 @@ import PeopleIcon from '@mui/icons-material/People'
 import BackHandIcon from '@mui/icons-material/BackHand'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 
-import { useDoctor } from '../../hooks/useDoctor'
+import { useDoctorByName } from '../../hooks/useDoctorByName'
 import Layout from '../../layout/main/Layout'
 import Loading from '../../ui-component/Loading'
 import NoResult from '../../ui-component/NoResult'
@@ -31,6 +31,7 @@ import isBetween from 'dayjs/plugin/isBetween'
 import { useEffect, useRef, useState } from 'react'
 import CreateAppointment from '../../modules/main/appointments/CreateAppointment'
 import Header2 from '../../layout/main/Header2'
+import { useTranslation } from 'next-i18next'
 
 dayjs.extend(isBetween)
 
@@ -72,14 +73,16 @@ const SingleDoctor = () => {
 
     const [selected, setSelected] = useState(initialState)
 
+    const { t, i18n} = useTranslation('common')
+    const curLang = i18n.language
     const { query } = useRouter()
 
-    const { id } = query ?? {}
+    const { name } = query ?? {}
 
     const [value, setValue] = useState<number | null>(4)
 
-    const { data: doctors, isFetching } = useDoctor({
-        id,
+    const { data: doctors, isFetching } = useDoctorByName({
+        name,
         checkAuth: false,
     })
 
@@ -100,7 +103,7 @@ const SingleDoctor = () => {
             <Header2 showForm={false} />
             <Container maxWidth="lg">
                 <Box minHeight="50vh" my={4}>
-                    {isFetching && id != undefined ? (
+                    {isFetching && name != undefined ? (
                         <Loading size={60} />
                     ) : !doctors?.length ? (
                         <NoResult />
@@ -164,7 +167,7 @@ const SingleDoctor = () => {
                                                     <Typography>Office Location: {doctor?.officeLocationName}</Typography>
                                                     <Typography>Works at
                                                         
-                                                        <Link key={doctor?.clinicId} href={clinicLink}>
+                                                        <Link rel='alternate' hrefLang={curLang} key={doctor?.clinicId} href={clinicLink}>
                                                             {doctor?.clinicName}
                                                         </Link>
                                                     </Typography>

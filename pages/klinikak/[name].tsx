@@ -1,4 +1,4 @@
-import { Box, Container, Typography, Grid, Button } from '@material-ui/core'
+import { Box, Container, Typography, Grid, Button, Link } from '@material-ui/core'
 import { useRouter } from 'next/router'
 import * as React from 'react'
 
@@ -6,8 +6,9 @@ import PhoneIphoneIcon from '@mui/icons-material/LocalPhoneOutlined'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import LocationOnOutlined from '@mui/icons-material/LocationOnOutlined'
 import GoogleMap from '../../ui-component/GoogleMap'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-import { useClinic } from '../../hooks/useClinic'
+import { useClinicByName } from '../../hooks/useClinicByName'
 
 import useUser from '../../lib/useUser'
 import Layout from '../../layout/main/Layout'
@@ -26,6 +27,8 @@ import { Star } from '@material-ui/icons'
 import Reviews from '../../modules/clinics/Reviews'
 import ClinicPicture from '../../modules/clinics/ClinicPicture'
 import { apiUrl } from '../../lib/fetchJson'
+import { GetStaticPaths } from 'next'
+import { useTranslation } from 'next-i18next'
 
 dayjs.extend(isBetween)
 
@@ -45,14 +48,17 @@ const SingleClinic = () => {
 
     const { query } = useRouter()
 
-    const { id } = query ?? {}
+    const { name } = query ?? {}
 
     const [value, setValue] = useState<number | null>(5)
 
-    const { data: clinic, isFetching } = useClinic({
-        id,
+    const { data: clinic, isFetching } = useClinicByName({
+        name,
         checkAuth: false,
     })
+
+    const { t, i18n } = useTranslation('common')
+    const curLang = i18n.language;
 
     useEffect(() => {
         console.log('selected', selected)
@@ -138,7 +144,7 @@ const SingleClinic = () => {
                                             </Box>
 
                                             <Typography mt="40px" lineHeight="24px">
-                                                {clinic?.description}
+                                                <div dangerouslySetInnerHTML={{ __html: clinic?.description || "" }} />
                                             </Typography>
                                         </Box>
                                         <Box
@@ -160,11 +166,10 @@ const SingleClinic = () => {
                                 <>
                                     <Box mt="100px" sx={{ textAlign: 'center' }}>
                                         <Typography sx={{ color: '#00624F' }} variant="h1">
-                                            Meet the team
+                                            Találkozni a csapattal
                                         </Typography>
                                         <Typography mt={3} mb={3} variant="h5">
-                                            Whether you need a professional teeth cleaning, are interested in an implant or simply want a
-                                            check-up appointment - we are here for you.
+                                        Mindegy, hogy professzionális fogtisztításra van szüksége, implantátum iránt érdeklődik, vagy egyszerűen csak egy vizsgálatra van szüksége – mi állunk rendelkezésére.
                                         </Typography>
                                         <Grid
                                             direction="row"
@@ -177,7 +182,8 @@ const SingleClinic = () => {
                                         >
                                             {doctors?.map((doctor) => {
                                                 const doctorImgUrl = `${apiUrl}/doctor/${doctor?.id}/profile-picture`
-
+                                                const user = doctor?.userDTO
+                                                const doctorUrl = `/fogorvosok/` + user?.firstName?.toLowerCase() + `-` + user?.lastName?.toLowerCase()
                                                 return (
                                                     <Grid key={doctor?.id} item xs={3}>
                                                         <Box
@@ -221,18 +227,20 @@ const SingleClinic = () => {
                                                                 <Typography variant="h4" color="black">
                                                                     {doctor?.doctorType?.replace('_', ' ')}
                                                                 </Typography>
-                                                                <Button
-                                                                    color="primary"
-                                                                    variant="contained"
-                                                                    sx={{
-                                                                        padding: '8px 24px',
-                                                                        borderRadius: '8px',
-                                                                        color: 'white',
-                                                                        marginTop: '8px',
-                                                                    }}
-                                                                >
-                                                                    Appointment
-                                                                </Button>
+                                                                <Link href={doctorUrl} style={{ textDecoration: 'none' }}>
+                                                                    <Button
+                                                                        color="primary"
+                                                                        variant="contained"
+                                                                        sx={{
+                                                                            padding: '8px 24px',
+                                                                            borderRadius: '8px',
+                                                                            color: 'white',
+                                                                            marginTop: '8px',
+                                                                        }}
+                                                                    >
+                                                                        Időpont egyeztetés
+                                                                    </Button>
+                                                                </Link>
                                                             </Box>
                                                         </Box>
                                                     </Grid>
@@ -245,11 +253,10 @@ const SingleClinic = () => {
 
                             <Box mt="150px" textAlign="center">
                                 <Typography variant="h3" sx={{ color: '#00624F', fontSize: '30px' }}>
-                                    HOW TO FIND OUR DENTAL PRACTICE
+                                    HOGYAN MEGTALÁLHATJUK FOGORVOSI RENDELŐNKET
                                 </Typography>
                                 <Typography mt={3} mb={3} variant="h5">
-                                    Whether you need a professional teeth cleaning, are interested in an implant or simply want a check-up
-                                    appointment - we are here for you.
+                                Mindegy, hogy professzionális fogtisztításra van szüksége, implantátum iránt érdeklődik, vagy egyszerűen csak egy vizsgálatra van szüksége – mi állunk rendelkezésére.
                                 </Typography>
                             </Box>
 
@@ -294,7 +301,7 @@ const SingleClinic = () => {
                                         }}
                                     >
                                         <CalendarMonthIcon sx={{ color: '#00624F', fontSize: 32 }} />
-                                        <Typography variant="h5">Mon - Sun: 8:00-20:00</Typography>
+                                        <Typography variant="h5">H-V: 8:00-20:00</Typography>
                                     </div>
                                 </Box>
 
@@ -305,11 +312,10 @@ const SingleClinic = () => {
 
                             <Box mt="150px" sx={{ textAlign: 'center', paddingX: '150px' }}>
                                 <Typography variant="h3" sx={{ color: '#00624F', fontSize: '30px' }}>
-                                    Our calendar
+                                    A naptárunk
                                 </Typography>
                                 <Typography mb={5} mt={3} variant="h5">
-                                    Whether you need a professional teeth cleaning, are interested in an implant or simply want a check-up
-                                    appointment - we are here for you.
+                                    Érdeklődni a nyitvatartási időnkban lehet
                                 </Typography>
 
                                 <Box display="flex" alignItems="center" justifyContent="center">
@@ -399,7 +405,7 @@ const SingleClinic = () => {
                                 </Box>
                             </Box>
 
-                            <Reviews />
+                            <Reviews curLang={curLang} />
                         </Container>
                     </>
                 )}
@@ -411,3 +417,19 @@ const SingleClinic = () => {
 }
 
 export default SingleClinic
+
+export const getStaticProps = async ({ locale }) => {
+    return {
+        props: {
+            ...(await serverSideTranslations(locale, ['common'])),
+        },
+    }
+}
+
+export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+
+    return {
+        paths: [], //indicates that no page needs be created at build time
+        fallback: 'blocking' //indicates the type of fallback
+    }
+}

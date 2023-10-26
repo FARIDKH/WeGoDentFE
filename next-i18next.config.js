@@ -1,8 +1,9 @@
 module.exports = {
     i18n: {
-        defaultLocale: 'en',
+        defaultLocale: 'hu',
         locales: ['en', 'hu'],
         localeDetection: false,
+        ns: ['common', 'doctorTypes', 'doctor'],
     },
     react: {
         useSuspense: false,

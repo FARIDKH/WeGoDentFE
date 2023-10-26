@@ -19,6 +19,34 @@
     "news_subscribe" : "Want to know what we're up to? Sign up for the newsletter and join our tribe",
     "buttonSubscribe" : "Subscribe",
     "labelContact" : "Contact",
-    "labelAddress": "Address"
-
+    "labelAddress": "Address",
+    "labelResultSubtitle" :  "Book appointment online without any extra fee",
+    "labelAppointment" : "Appointment",
+    "labelShowNumber" : "Show Number",
+    "labelMoreInfo" : "More Info",
+    "labelGeneralDentist": "General Dentist",
+    "labelOrthodontist": "Orthodontist",
+    "labelPeriodontist": "Periodontist",
+    "labelEndodontist": "Endodontist",
+    "labelOralAndMaxillofacialSurgeon": "Oral and Maxillofacial Surgeon",
+    "labelPediatricDentist": "Pediatric Dentist",
+    "labelProsthodontist": "Prosthodontist",
+    "labelOralPathologist": "Oral Pathologist",
+    "labelOralMedicineSpecialist": "Oral Medicine Specialist",
+    "labelCosmeticDentist": "Cosmetic Dentist",
+    "labelEmergencyDentist": "Emergency Dentist",
+    "DoctorType": {
+        "General_Dentist": "General Dentist",
+        "Orthodontist": "Orthodontist",
+        "Periodontist": "Periodontist",
+        "Endodontist": "Endodontist",
+        "Oral_and_Maxillofacial_Surgeon": "Oral and Maxillofacial Surgeon",
+        "Pediatric_Dentist": "Pediatric Dentist",
+        "Prosthodontist": "Prosthodontist",
+        "Oral_Pathologist": "Oral Pathologist",
+        "Oral_Medicine_Specialist": "Oral Medicine Specialist",
+        "Cosmetic_Dentist": "Cosmetic Dentist",
+        "Emergency_Dentist": "Emergency Dentist"
+    
+    }
 } 

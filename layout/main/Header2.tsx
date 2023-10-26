@@ -6,6 +6,8 @@ import LanguagaSelect from '../LanguageSelect'
 import LoginButton from './LoginButton'
 import MobileMenu from './MobileMenu'
 import SearchForm from './SearchForm'
+import { useTranslation } from 'next-i18next'
+
 
 const useStyle = makeStyles((theme) => ({
     wrapper: {
@@ -76,8 +78,12 @@ export const HeaderSearchForm = () => {
     const classes = useStyle()
     const isMobile = useMobile()
 
+    const { t, i18n } = useTranslation('common')
+
+
     return (
         <SearchForm
+            curLang={i18n.language}
             selectProps={
                 !isMobile && {
                     IconComponent: () => null,
@@ -106,7 +112,6 @@ export const HeaderSearchForm = () => {
 
 const Header2 = ({ showForm = true }) => {
     const isMobile = useMobile()
-
     return (
         <Box className="mainBlueBgGradient" paddingY={2}>
             <Container maxWidth="lg">

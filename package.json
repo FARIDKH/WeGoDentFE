@@ -44,6 +44,7 @@
         "date-fns": "^2.23.0",
         "date-fns-tz": "^1.2.2",
         "dayjs": "^1.11.9",
+        "dompurify": "^3.0.6",
         "firebase": "^8.7.1",
         "formik": "^2.2.9",
         "framer-motion": "^4.1.17",

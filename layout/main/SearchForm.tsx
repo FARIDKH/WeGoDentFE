@@ -11,6 +11,7 @@ import DoctorTypeSelect from '../../ui-component/main/DoctorTypeSelect'
 interface IProps {
     selectProps?: SelectProps
     inputProps?: TextFieldProps
+    curLang?: String,
     // eslint-disable-next-line no-unused-vars
     searchButton: ReactNode
     classNames: {
@@ -20,7 +21,7 @@ interface IProps {
     }
 }
 
-const SearchForm = ({ selectProps, inputProps, searchButton, classNames }: IProps) => {
+const SearchForm = ({ selectProps, curLang, inputProps, searchButton, classNames }: IProps) => {
     const { query, push, locale } = useRouter()
     const [loading, setLoading] = useState(false)
 
@@ -92,6 +93,7 @@ const SearchForm = ({ selectProps, inputProps, searchButton, classNames }: IProp
                 <form autoComplete="off" noValidate onSubmit={handleSubmit}>
                     <Box className={classNames.wrapper}>
                         <DoctorTypeSelect
+                            curLang={curLang}
                             className={classNames.doctorSelect}
                             name="doctorType"
                             value={values?.doctorType}
