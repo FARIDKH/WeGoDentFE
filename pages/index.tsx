@@ -109,10 +109,19 @@ declare global {
 const HomePage = () => {
     const classes = useStyle()
 
-    const { t } = useTranslation('common')
+    const { t,i18n } = useTranslation('common')
+    const curLang = i18n.language;
+
+    var metaDescription = "Finding a dentist at Wegodent is quick and easy! Find a practice near you and protect your teeth with us!";
+    var metaTitle = "Wegodent - Easy access to dentist near you";
+    if (curLang === 'hu') {
+        metaDescription = "Wegodent - nél fogorvos keresése gyors és egyszerű! Találjon közeli rendelőt és óvja fogait velünk!";
+        metaTitle = "Wegodent - A fogorvos elérése egyszerűen";
+    }
+
 
     return (
-        <Layout>
+        <Layout description={metaDescription} title={metaTitle}>
             <Box className="background-round" height="650px">
                 <Container maxWidth="lg">
                     <Header />
@@ -124,6 +133,7 @@ const HomePage = () => {
                         <Typography variant="h3">{t('welcome_h3')}</Typography>
                         <Box mt={5}>
                             <SearchForm
+                                curLang={i18n.language}
                                 classNames={{
                                     wrapper: classes.searchWrapper,
                                     doctorSelect: classes.selectDoctorType,

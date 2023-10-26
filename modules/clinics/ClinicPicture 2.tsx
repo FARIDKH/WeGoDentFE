@@ -8,7 +8,7 @@ const ClinicPicture = ({ file = null, clinic = null, ...rest }) => {
         <img
             src={imageUrl}
             alt={clinic?.name}
-            style={{  borderRadius:"50%" ,width: '100%', height: '100%', objectFit: 'cover' }}
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             onError={({ currentTarget }) => {
                 currentTarget.onerror = null // prevents looping
                 currentTarget.src = avatar?.src

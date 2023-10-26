@@ -31,7 +31,7 @@ import isBetween from 'dayjs/plugin/isBetween'
 import { useEffect, useRef, useState } from 'react'
 import CreateAppointment from '../../modules/main/appointments/CreateAppointment'
 import Header2 from '../../layout/main/Header2'
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'next-i18next'
 
 dayjs.extend(isBetween)
 
@@ -75,7 +75,6 @@ const SingleDoctor = () => {
 
     const { t, i18n} = useTranslation('common')
     const curLang = i18n.language
-
     const { query } = useRouter()
 
     const { id } = query ?? {}

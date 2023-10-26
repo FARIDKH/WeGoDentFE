@@ -6,8 +6,9 @@ import PhoneIphoneIcon from '@mui/icons-material/LocalPhoneOutlined'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import LocationOnOutlined from '@mui/icons-material/LocationOnOutlined'
 import GoogleMap from '../../ui-component/GoogleMap'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-import { useClinic } from '../../hooks/useClinic'
+import { useClinicByName } from '../../hooks/useClinicByName'
 
 import useUser from '../../lib/useUser'
 import Layout from '../../layout/main/Layout'
@@ -26,6 +27,7 @@ import { Star } from '@material-ui/icons'
 import Reviews from '../../modules/clinics/Reviews'
 import ClinicPicture from '../../modules/clinics/ClinicPicture'
 import { apiUrl } from '../../lib/fetchJson'
+import { GetStaticPaths } from 'next'
 
 dayjs.extend(isBetween)
 
@@ -45,12 +47,12 @@ const SingleClinic = () => {
 
     const { query } = useRouter()
 
-    const { id } = query ?? {}
+    const { name } = query ?? {}
 
     const [value, setValue] = useState<number | null>(5)
 
-    const { data: clinic, isFetching } = useClinic({
-        id,
+    const { data: clinic, isFetching } = useClinicByName({
+        name,
         checkAuth: false,
     })
 
@@ -411,3 +413,19 @@ const SingleClinic = () => {
 }
 
 export default SingleClinic
+
+export const getStaticProps = async ({ locale }) => {
+    return {
+        props: {
+            ...(await serverSideTranslations(locale, ['common'])),
+        },
+    }
+}
+
+export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+
+    return {
+        paths: [], //indicates that no page needs be created at build time
+        fallback: 'blocking' //indicates the type of fallback
+    }
+}

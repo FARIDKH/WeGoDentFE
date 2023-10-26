@@ -21,6 +21,8 @@ import { useMobile } from '../ui-component/hooks/useMobile'
 import GoogleMap from '../ui-component/GoogleMap'
 import useUser from '../lib/useUser'
 import ClinicPicture from '../modules/clinics/ClinicPicture'
+import { useTranslation } from 'next-i18next'
+
 
 dayjs.extend(isBetween)
 
@@ -47,9 +49,12 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const ClinicsPage = () => {
+    
     const ref = useRef(null)
     const { isLoggedIn, refetch } = useUser(false)
     const [page, setPage] = useState(1)
+    const { t, i18n } = useTranslation('common')
+    const curLang = i18n.language;
     const ITEMS_PER_PAGE = 4
 
     const [selected, setSelected] = useState(initialState)
@@ -67,6 +72,16 @@ const ClinicsPage = () => {
     const handlePageChange = (event, value) => {
         setPage(value)
     }
+
+    let translatedDoctorType = doctorType;
+    var metaDescription = "Wegodent makes it easy to browse dental clinics near you. Take care of your healthy smile today!";
+    var metaTitle = "The best dental clinics near you - Wegodent";
+    if (curLang === 'hu') {
+        translatedDoctorType = t(`DoctorType.${doctorType}`);
+        metaDescription = "Wegodent könnyedén böngészhet a közelben található fogászati klinikák között. Gondoskodjon egészséges mosolyáról ma!";
+        metaTitle = "A legjobb fogászati klinikák a közelben - Wegodent";
+    }
+
 
     const officeLocations = clinics?.map((clinic) => clinic.officeLocationName) ?? []
 
@@ -110,8 +125,8 @@ const ClinicsPage = () => {
                 <Typography variant="body1" component="span">
                     {truncated}
                 </Typography>
-                <Link href={href} color="primary">
-                    More info
+                <Link rel='alternate' hrefLang={curLang} href={href} color="primary">
+                    {t('labelMoreInfo')}
                 </Link>
             </>
         )
@@ -133,7 +148,7 @@ const ClinicsPage = () => {
     const displayedClinics = sortedClinics.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE)
 
     return (
-        <Layout title="Clinics">
+        <Layout description={metaDescription} title={metaTitle}>
             <Header2 />
 
             <Container maxWidth="lg">
@@ -168,10 +183,10 @@ const ClinicsPage = () => {
                                 }}
                             >
                                 <Typography variant="h2" mb={1}>
-                                    {(doctorType as string)?.replaceAll('_', ' ')}, {officeLocation}
+                                    {(translatedDoctorType as string)?.replaceAll('_', ' ')}, {officeLocation}
                                 </Typography>
                                 <Typography color="#808080">
-                                    <strong>Book appointment online without any extra fee</strong>
+                                    <strong>{t('labelResultSubtitle')}</strong>
                                 </Typography>
                             </Box>
 
@@ -192,7 +207,8 @@ const ClinicsPage = () => {
                                         const clinicName = clinic?.name
                                         const clinicId = clinic?.clinicId
                                         const isSelectedDoctor = clinic?.clinicId === selected?.clinicId
-                                        const clinicLink = '/clinics/' + clinicId
+                                        const modifiedName = clinicName.toLowerCase().replace(/\s+/g, '-');
+                                        const clinicLink = curLang === 'en' ? '/en/clinics/' + modifiedName : '/klinikak/' + modifiedName ;
                                         return (
                                             <Box key={clinicId}>
                                                 <Box
@@ -221,7 +237,7 @@ const ClinicsPage = () => {
                                                             </Box>
                                                             <Box ml="12px">
                                                                 <Typography variant="h4">
-                                                                    <Link underline="none" key={clinicId} href={clinicLink}>
+                                                                    <Link rel='alternate' hrefLang={curLang} underline="none" key={clinicId} href={clinicLink}>
                                                                         <Box display="flex" alignItems="center">
                                                                             <strong style={{ marginRight: '10px', color: 'black' }}>
                                                                                 {clinicName}
@@ -256,7 +272,7 @@ const ClinicsPage = () => {
                                                                 </div>
                                                                 <Box sx={{ marginTop: 2 }} gap={2} display="flex" alignItems="center">
                                                                     <Rating name="read-only" value={value} readOnly />
-                                                                    <Typography>0 appointment </Typography>
+                                                                    <Typography>0 {t('labelAppointment')} </Typography>
                                                                 </Box>
                                                             </Box>
                                                         </Box>
@@ -320,7 +336,7 @@ const ClinicsPage = () => {
                                                                             '& .MuiDigitalClock-item': {
                                                                                 padding: {
                                                                                     sm: '8px 16px',
-                                                                                    xs: 0,
+                                                                                    xs: 0, 
                                                                                 },
                                                                                 fontSize: {
                                                                                     sm: 'inherit',
@@ -357,7 +373,7 @@ const ClinicsPage = () => {
                                                                                         })
                                                                                     }}
                                                                                 >
-                                                                                    Show number
+                                                                                    {t('labelShowNumber')}
                                                                                 </Button>
                                                                             </Box>
                                                                         </div>
