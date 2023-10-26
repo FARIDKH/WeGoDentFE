@@ -233,7 +233,7 @@ const ClinicsPage = () => {
                                                             }}
                                                         >
                                                             <Box>
-                                                                <ClinicPicture clinic={clinic} style={{ width: 75, height: 75 }} />
+                                                                <ClinicPicture clinic={clinic} style={{ borderRadius:'50%', objectFit: "cover" ,width: 75, height: 75 }} />
                                                             </Box>
                                                             <Box ml="12px">
                                                                 <Typography variant="h4">
