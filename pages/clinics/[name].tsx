@@ -1,4 +1,4 @@
-import { Box, Container, Typography, Grid, Button } from '@material-ui/core'
+import { Box, Container, Typography, Grid, Button, Link } from '@material-ui/core'
 import { useRouter } from 'next/router'
 import * as React from 'react'
 
@@ -28,6 +28,7 @@ import ClinicPicture from '../../modules/clinics/ClinicPicture'
 import { apiUrl } from '../../lib/fetchJson'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next'
+import { useTranslation } from 'next-i18next'
 
 dayjs.extend(isBetween)
 
@@ -55,6 +56,9 @@ const SingleClinic = () => {
         name,
         checkAuth: false,
     })
+
+    const { t, i18n } = useTranslation('common')
+    const curLang = i18n.language;
 
     useEffect(() => {
         console.log('selected', selected)
@@ -140,7 +144,7 @@ const SingleClinic = () => {
                                             </Box>
 
                                             <Typography mt="40px" lineHeight="24px">
-                                                {clinic?.description}
+                                                <div dangerouslySetInnerHTML={{ __html: clinic?.description || "" }} />
                                             </Typography>
                                         </Box>
                                         <Box
@@ -159,6 +163,8 @@ const SingleClinic = () => {
                             </Box>
 
                             {!!doctors?.length && (
+
+                                
                                 <>
                                     <Box mt="100px" sx={{ textAlign: 'center' }}>
                                         <Typography sx={{ color: '#00624F' }} variant="h1">
@@ -179,7 +185,8 @@ const SingleClinic = () => {
                                         >
                                             {doctors?.map((doctor) => {
                                                 const doctorImgUrl = `${apiUrl}/doctor/${doctor?.id}/profile-picture`
-
+                                                const user = doctor?.userDTO
+                                                const doctorUrl = `/doctors/` + user?.firstName?.toLowerCase() + `-` + user?.lastName?.toLowerCase()
                                                 return (
                                                     <Grid key={doctor?.id} item xs={3}>
                                                         <Box
@@ -223,18 +230,20 @@ const SingleClinic = () => {
                                                                 <Typography variant="h4" color="black">
                                                                     {doctor?.doctorType?.replace('_', ' ')}
                                                                 </Typography>
-                                                                <Button
-                                                                    color="primary"
-                                                                    variant="contained"
-                                                                    sx={{
-                                                                        padding: '8px 24px',
-                                                                        borderRadius: '8px',
-                                                                        color: 'white',
-                                                                        marginTop: '8px',
-                                                                    }}
-                                                                >
-                                                                    Appointment
-                                                                </Button>
+                                                                <Link href={doctorUrl} style={{ textDecoration: 'none' }}>
+                                                                    <Button
+                                                                        color="primary"
+                                                                        variant="contained"
+                                                                        sx={{
+                                                                            padding: '8px 24px',
+                                                                            borderRadius: '8px',
+                                                                            color: 'white',
+                                                                            marginTop: '8px',
+                                                                        }}
+                                                                    >
+                                                                        Appointment
+                                                                    </Button>
+                                                                </Link>
                                                             </Box>
                                                         </Box>
                                                     </Grid>
@@ -401,7 +410,7 @@ const SingleClinic = () => {
                                 </Box>
                             </Box>
 
-                            <Reviews />
+                            <Reviews curLang={curLang} />
                         </Container>
                     </>
                 )}

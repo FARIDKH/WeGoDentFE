@@ -22,6 +22,8 @@ import GoogleMap from '../ui-component/GoogleMap'
 import useUser from '../lib/useUser'
 import ClinicPicture from '../modules/clinics/ClinicPicture'
 import { useTranslation } from 'next-i18next'
+import DOMPurify from 'dompurify'
+
 
 
 dayjs.extend(isBetween)
@@ -112,25 +114,25 @@ const ClinicsPage = () => {
     }
 
     const getDescriptionSnippet = (description: string, href: string) => {
-        const maxLength = 255
-        if (description.length <= maxLength) {
-            return description
+        const maxLength = 255;
+        let sanitizedDescription = DOMPurify.sanitize(description);
+        
+        if (sanitizedDescription.length <= maxLength) {
+            return <span dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />;
         }
-
+    
         // Truncate description and ensure it doesn't cut off in the middle of a word
-        const truncated = description.substring(0, description.lastIndexOf(' ', maxLength)) + '... '
-
+        const truncated = sanitizedDescription.substring(0, sanitizedDescription.lastIndexOf(' ', maxLength)) + '... ';
+        
         return (
             <>
-                <Typography variant="body1" component="span">
-                    {truncated}
-                </Typography>
+                <Typography variant="body1" component="span" dangerouslySetInnerHTML={{ __html: truncated }} />
                 <Link rel='alternate' hrefLang={curLang} href={href} color="primary">
                     {t('labelMoreInfo')}
                 </Link>
             </>
-        )
-    }
+        );
+    };
 
     // First, add an index to each item using reduce
     const clinicsWithIndex = clinics.reduce((acc, clinic, index) => {

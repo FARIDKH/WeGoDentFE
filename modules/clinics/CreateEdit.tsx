@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, CircularProgress } from '@material-ui/core'
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, CircularProgress, TextField } from '@material-ui/core'
 import axios from '../../utils/axios'
 import { Formik } from 'formik'
 import React from 'react'
@@ -207,18 +207,21 @@ const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
                             value={values?.email}
                         />
 
-                        <Input
+                        <TextField
                             id="description"
                             label="Description"
                             name="description"
-                            type="description"
-                            isTouched={touched.description}
-                            error={errors.description}
+                            type="text"
                             onBlur={handleBlur}
                             onChange={handleChange}
+                            error={Boolean(touched.description && errors.description)}
+                            helperText={touched.description && errors.description}
                             disabled={isLoading}
                             value={values?.description}
+                            variant="outlined" // or "filled" or "standard"
+                            fullWidth // if you want it to take the full width of its container
                         />
+
 
 
                     </DialogContent>

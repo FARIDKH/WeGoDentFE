@@ -27,16 +27,21 @@ const reviews = [
     },
 ]
 
-const Reviews = () => {
+const Reviews = (curLang) => {
+
+    const lang = curLang?.curLang
     return (
         <Box my="100px" sx={{ textAlign: 'center', paddingX: '130px' }}>
             <Typography variant="h3" sx={{ color: '#00624F', fontSize: '30px' }}>
-                Reviews from our patient
+                {lang == 'en' ? "Reviews from our patient" : "Vélemények a betegeinktől"}
             </Typography>
             <Typography mb={7} mt={3} variant="h5">
-                Whether you need a professional teeth cleaning, are interested in an implant or simply want a check-up appointment - we are
-                here for you.
+                {lang == 'en' 
+                    ? "Whether you need a professional teeth cleaning, are interested in an implant or simply want a check-up appointment - we are here for you."
+                    : "Akár profi fogtisztításra van szüksége, implantátum iránt érdeklődik, vagy egyszerűen csak ellenőrző vizsgálatot szeretne - mi itt vagyunk Önnek."
+                }
             </Typography>
+        
 
             <Box display="flex" alignItems="center" justifyContent="space-evenly" gap="16px">
                 {reviews?.map((review, i) => (
