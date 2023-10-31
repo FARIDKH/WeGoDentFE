@@ -87,7 +87,7 @@ const Appointments = () => {
                     
                     
                     const allAppointmentsResults = await Promise.all(appointmentsPromises);
-            
+                    
                     return allAppointmentsResults.flatMap(result => 
                         result.data.filter(item => item.status !== ENUM_APPOINTMENT_STATUSES.REJECTED)
                     );
@@ -120,6 +120,7 @@ const Appointments = () => {
             title += ` | Clinic: ${item.clinicDTO.name}`;
         }
 
+
         if (item?.status === ENUM_APPOINTMENT_STATUSES.REJECTED) return []
         return {
             id,
@@ -127,6 +128,8 @@ const Appointments = () => {
             start: item?.appointmentStart,
             end: item?.appointmentEnd,
             backgroundColor: APPOINTMENT_STATUS_BGCOLORS?.[item?.status],
+            patientDTO: item?.patientDTO,
+            clinicDTO: item?.clinicDTO,
             extendedProps: {
                 id,
                 ...item,
@@ -215,42 +218,57 @@ const Appointments = () => {
                                         label: 'Doctor',
                                         align: 'left',
                                         hide: isDoctor,
-                                        renderAs: ({ doctorDTO }) => `${doctorDTO?.userDTO?.firstName} ${doctorDTO?.userDTO?.lastName}`,
+                                        renderAs: ({ doctorDTO }) => {
+                                            // Destructure properties
+                                            const { userDTO } = doctorDTO || {};
+                                            const { firstName, lastName } = userDTO || {};
+                                    
+                                            // Check if both are defined and return formatted name or '-'
+                                            return (firstName && lastName) ? `${firstName} ${lastName}` : '-';
+                                        },
                                     },
-                                    {
-                                        id: 'doctorType',
-                                        numeric: false,
-                                        label: 'Doctor Type',
-                                        align: 'left',
-                                        hide: isDoctor,
-                                        renderAs: ({ doctorDTO }) => doctorDTO?.doctorType?.replaceAll('_', ' '),
-                                    },
+                                    
                                     {
                                         id: 'doctorContact',
                                         numeric: false,
                                         label: 'Doctor Contact',
                                         align: 'left',
-                                        hide: isDoctor,
-                                        renderAs: ({ doctorDTO }) => (
-                                            <Box>
+                                        hide: !!isReceptionist || !!isManager || !!isDoctor ,
+                                        renderAs: ({ doctorDTO }) => {
+                                            if (!doctorDTO) {
+                                                return '-';
+                                            }
+                                    
+                                            return (
                                                 <Box>
-                                                    <b>Address:</b> {doctorDTO?.officeLocationName}
+                                                    <Box>
+                                                        <b>Address:</b> {doctorDTO?.officeLocationName || '-'}
+                                                    </Box>
+                                                    <Box>
+                                                        <b>Phone Number:</b> {doctorDTO?.userDTO?.phoneNumber || '-'}
+                                                    </Box>
+                                                    <Box>
+                                                        <b>Email:</b> {doctorDTO?.userDTO?.email || '-'}
+                                                    </Box>
                                                 </Box>
-                                                <Box>
-                                                    <b>Phone Number:</b> {doctorDTO?.userDTO?.phoneNumber}
-                                                </Box>
-                                                <Box>
-                                                    <b>Email:</b> {doctorDTO?.userDTO?.email}
-                                                </Box>
-                                            </Box>
-                                        ),
+                                            );
+                                        },
                                     },
+
+                                    
                                     {
                                         id: 'appointmentStart',
                                         numeric: false,
                                         label: t('labelAppointmentStartDate'),
                                         align: 'left',
                                         renderAs: ({ appointmentStart }) => <DateTime value={appointmentStart} />,
+                                    },
+                                    {
+                                        id: 'clinic',
+                                        numeric: false,
+                                        label: "Clinic",
+                                        align: 'left',
+                                        renderAs: ({ clinicDTO }) => clinicDTO?.name,
                                     },
                                     {
                                         id: 'appointmentEnd',
