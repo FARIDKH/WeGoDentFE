@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 // import Tab from '@mui/material/Tab';
 import * as React from 'react'
 
+import useUser from '../../lib/useUser'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
@@ -31,7 +32,9 @@ import isBetween from 'dayjs/plugin/isBetween'
 import { useEffect, useRef, useState } from 'react'
 import CreateAppointment from '../../modules/main/appointments/CreateAppointment'
 import Header2 from '../../layout/main/Header2'
-import { useTranslation } from 'react-i18next'
+import { apiUrl } from '../../lib/fetchJson'
+import { useTranslation } from 'next-i18next'
+import DoctorPicture from '../../modules/Doctor/DoctorPicture'
 
 dayjs.extend(isBetween)
 
@@ -73,12 +76,12 @@ const SingleDoctor = () => {
 
     const [selected, setSelected] = useState(initialState)
 
-    const { t, i18n} = useTranslation('common')
+    const { t, i18n } = useTranslation('common')
     const curLang = i18n.language
-
     const { query } = useRouter()
 
     const { name } = query ?? {}
+    const { isLoggedIn } = useUser(false)
 
     const [value, setValue] = useState<number | null>(4)
 
@@ -87,7 +90,7 @@ const SingleDoctor = () => {
         checkAuth: false,
     })
 
-    const [tabValue, setTabValue] = useState(0)
+    const [tabValue, setTabValue] = useState(1)
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setTabValue(newValue)
@@ -98,6 +101,20 @@ const SingleDoctor = () => {
             ref?.current?.open(selected)
         }
     }, [selected])
+
+    const phoneStyles = {
+        filter: !isLoggedIn ? 'blur(4px)' : 'none',
+        cursor: !isLoggedIn ? 'pointer' : 'default',
+    }
+
+    const blurPhoneNumber = (phoneNumber) => {
+        if (!phoneNumber) {
+            return null
+        }
+        const visibleDigits = phoneNumber.slice(-4) // Show the last 4 digits
+        const hiddenDigits = phoneNumber.slice(0, -4).replace(/[0-9]/g, '*') // Replace the first digits with '*'
+        return `${hiddenDigits}${visibleDigits}`
+    }
 
     return (
         <Layout>
@@ -140,10 +157,6 @@ const SingleDoctor = () => {
                                         >
                                             <Box
                                                 className="doctorInfo"
-                                                display="flex"
-                                                flexWrap="wrap"
-                                                alignItems="center"
-                                                flex={1}
                                                 sx={{
                                                     mt: 3,
                                                     mb: {
@@ -152,36 +165,49 @@ const SingleDoctor = () => {
                                                     },
                                                 }}
                                             >
-                                                <Box>
-                                                    <Avatar src={avatar?.src} alt={doctorName} sx={{ width: 150, height: 150 }} />
+                                                <Box display="flex" flexWrap="wrap" alignItems="center" flex={1}>
+                                                    <Box sx={{ width: '150px', height: '150px', borderRadius: '100%' }}>
+                                                        <DoctorPicture doctor={doctor} />
+                                                    </Box>
+                                                    <Box ml="12px">
+                                                        <Typography variant="h4">
+                                                            <strong>Dr. {doctorName}</strong>
+                                                        </Typography>
+
+                                                        <Typography my={1}>{doctor?.doctorType?.replaceAll('_', ' ')}</Typography>
+
+                                                        <Rating name="read-only" value={value} readOnly />
+                                                        <Typography sx={{ mt: '10px', mb: '10px' }}>
+                                                            Office location: {doctor?.officeLocationName}
+                                                        </Typography>
+                                                        <Typography>
+                                                            Works at:
+                                                            <Link
+                                                                sx={{ ml: '10px' }}
+                                                                rel="alternate"
+                                                                hrefLang={curLang}
+                                                                key={doctor?.clinicId}
+                                                                href={clinicLink}
+                                                            >
+                                                                {doctor?.clinicName}
+                                                            </Link>
+                                                        </Typography>
+                                                    </Box>
                                                 </Box>
-                                                <Box ml="12px">
-                                                    <Typography variant="h4">
-                                                        <strong>Dr. {doctorName}</strong>
-                                                    </Typography>
-                                                    
-                                                    <Typography my={1}>{doctor?.doctorType?.replaceAll('_', ' ')}</Typography>
-                                                    <Typography sx={{ width: '75%', textAlign: 'justify' }} my={1}>
-                                                        {doctor?.experience}
-                                                    </Typography>
-                                                    <Rating name="read-only" value={value} readOnly />
-                                                    <Typography>Office Location: {doctor?.officeLocationName}</Typography>
-                                                    <Typography>Works at
-                                                        
-                                                        <Link rel='alternate' hrefLang={curLang} key={doctor?.clinicId} href={clinicLink}>
-                                                            {doctor?.clinicName}
-                                                        </Link>
-                                                    </Typography>
-                                                    
-                                                    {/* <Divider /> */}
-                                                </Box>
+
                                                 <Box sx={{ marginTop: '25px', width: '100%' }}>
                                                     <Tabs value={tabValue} onChange={handleChange} aria-label="basic tabs example">
-                                                        <Tab label="Address" {...a11yProps(0)} />
-                                                        <Tab label="Treatments" {...a11yProps(1)} />
-                                                        <Tab label="Reviews" {...a11yProps(2)} />
+                                                        <Tab label="About" {...a11yProps(0)} />
+                                                        <Tab label="Workplace" {...a11yProps(1)} />
+                                                        <Tab label="Treatments" {...a11yProps(2)} />
+                                                        <Tab label="Reviews" {...a11yProps(3)} />
                                                     </Tabs>
                                                     <CustomTabPanel value={tabValue} index={0}>
+                                                        <Typography sx={{ width: '75%', textAlign: 'justify' }} my={1}>
+                                                            {doctor?.experience}
+                                                        </Typography>
+                                                    </CustomTabPanel>
+                                                    <CustomTabPanel value={tabValue} index={1}>
                                                         {/* <Box> */}
                                                         <List>
                                                             <ListItem disablePadding>
@@ -189,7 +215,7 @@ const SingleDoctor = () => {
                                                                     <ListItemIcon>
                                                                         <ShieldIcon />
                                                                     </ListItemIcon>
-                                                                    <ListItemText primary="Insurances accepted: TAJ card, Generali" />
+                                                                    <ListItemText primary="Accepted insurances: TAJ card, Generali" />
                                                                 </ListItemButton>
                                                             </ListItem>
                                                             <ListItem disablePadding>
@@ -197,7 +223,7 @@ const SingleDoctor = () => {
                                                                     <ListItemIcon>
                                                                         <LocationCityIcon />
                                                                     </ListItemIcon>
-                                                                    <ListItemText primary="Egyetem ter 7, Budapest" />
+                                                                    <ListItemText primary={doctor?.officeLocationName} />
                                                                 </ListItemButton>
                                                             </ListItem>
                                                             <ListItem disablePadding>
@@ -205,7 +231,7 @@ const SingleDoctor = () => {
                                                                     <ListItemIcon>
                                                                         <CreditCardIcon />
                                                                     </ListItemIcon>
-                                                                    <ListItemText primary="Accepted payments: Cash, Credit card" />
+                                                                    <ListItemText primary="Accepted payments: cash, bank card" />
                                                                 </ListItemButton>
                                                             </ListItem>
                                                             <ListItem disablePadding>
@@ -227,7 +253,7 @@ const SingleDoctor = () => {
                                                         </List>
                                                         {/* </Box> */}
                                                     </CustomTabPanel>
-                                                    <CustomTabPanel value={tabValue} index={1}>
+                                                    <CustomTabPanel value={tabValue} index={2}>
                                                         <List>
                                                             <ListItem>
                                                                 <ListItemIcon>
@@ -351,7 +377,7 @@ const SingleDoctor = () => {
                                                             </ListItem>
                                                         </List>
                                                     </CustomTabPanel>
-                                                    <CustomTabPanel value={tabValue} index={2}>
+                                                    <CustomTabPanel value={tabValue} index={3}>
                                                         <Grid mt={5} wrap="nowrap" container spacing={1}>
                                                             <Grid item>
                                                                 <Avatar>AP</Avatar>
@@ -364,12 +390,12 @@ const SingleDoctor = () => {
                                                                     27 July 2023
                                                                 </Typography>
                                                                 <Typography>
-                                                                    I had him veneer, apart from that, I had a bridge and tooth extraction,
-                                                                    and I also had a cyst removal. He is a doctor who examines his patient
-                                                                    very well, he does what he can to save the teeth before the procedure in
-                                                                    this process and then proceeds to the procedures to be done, I am very
-                                                                    pleased with this aspect, I am still his patient at the moment, I
-                                                                    continue my treatment.
+                                                                    Volt neki furnér, ezen kívül volt hidat és foghúzást, és volt egy ciszta
+                                                                    eltávolítás is. Ő egy orvos, aki megvizsgálja a betegét Nagyon jól,
+                                                                    mindent megtesz a fogak megmentéséért a beavatkozás előtt ezt a
+                                                                    folyamatot, majd folytatja az elvégzendő eljárásokat, nagyon vagyok
+                                                                    elégedett ezzel a szemponttal, jelenleg is a páciense vagyok, én
+                                                                    folytassam a kezelést.
                                                                 </Typography>
                                                             </Grid>
                                                         </Grid>
@@ -385,86 +411,102 @@ const SingleDoctor = () => {
                                                                     12 June 2023
                                                                 </Typography>
                                                                 <Typography>
-                                                                    I had him fill and veneer. In this process, I was very pleased with his
-                                                                    interest and interest in his patient, as well as his experience in the
-                                                                    field, and I still continue my process, I go from time to time at the
-                                                                    moment, I continue my treatment.
+                                                                    Megtöltettem és bevontam. Ebben a folyamatban nagyon meg voltam elégedve
+                                                                    az övével érdeklődését és érdeklődését páciense iránt, valamint
+                                                                    tapasztalatait a területen, és továbbra is folytatom a folyamatot,
+                                                                    időnként elmegyek a pillanatban folytatom a kezelést.
                                                                 </Typography>
                                                             </Grid>
                                                         </Grid>
                                                     </CustomTabPanel>
                                                 </Box>
                                             </Box>
-                                            <Box
-                                                className="appointment"
-                                                display="flex"
-                                                flex={1}
-                                                sx={{
-                                                    borderLeft: {
-                                                        md: '1px solid #eeeeee',
-                                                        xs: '0',
-                                                    },
-                                                    borderTop: {
-                                                        md: '0',
-                                                        xs: '1px solid #eeeeee',
-                                                    },
-                                                }}
-                                            >
-                                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                    <Box flex={2}>
-                                                        <DateCalendar
-                                                            views={['day']}
-                                                            disablePast
-                                                            minDate={startDate}
-                                                            maxDate={endDate}
-                                                            value={isSelectedDoctor ? selected.day : null}
-                                                            onChange={(value) =>
-                                                                setSelected((prev) => ({
-                                                                    ...prev,
-                                                                    day: value,
-                                                                    doctorId: doctor?.id,
-                                                                }))
-                                                            }
-                                                            sx={{
-                                                                width: {
-                                                                    sm: 320,
-                                                                    xs: 290,
-                                                                },
-                                                            }}
-                                                        />
-                                                    </Box>
-                                                    <Box flex={1}>
-                                                        <DigitalClock
-                                                            // value={isSelectedDoctor ? selected.time : null}
-                                                            // minTime={dayjs(startDate.format('YYYY-MM-DDT07:00'))}
-                                                            // maxTime={dayjs(endDate.format('YYYY-MM-DDT18:00'))}
-                                                            // timeStep={60}
-                                                            // skipDisabled
-                                                            // disablePast={!isFuture}
 
-                                                            sx={{
-                                                                maxHeight: '300px',
-                                                                '& .MuiDigitalClock-item': {
-                                                                    padding: {
-                                                                        sm: '8px 16px',
-                                                                        xs: 0,
-                                                                    },
-                                                                    fontSize: {
-                                                                        sm: 'inherit',
-                                                                        xs: '0.75rem',
-                                                                    },
-                                                                },
-                                                            }}
-                                                            onChange={(value) =>
-                                                                setSelected((prev) => ({
-                                                                    ...prev,
-                                                                    time: value,
-                                                                    doctorId: doctor?.id,
-                                                                }))
-                                                            }
-                                                        />
+                                            <Box mt="25px" sx={{ textAlign: 'center', paddingX: '75px' }}>
+                                                <Box display="flex" alignItems="center" justifyContent="center">
+                                                    <Box
+                                                        className="appointment"
+                                                        display="flex"
+                                                        alignItems="center"
+                                                        justifyContent="center"
+                                                        sx={{
+                                                            background: '#E7FDF0',
+                                                            borderRadius: '8px',
+                                                            p: 4,
+                                                        }}
+                                                    >
+                                                        {true ? (
+                                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                                <Box flex={2}>
+                                                                    <DateCalendar
+                                                                        views={['day']}
+                                                                        disablePast
+                                                                        minDate={startDate}
+                                                                        // value={isSelectedDoctor ? selected.day : null}
+                                                                        onChange={(value) =>
+                                                                            setSelected((prev) => ({
+                                                                                ...prev,
+                                                                                day: value,
+                                                                                doctorId: doctor?.id,
+                                                                            }))
+                                                                        }
+                                                                        sx={{
+                                                                            width: {
+                                                                                sm: 320,
+                                                                                xs: 290,
+                                                                            },
+                                                                        }}
+                                                                    />
+                                                                </Box>
+                                                                <Box flex={1}>
+                                                                    <DigitalClock
+                                                                        sx={{
+                                                                            maxHeight: '300px',
+                                                                            '& .MuiDigitalClock-item': {
+                                                                                padding: {
+                                                                                    sm: '8px 16px',
+                                                                                    xs: 0,
+                                                                                },
+                                                                                fontSize: {
+                                                                                    sm: 'inherit',
+                                                                                    xs: '0.75rem',
+                                                                                },
+                                                                            },
+                                                                        }}
+                                                                        onChange={(value) =>
+                                                                            setSelected((prev) => ({
+                                                                                ...prev,
+                                                                                time: value,
+                                                                                day: value,
+                                                                                doctorId: doctor?.id,
+                                                                            }))
+                                                                        }
+                                                                    />
+                                                                </Box>
+                                                            </LocalizationProvider>
+                                                        ) : (
+                                                            <Box>
+                                                                <Typography variant="h1">
+                                                                    {!isLoggedIn ? (
+                                                                        <Typography
+                                                                            onClick={() => {
+                                                                                ref?.current?.open({
+                                                                                    clinicIsSubscribed: false,
+                                                                                })
+                                                                            }}
+                                                                            style={phoneStyles}
+                                                                            variant="h1"
+                                                                        >
+                                                                            {blurPhoneNumber(doctor?.phoneNumber)}
+                                                                        </Typography>
+                                                                    ) : (
+                                                                        <Typography variant="h1">{doctor?.phoneNumber}</Typography>
+                                                                    )}
+                                                                </Typography>
+                                                            </Box>
+                                                        )}
                                                     </Box>
-                                                </LocalizationProvider>
+                                                </Box>
                                             </Box>
                                         </Box>
 
