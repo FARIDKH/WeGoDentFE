@@ -29,6 +29,10 @@ import { apiUrl } from '../../lib/fetchJson'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetStaticPaths } from 'next'
 import { useTranslation } from 'next-i18next'
+import { ref as storageRef, getDownloadURL } from 'firebase/storage'
+import { storage } from '../../utils/firebase' // make sure to import your Firebase storage instance
+import defaultImage from '../../assets/images/dentist-profile-pic.png' // Path to your default image
+import DoctorPicture from '../../modules/Doctor/DoctorPicture'
 
 dayjs.extend(isBetween)
 
@@ -58,10 +62,9 @@ const SingleClinic = () => {
     })
 
     const { t, i18n } = useTranslation('common')
-    const curLang = i18n.language;
+    const curLang = i18n.language
 
     useEffect(() => {
-        console.log('selected', selected)
         if (Object.values(selected).every((val) => !!val)) {
             ref?.current?.open(selected)
         }
@@ -84,6 +87,22 @@ const SingleClinic = () => {
     const startDate = dayjs(new Date())
 
     const doctors = clinic?.doctorList?.slice(0, 4)
+
+    const getDefaultImageUrl = () => {
+        return defaultImage?.src // Ensure this points to your local default image path
+    }
+
+    const getFirebaseImageUrl = async (doctorId) => {
+        const imageRef = storageRef(storage, `doctor/${doctorId}/profile-picture`)
+        try {
+            const url = await getDownloadURL(imageRef)
+            return url
+        } catch (error) {
+            console.error(error)
+            return getDefaultImageUrl()
+        }
+    }
+
 
     return (
         <Layout title={clinic?.name}>
@@ -144,7 +163,7 @@ const SingleClinic = () => {
                                             </Box>
 
                                             <Typography mt="40px" lineHeight="24px">
-                                                <div dangerouslySetInnerHTML={{ __html: clinic?.description || "" }} />
+                                                <div dangerouslySetInnerHTML={{ __html: clinic?.description || '' }} />
                                             </Typography>
                                         </Box>
                                         <Box
@@ -163,8 +182,6 @@ const SingleClinic = () => {
                             </Box>
 
                             {!!doctors?.length && (
-
-                                
                                 <>
                                     <Box mt="100px" sx={{ textAlign: 'center' }}>
                                         <Typography sx={{ color: '#00624F' }} variant="h1">
@@ -184,9 +201,11 @@ const SingleClinic = () => {
                                             spacing={5}
                                         >
                                             {doctors?.map((doctor) => {
-                                                const doctorImgUrl = `${apiUrl}/doctor/${doctor?.id}/profile-picture`
                                                 const user = doctor?.userDTO
-                                                const doctorUrl = `/en/doctors/` + user?.firstName?.toLowerCase() + `-` + user?.lastName?.toLowerCase()
+                                                const doctorUrl =
+                                                    `/en/doctors/` + user?.firstName?.toLowerCase() + `-` + user?.lastName?.toLowerCase()
+                                                  
+
                                                 return (
                                                     <Grid key={doctor?.id} item xs={3}>
                                                         <Box
@@ -198,14 +217,13 @@ const SingleClinic = () => {
                                                                 border: '1px solid #D3D3D3',
                                                             }}
                                                         >
-                                                            <Box
-                                                                height="100%"
-                                                                width="100%"
-                                                                sx={{
-                                                                    borderRadius: '8px',
-                                                                    background: `url(${doctorImgUrl}) no-repeat center/cover`, // replace with your image path
-                                                                }}
-                                                            />
+                                                            <DoctorPicture width="100%"
+                                                            height="400px"
+                                                            sx={{
+                                                                borderRadius: '8px',
+                                                                position: 'relative',
+                                                                border: '1px solid #D3D3D3',
+                                                            }} doctor={doctor}/>
 
                                                             <Box
                                                                 width="100%"
@@ -423,7 +441,6 @@ const SingleClinic = () => {
 
 export default SingleClinic
 
-
 export const getStaticProps = async ({ locale }) => {
     return {
         props: {
@@ -433,9 +450,8 @@ export const getStaticProps = async ({ locale }) => {
 }
 
 export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
-
     return {
         paths: [], //indicates that no page needs be created at build time
-        fallback: 'blocking' //indicates the type of fallback
+        fallback: 'blocking', //indicates the type of fallback
     }
 }

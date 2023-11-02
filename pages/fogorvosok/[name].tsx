@@ -34,6 +34,7 @@ import CreateAppointment from '../../modules/main/appointments/CreateAppointment
 import Header2 from '../../layout/main/Header2'
 import { useTranslation } from 'next-i18next'
 import { apiUrl } from '../../lib/fetchJson'
+import DoctorPicture from '../../modules/Doctor/DoctorPicture'
 
 
 dayjs.extend(isBetween)
@@ -144,7 +145,6 @@ const SingleDoctor = () => {
 
                                 const isSelectedDoctor = doctor?.id === selected?.doctorId
                                 const clinicLink = '/clinics/' + doctor?.clinicId
-                                const doctorImgUrl = `${apiUrl}/doctor/${doctor?.id}/profile-picture`
                                 return (
                                     <Box key={doctor?.id}>
                                         <Box
@@ -173,8 +173,9 @@ const SingleDoctor = () => {
                                                 alignItems="center"
                                                 flex={1}
                                                 >
-                                                    <Box>
-                                                        <Avatar src={doctorImgUrl} alt={doctorName} sx={{ width: 150, height: 150 }} />
+                                                    <Box sx={{ width: "150px", height: "150px", borderRadius:"100%" }} >
+                                                        <DoctorPicture
+                                                            doctor={doctor}/>
                                                     </Box>
                                                     <Box ml="12px">
                                                         <Typography variant="h4">

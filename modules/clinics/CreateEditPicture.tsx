@@ -7,6 +7,8 @@ import { SNACKBAR_OPEN } from '../../store/actions'
 import Input from '../../ui-component/Form/Input'
 import { useOpenState } from '../../ui-component/hooks/useOpenState'
 import ClinicPicture from './ClinicPicture'
+import { storage } from '../../utils/firebase'
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
 
 interface IProps {
     onSuccess?: () => void
@@ -17,15 +19,53 @@ const CreateEditPictureForm = forwardRef(({ onSuccess }: IProps, ref) => {
     const [data, setData] = useState(null)
     const [file, setFile] = useState(null)
 
+    // const { isLoading, mutate } = useMutation(
+    //     async () => {
+    //         const formData = new FormData()
+
+    //         formData.append('image', file)
+    //         return await axios.post(`/api/clinic/${data?.clinicId}/upload`, formData)
+    //     },
+    //     {
+    //         onSuccess: () => {
+    //             store.dispatch({
+    //                 type: SNACKBAR_OPEN,
+    //                 open: true,
+    //                 message: 'Clinic photo has been updated successfully',
+    //                 variant: 'alert',
+    //                 alertSeverity: 'success',
+    //                 anchorOrigin: { vertical: 'top', horizontal: 'center' },
+    //             })
+
+    //             handleClose()
+    //             onSuccess()
+    //         },
+    //         onError: (err) => {
+    //             console.log(err)
+    //         },
+    //     }
+    // )
     const { isLoading, mutate } = useMutation(
         async () => {
-            const formData = new FormData()
+            if (!file) {
+                throw new Error('No file to upload.')
+            }
 
-            formData.append('image', file)
-            return await axios.post(`/api/clinic/${data?.clinicId}/upload`, formData)
+            // Create a reference to the location with the desired file name in Firebase storage
+            const fileRef = storageRef(storage, `clinic/${data?.clinicId}/profile-picture`)
+
+            // Upload the file to Firebase storage
+            const uploadTaskSnapshot = await uploadBytes(fileRef, file)
+
+            // After successful upload, get the download URL
+            const downloadUrl = await getDownloadURL(uploadTaskSnapshot.ref)
+
+            // You can return the download URL if needed
+            return downloadUrl
         },
         {
-            onSuccess: () => {
+            onSuccess: (downloadUrl) => {
+                // Dispatch success action with the URL if needed
                 store.dispatch({
                     type: SNACKBAR_OPEN,
                     open: true,
@@ -36,7 +76,10 @@ const CreateEditPictureForm = forwardRef(({ onSuccess }: IProps, ref) => {
                 })
 
                 handleClose()
-                onSuccess()
+                onSuccess?.()
+
+                // If you want to do something with the download URL you can do it here
+                console.log('File available at', downloadUrl)
             },
             onError: (err) => {
                 console.log(err)

@@ -34,6 +34,7 @@ import CreateAppointment from '../../modules/main/appointments/CreateAppointment
 import Header2 from '../../layout/main/Header2'
 import { apiUrl } from '../../lib/fetchJson'
 import { useTranslation } from 'next-i18next'
+import DoctorPicture from '../../modules/Doctor/DoctorPicture'
 
 dayjs.extend(isBetween)
 
@@ -143,7 +144,6 @@ const SingleDoctor = () => {
 
                                 const isSelectedDoctor = doctor?.id === selected?.doctorId
                                 const clinicLink = '/clinics/' + doctor?.clinicId
-                                const doctorImgUrl = `${apiUrl}/doctor/${doctor?.id}/profile-picture`
                                 return (
                                     <Box key={doctor?.id}>
                                         <Box
@@ -157,7 +157,6 @@ const SingleDoctor = () => {
                                         >
                                             <Box
                                                 className="doctorInfo"
-                                                
                                                 sx={{
                                                     mt: 3,
                                                     mb: {
@@ -166,14 +165,9 @@ const SingleDoctor = () => {
                                                     },
                                                 }}
                                             >
-                                                <Box 
-                                                display="flex"
-                                                flexWrap="wrap"
-                                                alignItems="center"
-                                                flex={1}
-                                                >
-                                                    <Box>
-                                                        <Avatar src={doctorImgUrl} alt={doctorName} sx={{ width: 150, height: 150 }} />
+                                                <Box display="flex" flexWrap="wrap" alignItems="center" flex={1}>
+                                                    <Box sx={{ width: '150px', height: '150px', borderRadius: '100%' }}>
+                                                        <DoctorPicture doctor={doctor} />
                                                     </Box>
                                                     <Box ml="12px">
                                                         <Typography variant="h4">
@@ -184,7 +178,7 @@ const SingleDoctor = () => {
 
                                                         <Rating name="read-only" value={value} readOnly />
                                                         <Typography sx={{ mt: '10px', mb: '10px' }}>
-                                                            Office location:  {doctor?.officeLocationName}
+                                                            Office location: {doctor?.officeLocationName}
                                                         </Typography>
                                                         <Typography>
                                                             Works at:
@@ -229,7 +223,7 @@ const SingleDoctor = () => {
                                                                     <ListItemIcon>
                                                                         <LocationCityIcon />
                                                                     </ListItemIcon>
-                                                                    <ListItemText primary={doctor?.officeLocationName}/>
+                                                                    <ListItemText primary={doctor?.officeLocationName} />
                                                                 </ListItemButton>
                                                             </ListItem>
                                                             <ListItem disablePadding>
@@ -396,12 +390,12 @@ const SingleDoctor = () => {
                                                                     27 July 2023
                                                                 </Typography>
                                                                 <Typography>
-                                                                Volt neki furnér, ezen kívül volt hidat és foghúzást,
-                                                                     és volt egy ciszta eltávolítás is. Ő egy orvos, aki megvizsgálja a betegét
-                                                                     Nagyon jól, mindent megtesz a fogak megmentéséért a beavatkozás előtt
-                                                                     ezt a folyamatot, majd folytatja az elvégzendő eljárásokat, nagyon vagyok
-                                                                     elégedett ezzel a szemponttal, jelenleg is a páciense vagyok, én
-                                                                     folytassam a kezelést.
+                                                                    Volt neki furnér, ezen kívül volt hidat és foghúzást, és volt egy ciszta
+                                                                    eltávolítás is. Ő egy orvos, aki megvizsgálja a betegét Nagyon jól,
+                                                                    mindent megtesz a fogak megmentéséért a beavatkozás előtt ezt a
+                                                                    folyamatot, majd folytatja az elvégzendő eljárásokat, nagyon vagyok
+                                                                    elégedett ezzel a szemponttal, jelenleg is a páciense vagyok, én
+                                                                    folytassam a kezelést.
                                                                 </Typography>
                                                             </Grid>
                                                         </Grid>
@@ -417,10 +411,10 @@ const SingleDoctor = () => {
                                                                     12 June 2023
                                                                 </Typography>
                                                                 <Typography>
-                                                                Megtöltettem és bevontam. Ebben a folyamatban nagyon meg voltam elégedve az övével
-                                                                     érdeklődését és érdeklődését páciense iránt, valamint tapasztalatait a
-                                                                     területen, és továbbra is folytatom a folyamatot, időnként elmegyek a
-                                                                     pillanatban folytatom a kezelést.
+                                                                    Megtöltettem és bevontam. Ebben a folyamatban nagyon meg voltam elégedve
+                                                                    az övével érdeklődését és érdeklődését páciense iránt, valamint
+                                                                    tapasztalatait a területen, és továbbra is folytatom a folyamatot,
+                                                                    időnként elmegyek a pillanatban folytatom a kezelést.
                                                                 </Typography>
                                                             </Grid>
                                                         </Grid>

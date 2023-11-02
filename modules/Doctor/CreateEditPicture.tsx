@@ -7,6 +7,9 @@ import { SNACKBAR_OPEN } from '../../store/actions'
 import Input from '../../ui-component/Form/Input'
 import { useOpenState } from '../../ui-component/hooks/useOpenState'
 import DoctorPicture from './DoctorPicture'
+import { storage } from '../../utils/firebase'; // make sure to import your Firebase storage instance
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+
 
 interface IProps {
     onSuccess?: () => void
@@ -16,14 +19,23 @@ const CreateEditPictureForm = forwardRef(({ onSuccess }: IProps, ref) => {
     const { isOpen, open, close } = useOpenState()
     const [data, setData] = useState(null)
     const [file, setFile] = useState(null)
-
+    console.log(data)
     const { isLoading, mutate } = useMutation(
         async () => {
-            const formData = new FormData()
-
-            formData.append('image', file)
-            return await axios.post(`/api/doctor/${data?.id}/upload`, formData)
-        },
+            if (!file) {
+              throw new Error('No file to upload.');
+            }
+            
+            
+            // Firebase Storage reference
+            const fileRef = storageRef(storage, `doctor/${data?.id}/profile-picture`);
+      
+            // Upload the file
+            const uploadTaskSnapshot = await uploadBytes(fileRef, file);
+      
+            // Get the download URL
+            return getDownloadURL(uploadTaskSnapshot.ref);
+          },
         {
             onSuccess: () => {
                 store.dispatch({
@@ -60,7 +72,7 @@ const CreateEditPictureForm = forwardRef(({ onSuccess }: IProps, ref) => {
     return (
         <Dialog sx={{ '& .MuiDialog-paper': { width: '30%', maxHeight: 600 } }} maxWidth="lg" open={isOpen}>
             <DialogTitle>
-                <span style={{ fontSize: 22, fontWeight: 'bold' }}>{data?.clinicId ? 'Update' : 'Create'} Clinic</span>
+                <span style={{ fontSize: 22, fontWeight: 'bold' }}>Update picture of {data?.userDTO?.firstName}  {data?.userDTO?.lastName}</span>
             </DialogTitle>
             <DialogContent dividers>
                 <Input

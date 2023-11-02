@@ -29,6 +29,7 @@ import ClinicPicture from '../../modules/clinics/ClinicPicture'
 import { apiUrl } from '../../lib/fetchJson'
 import { GetStaticPaths } from 'next'
 import { useTranslation } from 'next-i18next'
+import DoctorPicture from '../../modules/Doctor/DoctorPicture'
 
 dayjs.extend(isBetween)
 
@@ -181,7 +182,6 @@ const SingleClinic = () => {
                                             spacing={5}
                                         >
                                             {doctors?.map((doctor) => {
-                                                const doctorImgUrl = `${apiUrl}/doctor/${doctor?.id}/profile-picture`
                                                 const user = doctor?.userDTO
                                                 const doctorUrl = `/fogorvosok/` + user?.firstName?.toLowerCase() + `-` + user?.lastName?.toLowerCase()
                                                 return (
@@ -195,14 +195,13 @@ const SingleClinic = () => {
                                                                 border: '1px solid #D3D3D3',
                                                             }}
                                                         >
-                                                            <Box
-                                                                height="100%"
-                                                                width="100%"
-                                                                sx={{
-                                                                    borderRadius: '8px',
-                                                                    background: `url(${doctorImgUrl}) no-repeat center/cover`, // replace with your image path
-                                                                }}
-                                                            />
+                                                            <DoctorPicture width="100%"
+                                                            height="400px"
+                                                            sx={{
+                                                                borderRadius: '8px',
+                                                                position: 'relative',
+                                                                border: '1px solid #D3D3D3',
+                                                            }} doctor={doctor}/>
 
                                                             <Box
                                                                 width="100%"
