@@ -186,7 +186,7 @@ const SingleClinic = () => {
                                             {doctors?.map((doctor) => {
                                                 const doctorImgUrl = `${apiUrl}/doctor/${doctor?.id}/profile-picture`
                                                 const user = doctor?.userDTO
-                                                const doctorUrl = `/doctors/` + user?.firstName?.toLowerCase() + `-` + user?.lastName?.toLowerCase()
+                                                const doctorUrl = `/en/doctors/` + user?.firstName?.toLowerCase() + `-` + user?.lastName?.toLowerCase()
                                                 return (
                                                     <Grid key={doctor?.id} item xs={3}>
                                                         <Box
