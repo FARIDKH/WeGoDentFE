@@ -1,7 +1,7 @@
 import { Typography, makeStyles, Box, Container } from '@material-ui/core'
 import { Button } from '@mui/material'
 import Layout from '../layout/main/Layout'
-import {iframeCode} from './toc'
+import TermsPage from './toc'
 
 const useStyles = makeStyles((theme) => ({
     heading: {
@@ -27,11 +27,10 @@ export default function Custom404() {
     const classes = useStyles()
 
     return (
-        <Layout>
+        <Layout title="Wegodent - Terms & Conditions" description="Wegodent - Terms & Conditions">
             <Box className="background-round"  height="65vh" display="flex" alignItems="center">
                 <Container maxWidth="lg">
-                    <div dangerouslySetInnerHTML={{__html: iframeCode}} className={classes.iframeContainer} />
-                
+                    <TermsPage></TermsPage>
                     <Button variant="contained" color="primary" LinkComponent="a" href="/" className={classes.button}>
                         Go Home
                     </Button>

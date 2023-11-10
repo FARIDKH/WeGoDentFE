@@ -116,8 +116,10 @@ const SingleDoctor = () => {
         return `${hiddenDigits}${visibleDigits}`
     }
 
+    const title = "Dr. " + doctors[0]?.userDTO?.firstName + " " + doctors[0]?.userDTO?.lastName
+
     return (
-        <Layout>
+        <Layout title={title} description={doctors[0]?.experience?.slice(0, 160)}>
             <Header2 showForm={false} />
             <Container maxWidth="lg">
                 <Box minHeight="50vh" my={4}>
