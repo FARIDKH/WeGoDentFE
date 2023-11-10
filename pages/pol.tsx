@@ -1,4 +1,23 @@
-export const iframeCode =  `<html>
+
+import { makeStyles } from '@material-ui/core';
+import React from 'react';
+
+
+
+const useStyles = makeStyles((theme) => ({
+    
+    iframeContainer: {
+        maxHeight: '50vh', // 90% of the viewport height
+        overflow: 'auto',  // Enable scrolling
+        padding:"10px",
+        marginBottom:"50px",
+        paddingLeft: 0
+    },
+}))
+const PolicyPage = () => {
+  // Your page content here
+  const classes = useStyles()
+  const iframeCode =  `<html>
 
 <head>
     <style>
@@ -991,4 +1010,17 @@ export const iframeCode =  `<html>
     </div>
 </body>
 
-</html>`
+                    </html>`
+//   return 
+//     (
+//         <div dangerouslySetInnerHTML={{__html: PolicyPage}} className={classes.iframeContainer} />
+//     )
+
+    return (
+        <div dangerouslySetInnerHTML={{__html: iframeCode}} className={classes.iframeContainer} />
+      );
+  
+};
+
+export default PolicyPage;
+

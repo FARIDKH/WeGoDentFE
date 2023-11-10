@@ -103,9 +103,37 @@ const SingleClinic = () => {
         }
     }
 
+    function getDescription(language: 'en' | 'hu', description: string): string {
+        // Splitting the description based on the language tags
+        const parts = description?.split(/<b>English<\/b>:|<br>\s*<b> Hungarian: <\/b>/);
+        
+        if (parts?.length < 3) {
+          // If the parts array doesn't contain the expected elements, return an empty string or a default message
+          return description.slice(0, 160);
+        }
+      
+        let selectedDescription = '';
+        if(parts == undefined) return null;
+      
+        if (language === 'en') {
+          // Extracting the English part, using optional chaining for safety
+          selectedDescription = parts[1]?.trim();
+        } else if (language === 'hu') {
+          // Extracting the Hungarian part, using optional chaining for safety
+          selectedDescription = parts[2]?.trim();
+        }
+      
+        // Returning the first 160 characters of the selected part
+        return selectedDescription.slice(0, 160);
+      }
+      // Example usage
+    //   const description = getDescription('en',clinic?.description)
+
+    const description = getDescription('en',clinic?.description)
+
 
     return (
-        <Layout title={clinic?.name}>
+        <Layout title={clinic?.name} description={description}>
             <Header2 showForm={false} />
 
             <Box minHeight="50vh" my={4}>

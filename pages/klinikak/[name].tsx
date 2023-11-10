@@ -86,8 +86,41 @@ const SingleClinic = () => {
 
     const doctors = clinic?.doctorList?.slice(0, 4)
 
+    function getDescription(language: 'en' | 'hu', description: string): string {
+        // Splitting the description based on the language tags
+        const parts = description?.split(/<b>English<\/b>:|<br>\s*<b> Hungarian: <\/b>/);
+        
+        if (parts?.length < 3) {
+          // If the parts array doesn't contain the expected elements, return an empty string or a default message
+          return description.slice(0, 160);
+        }
+      
+        let selectedDescription = '';
+        if(parts == undefined) return null;
+      
+        if (language === 'en') {
+          // Extracting the English part, using optional chaining for safety
+          selectedDescription = parts[1]?.trim();
+        } else if (language === 'hu') {
+          // Extracting the Hungarian part, using optional chaining for safety
+          selectedDescription = parts[2]?.trim();
+        }
+      
+        // Returning the first 160 characters of the selected part
+        return selectedDescription.slice(0, 160);
+      }
+      
+      // Example usage
+    //   const description = getDescription('hu',clinic?.description)
+
+      
+    //   const description = '<b>English</b>: Our dental clinic specializes in general dentistry, offering a comprehensive range of treatments tailored to meet the unique needs of every patient. Our team of experienced professionals is dedicated to providing exceptional care in a comfortable environment, ensuring your dental health is in the best hands. <br> <b> Hungarian: </b> A fogászati rendelőnk általános fogászatra szakosodott, széleskörű kezeléseket kínálva, amelyeket minden páciens egyedi igényeihez igazítanak. Tapasztalt szakembereink elkötelezettek a kiváló ellátás nyújtása mellett egy kényelmes környezetben, garantálva, hogy fogászati egészsége a legjobb kezekben van.';
+      
+    
+    const description = getDescription('hu',clinic?.description)
+
     return (
-        <Layout title={clinic?.name}>
+        <Layout title={clinic?.name} description={description}>
             <Header2 showForm={false} />
 
             <Box minHeight="50vh" my={4}>
