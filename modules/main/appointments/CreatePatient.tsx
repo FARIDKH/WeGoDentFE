@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress } from '@material-ui/core'
+import { Box, Button, CircularProgress, Link } from '@material-ui/core'
 import { Formik } from 'formik'
 import { useMutation } from 'react-query'
 import { store } from '../../../pages/_app'
@@ -115,7 +115,14 @@ const CreatePatient = ({ onSuccess }) => {
                                 error={errors?.phoneNumber}
                                 isTouched={touched?.phoneNumber}
                             />
+                    <p style={{ color:"gray" }}>
+                        By clicking Create, you agree to our <Link target="_blank" href="/terms_and_conditions">Terms</Link>. Learn how we collect, 
+                        use and share your data in our <Link href="/privacy_policy" target="_blank">Privacy Policy</Link>. 
 
+                        You may receive e-mail notifications from us and can opt out at any time.
+
+
+                        </p>
                             <Button
                                 disableElevation
                                 disabled={isLoading}
@@ -125,11 +132,14 @@ const CreatePatient = ({ onSuccess }) => {
                                 color="secondary"
                                 style={{ margin: '0 10px' }}
                             >
+                                
                                 Create
                                 {isLoading && <CircularProgress size={20} />}
                             </Button>
                         </Box>
+                        
                     </form>
+                    
                 )
             }}
         </Formik>
