@@ -12,11 +12,13 @@ import axios from '../../utils/axios'
 import { ENUM_APPOINTMENT_STATUSES } from '../appointments/constants'
 import LoginForm from '../auth/LoginForm'
 import CreatePatient from '../main/appointments/CreatePatient'
+import GoogleIcon from '@mui/icons-material/Google';
 
 interface IProps {
     onSuccess?: () => void
     onClose?: () => void
 }
+
 
 const CreateClinicAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref) => {
     const [isLoginStep, setLoginStep] = useState(true)
@@ -36,6 +38,14 @@ const CreateClinicAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref)
         open()
     }
 
+    const googleButtonStyle = {
+        background: 'linear-gradient(45deg, #4285F4 30%, #34A853 90%)', // Example gradient using Google colors
+        color: 'white', // White icon
+        marginLeft: '8px',
+        // Additional styles (if needed) to make it look more like a Google button
+    };
+    
+
     var resultStartDate = '2021-09-01T10:00:00.000Z'
 
     const { mutate: createAppointment } = useMutation(
@@ -49,7 +59,6 @@ const CreateClinicAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref)
             const endDate = `${day}${endTime}`
 
             const userData = await fetchCurrentUser()
-            console.log(userData);
 
 
             const requestBody = {
@@ -94,6 +103,41 @@ const CreateClinicAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref)
         onSuccess?.()
     }
 
+    const handleGoogleSignIn = () => {
+        // Open a new popup window for Google OAuth2 sign-in
+        const googleAuthUrl = 'https://wegodent-service.onrender.com/oauth2/authorization/google';
+        const authWindow = window.open(googleAuthUrl, '_blank', 'width=600,height=700');
+    
+        // Poll to check if the user has been authenticated
+        const intervalId = setInterval(async () => {
+            try {
+                const user = await fetchCurrentUser(); // This call should include credentials to send cookies
+                if (user) {
+                    // User is authenticated, stop polling
+                    clearInterval(intervalId);
+                    if (authWindow) {
+                        authWindow.close(); // Close the auth window if it's still open
+                    }
+    
+                    // Create an appointment if the user is authenticated
+                    if (data?.clinicIsSubscribed) {
+                        createAppointment();
+                    } else {
+                        handleClinicClose();
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking authentication status:', error);
+            }
+        }, 1000);
+    };
+    
+    
+    
+    
+    
+    
+
 
     React.useImperativeHandle(
         ref,
@@ -120,11 +164,21 @@ const CreateClinicAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref)
                         marginY: 2,
                     }}
                 />
-                <Box display="flex" justifyContent="center">
-                    <Button onClick={() => setLoginStep((prev) => !prev)} variant="outlined" color="secondary">
-                        {isLoginStep ? 'Create new account' : 'Login'}
-                    </Button>
+                <Box display="flex" justifyContent="center" alignItems="center">
+                    <span>
+                        <Button onClick={() => setLoginStep((prev) => !prev)} variant="outlined" color="secondary">
+                            {isLoginStep ? 'Create new account' : 'Login'}
+                        </Button>
+                    </span>
+
+                    <span style={{ marginLeft: '10px', display: 'flex', alignItems: 'center' }}>
+                        or sign up with 
+                        <Button onClick={handleGoogleSignIn} variant="outlined" color="secondary" style={googleButtonStyle}>
+                            <GoogleIcon />
+                        </Button>
+                    </span>
                 </Box>
+                                
             </DialogContent>
         </Dialog>
     )
