@@ -104,34 +104,43 @@ const CreateClinicAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref)
     }
 
     const handleGoogleSignIn = () => {
-        // Open a new popup window for Google OAuth2 sign-in
-        const googleAuthUrl = 'https://wegodent-service.onrender.com/oauth2/authorization/google';
-        const authWindow = window.open(googleAuthUrl, '_blank', 'width=600,height=700');
+        const googleAuthUrl = 'https://wegodent-service.onrender.com/oauth2/authorize/google?redirect_uri=http://localhost:3000/auth/success';
+        const authWindow = window.open(googleAuthUrl, 'width=600,height=700');
     
-        // Poll to check if the user has been authenticated
-        const intervalId = setInterval(async () => {
-            try {
-                const user = await fetchCurrentUser(); // This call should include credentials to send cookies
-                if (user) {
-                    // User is authenticated, stop polling
-                    clearInterval(intervalId);
-                    if (authWindow) {
-                        authWindow.close(); // Close the auth window if it's still open
-                    }
+        const checkAuthInterval = setInterval(() => {
+            const jwtCookie = getCookie('jwt'); // Assuming 'jwt' is the name of your cookie
+            
+            if (jwtCookie) {
+                clearInterval(checkAuthInterval);
+                authWindow.close(); // Close the popup if still open
     
-                    // Create an appointment if the user is authenticated
-                    if (data?.clinicIsSubscribed) {
-                        createAppointment();
-                    } else {
+                // Use the JWT token to fetch user data or perform other actions
+                fetchCurrentUser().then(userData => {
+                    if (userData) {
                         handleClinicClose();
                     }
-                }
-            } catch (error) {
-                console.error('Error checking authentication status:', error);
+                });
+            } else {
+                console.log("jwt not found")
             }
         }, 1000);
     };
     
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
     
     
     
