@@ -14,6 +14,7 @@ import ClinicSelect from '../../ui-component/Form/selects/ClinicSelect'
 import { useQuery } from 'react-query'
 import ClinicSelectionModal from '../../modules/clinics/ClinicSelectionModal'
 import { Form, Formik } from 'formik'
+import { useClinics } from '../../hooks/useClinics'
 
 interface ClinicAppointment {
     appointmentStart: string
@@ -48,35 +49,45 @@ const Dashboard = () => {
 
     const { isDoctor, isPatient, isManager, isReceptionist, info, isAdmin } = useUser()
 
-    useEffect(() => {
-        const fetchAppointments = async () => {
-            try {
-              if(clinicId == undefined) return;
-                const response = await axios.get<ClinicAppointment[]>(`/api/appointment/clinic/${clinicId}`)
-                const appointments = response.data
+  //   const { data, isFetching, isError, refetch } = useQuery(['Clinics'], async ({ signal }) => {
+  //     const result = await axios(`/api/clinics/all`, { signal })
+  //     if(result.data != null) {
+  //       setClinicId(result.data)
+  //     }
+  //     return result.data
+  // })
 
-                // Group and count appointments by day
-                const countsByDay: Record<string, number> = {}
-                appointments.forEach((appointment) => {
-                    const date = format(parseISO(appointment.appointmentStart), 'yyyy-MM-dd')
-                    countsByDay[date] = (countsByDay[date] || 0) + 1
-                })
 
-                // Convert the counts to chart data
-                const labels = Object.keys(countsByDay)
-                const data = Object.values(countsByDay)
+    const fetchAppointments = async () => {
+      try {
+          if (clinicId == undefined) return
+          const response = await axios.get<ClinicAppointment[]>(`/api/appointment/clinic/${clinicId}`)
+          const appointments = response.data
 
-                setChartData({
-                    labels,
-                    datasets: [{ ...chartData.datasets[0], data }],
-                })
-            } catch (error) {
-                console.error('Error fetching appointment data:', error)
-            }
-        }
+          // Group and count appointments by day
+          const countsByDay: Record<string, number> = {}
+          appointments.forEach((appointment) => {
+              const date = format(parseISO(appointment.appointmentStart), 'yyyy-MM-dd')
+              countsByDay[date] = (countsByDay[date] || 0) + 1
+          })
 
-        fetchAppointments()
-    }, [])
+          // Convert the counts to chart data
+          const labels = Object.keys(countsByDay)
+          const data = Object.values(countsByDay)
+
+          setChartData({
+              labels,
+              datasets: [{ ...chartData.datasets[0], data }],
+          })
+      } catch (error) {
+          console.error('Error fetching appointment data:', error)
+      }
+  }
+
+  useEffect(() => {
+    fetchAppointments();
+}, [clinicId]);
+
 
     const options = {
         scales: {
@@ -123,17 +134,18 @@ const Dashboard = () => {
         responsive: true,
         maintainAspectRatio: false,
     }
-    const handleClinicChange = (x) => {
-        console.log(x)
+
+    // ... (rest of the Dashboard component)
+
+    const handleClinicChange = (event) => {
+        setClinicId(event.target.value) // Update clinicId state
     }
 
-
-        const handleChange = (values) => {
-          console.log(values?.clinicId)
-      };
-      const handleConfirm = (values) => {
-        console.log(values?.clinicId)
-    };
+    // Form submit handler
+    const handleSubmit = (event) => {
+        event.preventDefault()
+        // You may want to trigger a refetch of appointments here if needed
+    }
     return (
         <MainLayout>
             <Typography variant="h3">Welcome Back</Typography>
@@ -149,8 +161,7 @@ const Dashboard = () => {
             >
                 <TimestampBox />
             </Container>
-            {isManager ||
-                (isAdmin && (
+            {(isManager || isAdmin) && (
                     <Container>
                         <Box display="flex" alignItems="center" justifyContent="space-between" mt={5} mb={5}>
                             <Typography sx={{ width: '100%' }} variant="h4" component="span">
@@ -158,21 +169,24 @@ const Dashboard = () => {
                             </Typography>
                             <Formik
                                 initialValues={{
-                                    clinicId: '',
+                                    clinicId: clinicId || '', // Use the state value or empty string
                                 }}
-                                onSubmit={handleConfirm}
+                                onSubmit={handleSubmit}
                             >
-                                {({ errors, handleBlur, handleChange, touched, values }) => (
-                                    <Form>
+                                {({ setFieldValue, values }) => (
+                                    <Form >
                                         <DialogContent>
                                             <ClinicSelect
                                                 fetch={true}
                                                 name="clinicId"
-                                                isTouched={!!touched.clinicId}
-                                                error={errors?.clinicId as string}
-                                                onBlur={handleBlur}
-                                                onChange={handleChange}
-                                                value={values?.clinicId}
+                                                onChange={(event) => {
+                                                    const newClinicId = event.target.value;
+                                                    setFieldValue('clinicId', newClinicId);
+                                                    setClinicId(newClinicId); // Update clinicId state to the new value
+                                                }}
+                                                value={values.clinicId || ''}  
+                                                onBlur={undefined}
+                                                error={''} // ... (other props)
                                             />
                                         </DialogContent>
                                     </Form>
@@ -189,7 +203,7 @@ const Dashboard = () => {
                             {chartData && <PatientChart data={chartData} options={options} />}
                         </div>
                     </Container>
-                ))}
+                )}
         </MainLayout>
     )
 }
