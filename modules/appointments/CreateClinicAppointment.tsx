@@ -101,8 +101,13 @@ const CreateClinicAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref)
     }
 
     const handleGoogleSignIn = () => {
+
+        var redirect_uri = "http://localhost:3000/auth/success"
+        if (process.env.NODE_ENV === 'production') {
+            redirect_uri = "https://www.wegodent.com/auth/success"
+        }
         const googleAuthUrl =
-            'https://wegodent-service.onrender.com/oauth2/authorize/google?redirect_uri=http://localhost:3000/auth/success'
+            'https://wegodent-service.onrender.com/oauth2/authorize/google?redirect_uri=' + redirect_uri
         window.open(googleAuthUrl, 'width=600,height=700')
     }
 
