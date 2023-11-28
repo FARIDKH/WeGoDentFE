@@ -25,6 +25,7 @@ const TimestampBox: React.FC = () => {
                 alignItems: 'center',
                 border: '1px solid #333',
                 borderRadius: 2,
+                padding:"50px"
             }}
         >
             <Typography variant="h3">{timestamp}</Typography>

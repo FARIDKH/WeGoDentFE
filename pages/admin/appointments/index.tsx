@@ -64,7 +64,6 @@ const Appointments = () => {
                 const appointmentsPromises = clinicsData.map(clinic => 
                     axios(`/api/appointment/clinic/${clinic.clinicId}`, { signal })
                 );
-                console.log(appointmentsPromises)
                 const allAppointmentsResults = await Promise.all(appointmentsPromises);
                 
                 return allAppointmentsResults.flatMap(result => 

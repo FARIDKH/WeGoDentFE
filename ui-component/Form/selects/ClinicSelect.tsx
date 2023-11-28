@@ -15,7 +15,6 @@ interface IProps {
 
 const ClinicSelect = ({ fetch, name, isTouched, error, onBlur, onChange, value, disabled }: IProps) => {
     const { data: clinics, isFetching: isPatientFetching } = useClinics({ enabled : fetch})
-    console.log(clinics)
     return (
         <Select
             id="clinicId"

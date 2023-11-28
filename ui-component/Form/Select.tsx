@@ -33,6 +33,7 @@ const Select = ({
             name={name}
             style={{ textTransform: 'capitalize' }}
             sx={{
+                width: "200px",
                 '& .MuiSelect-iconOutlined': { display: isClearable && value ? 'none' : 'block' },
             }}
             endAdornment={
