@@ -20,7 +20,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import { useEffect, useRef, useState } from 'react'
-import CreateAppointment from '../../modules/main/appointments/CreateAppointment'
+import CreateClinicAppointment from '../../modules/appointments/CreateClinicAppointment'
 import Header2 from '../../layout/main/Header2'
 import { Star } from '@material-ui/icons'
 import Reviews from '../../modules/clinics/Reviews'
@@ -462,7 +462,7 @@ const SingleClinic = () => {
                 )}
             </Box>
 
-            <CreateAppointment ref={ref} onClose={() => setSelected(initialState)} />
+            <CreateClinicAppointment ref={ref} onClose={() => setSelected(initialState)} />
         </Layout>
     )
 }
@@ -478,8 +478,9 @@ export const getStaticProps = async ({ locale }) => {
 }
 
 export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+
     return {
         paths: [], //indicates that no page needs be created at build time
-        fallback: 'blocking', //indicates the type of fallback
+        fallback: 'blocking' //indicates the type of fallback
     }
 }

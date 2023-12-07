@@ -35,6 +35,9 @@ import Header2 from '../../layout/main/Header2'
 import { apiUrl } from '../../lib/fetchJson'
 import { useTranslation } from 'next-i18next'
 import DoctorPicture from '../../modules/Doctor/DoctorPicture'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import CreateClinicAppointment from '../../modules/appointments/CreateClinicAppointment'
+import { GetStaticPaths } from 'next'
 
 dayjs.extend(isBetween)
 
@@ -145,7 +148,8 @@ const SingleDoctor = () => {
                                 const doctorName = `${doctor?.userDTO?.firstName} ${doctor?.userDTO?.lastName}`
 
                                 const isSelectedDoctor = doctor?.id === selected?.doctorId
-                                const clinicLink = '/clinics/' + doctor?.clinicId
+                                const modifiedName = doctor?.clinicName?.toLowerCase().replace(/\s+/g, '-');
+                                const clinicLink = '/en/clinics/' + modifiedName;
                                 return (
                                     <Box key={doctor?.id}>
                                         <Box
@@ -448,8 +452,9 @@ const SingleDoctor = () => {
                                                                         onChange={(value) =>
                                                                             setSelected((prev) => ({
                                                                                 ...prev,
-                                                                                day: value,
-                                                                                doctorId: doctor?.id,
+                                                                                time: value,
+                                                                                clinicId: doctor?.clinicId,
+                                                                                clinicIsSubscribed: true,
                                                                             }))
                                                                         }
                                                                         sx={{
@@ -520,10 +525,28 @@ const SingleDoctor = () => {
                     )}
                 </Box>
 
-                <CreateAppointment ref={ref} onClose={() => setSelected(initialState)} />
+
+                <CreateClinicAppointment ref={ref} onClose={() => setSelected(initialState)} />
             </Container>
         </Layout>
     )
 }
 
 export default SingleDoctor
+
+
+export const getStaticProps = async ({ locale }) => {
+    return {
+        props: {
+            ...(await serverSideTranslations(locale, ['common'])),
+        },
+    }
+}
+
+export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+
+    return {
+        paths: [], //indicates that no page needs be created at build time
+        fallback: 'blocking' //indicates the type of fallback
+    }
+}

@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === 'production') {
     basePath = process.env.BASE_PATH !== undefined ? process.env.BASE_PATH : ''
 }
 
-const { i18n } = require('./next-i18next.config');
+const { i18n } = require('./next-i18next.config')
 
 module.exports = {
     basePath: basePath,
@@ -18,7 +18,6 @@ module.exports = {
     eslint: {
         ignoreDuringBuilds: true,
         dirs: ['pages', 'utils', 'modules', 'menu-items', 'layout', 'store'],
-        //  dirs: ['pages', 'utils']
     },
     env: {
         NEXT_PUBLIC_BASE_PATH: basePath,
@@ -30,18 +29,38 @@ module.exports = {
             generator: {
                 filename: 'static/chunks/[path][name].[hash][ext]',
             },
-        })
+        });
 
-        return config
+        return config;
     },
-    async rewrites() {
-        return [
-            {
-                source: '/reports',
-                destination: '/reports/main',
-            },
-        ]
-    },
-    i18n
-    
-}
+    // async redirects() {
+    //     return [
+    //         {
+    //             source: '/en/klinikak/:name',
+    //             destination: '/en/clinics/:name',
+    //             permanent: false,
+    //         },
+    //         {
+    //             source: '/en/fogorvosok/:name',
+    //             locale: false,
+    //             destination: '/en/doctors/:name',
+    //             permanent: false,
+    //         },
+    //         {
+    //             source: '/clinics/:name*',
+    //             destination: '/klinikak/:name*',
+    //             permanent: false,
+    //         },
+    //         {
+    //             source: '/doctors/:name',
+    //             destination: '/fogorvosok/:name',
+    //             permanent: false,
+    //             // locale: false,
+    //         },
+    //         // ... other redirects
+    //     ];
+    // },
+
+    i18n,
+};
+
