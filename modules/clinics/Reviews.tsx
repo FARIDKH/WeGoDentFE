@@ -28,26 +28,23 @@ const reviews = [
 ]
 
 const Reviews = (curLang) => {
-
     const lang = curLang?.curLang
     return (
-        <Box my="100px" sx={{ textAlign: 'center', paddingX: '130px' }}>
-            <Typography variant="h3" sx={{ color: '#00624F', fontSize: '30px' }}>
-                {lang == 'en' ? "Reviews from our patient" : "Vélemények a betegeinktől"}
+        <Box my="100px" sx={{ textAlign: 'center', paddingX: { xs: '20px', md: '130px' } }}>
+            <Typography variant="h3" sx={{ color: '#00624F', fontSize: { xs: '20px', md: '30px' } }}>
+                {lang == 'en' ? 'Reviews from our patient' : 'Vélemények a betegeinktől'}
             </Typography>
-            <Typography mb={7} mt={3} variant="h5">
-                {lang == 'en' 
-                    ? "Whether you need a professional teeth cleaning, are interested in an implant or simply want a check-up appointment - we are here for you."
-                    : "Akár profi fogtisztításra van szüksége, implantátum iránt érdeklődik, vagy egyszerűen csak ellenőrző vizsgálatot szeretne - mi itt vagyunk Önnek."
-                }
+            <Typography mb={7} mt={3} variant="h5" sx={{ fontSize: { xs: '16px', sm: '18px' } }}>
+                {lang == 'en'
+                    ? 'Whether you need a professional teeth cleaning, are interested in an implant or simply want a check-up appointment - we are here for you.'
+                    : 'Akár profi fogtisztításra van szüksége, implantátum iránt érdeklődik, vagy egyszerűen csak ellenőrző vizsgálatot szeretne - mi itt vagyunk Önnek.'}
             </Typography>
-        
 
-            <Box display="flex" alignItems="center" justifyContent="space-evenly" gap="16px">
+            <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} alignItems="center" justifyContent="space-evenly" gap="16px">
                 {reviews?.map((review, i) => (
-                    <Paper key={i} elevation={2} sx={{ p: '16px' }}>
+                    <Paper key={i} elevation={2} sx={{ p: '16px', width: { xs: '100%', md: 'auto' } }}>
                         <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" gap="16px">
-                            <img src={review?.profilePicture} alt={review?.username} width="100px" height="100px" />
+                            <img src={review?.profilePicture} alt={review?.username} style={{ width: '100px', height: '100px' }} />
                             <Typography fontSize="24px" fontWeight="700" color="black">
                                 {review?.username}
                             </Typography>

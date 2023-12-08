@@ -38,7 +38,6 @@ import DoctorPicture from '../../modules/Doctor/DoctorPicture'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import CreateClinicAppointment from '../../modules/appointments/CreateClinicAppointment'
 
-
 dayjs.extend(isBetween)
 
 interface TabPanelProps {
@@ -119,7 +118,7 @@ const SingleDoctor = () => {
         return `${hiddenDigits}${visibleDigits}`
     }
 
-    const title = "Dr. " + doctors[0]?.userDTO?.firstName + " " + doctors[0]?.userDTO?.lastName
+    const title = 'Dr. ' + doctors[0]?.userDTO?.firstName + ' ' + doctors[0]?.userDTO?.lastName
 
     return (
         <Layout title={title} description={doctors[0]?.experience?.slice(0, 160)}>
@@ -148,42 +147,31 @@ const SingleDoctor = () => {
                                 const doctorName = `${doctor?.userDTO?.firstName} ${doctor?.userDTO?.lastName}`
 
                                 const isSelectedDoctor = doctor?.id === selected?.doctorId
-                                const modifiedName = doctor?.clinicName?.toLowerCase().replace(/\s+/g, '-');
-                                const clinicLink = '/klinikak/' + modifiedName;
-
-
+                                const modifiedName = doctor?.clinicName?.toLowerCase().replace(/\s+/g, '-')
+                                const clinicLink = '/klinikak/' + modifiedName
 
                                 return (
                                     <Box key={doctor?.id}>
                                         <Box
                                             display="flex"
+                                            flexDirection={{ md: 'row', xs: 'column' }}
                                             sx={{
-                                                flexDirection: {
-                                                    md: 'row',
-                                                    xs: 'column',
-                                                },
+                                                mt: 3,
+                                                mb: 10,
                                             }}
                                         >
                                             <Box
                                                 className="doctorInfo"
-                                                
-                                                sx={{
-                                                    mt: 3,
-                                                    mb: {
-                                                        sm: 0,
-                                                        xs: 3,
-                                                    },
-                                                }}
-                                            >
-                                                <Box 
                                                 display="flex"
                                                 flexWrap="wrap"
                                                 alignItems="center"
                                                 flex={1}
-                                                >
-                                                    <Box sx={{ width: "150px", height: "150px", borderRadius:"100%" }} >
-                                                        <DoctorPicture
-                                                            doctor={doctor}/>
+                                                justifyContent="space-between"
+                                                gap="60px"
+                                            >
+                                                <Box display="flex" alignItems="center" flex={1}>
+                                                    <Box sx={{ width: '150px', height: '150px', borderRadius: '100%' }}>
+                                                        <DoctorPicture doctor={doctor} />
                                                     </Box>
                                                     <Box ml="12px">
                                                         <Typography variant="h4">
@@ -239,7 +227,7 @@ const SingleDoctor = () => {
                                                                     <ListItemIcon>
                                                                         <LocationCityIcon />
                                                                     </ListItemIcon>
-                                                                    <ListItemText primary={doctor?.officeLocationName}/>
+                                                                    <ListItemText primary={doctor?.officeLocationName} />
                                                                 </ListItemButton>
                                                             </ListItem>
                                                             <ListItem disablePadding>
@@ -406,12 +394,12 @@ const SingleDoctor = () => {
                                                                     27 July 2023
                                                                 </Typography>
                                                                 <Typography>
-                                                                Volt neki furnér, ezen kívül volt hidat és foghúzást,
-                                                                     és volt egy ciszta eltávolítás is. Ő egy orvos, aki megvizsgálja a betegét
-                                                                     Nagyon jól, mindent megtesz a fogak megmentéséért a beavatkozás előtt
-                                                                     ezt a folyamatot, majd folytatja az elvégzendő eljárásokat, nagyon vagyok
-                                                                     elégedett ezzel a szemponttal, jelenleg is a páciense vagyok, én
-                                                                     folytassam a kezelést.
+                                                                    Volt neki furnér, ezen kívül volt hidat és foghúzást, és volt egy ciszta
+                                                                    eltávolítás is. Ő egy orvos, aki megvizsgálja a betegét Nagyon jól,
+                                                                    mindent megtesz a fogak megmentéséért a beavatkozás előtt ezt a
+                                                                    folyamatot, majd folytatja az elvégzendő eljárásokat, nagyon vagyok
+                                                                    elégedett ezzel a szemponttal, jelenleg is a páciense vagyok, én
+                                                                    folytassam a kezelést.
                                                                 </Typography>
                                                             </Grid>
                                                         </Grid>
@@ -427,10 +415,10 @@ const SingleDoctor = () => {
                                                                     12 June 2023
                                                                 </Typography>
                                                                 <Typography>
-                                                                Megtöltettem és bevontam. Ebben a folyamatban nagyon meg voltam elégedve az övével
-                                                                     érdeklődését és érdeklődését páciense iránt, valamint tapasztalatait a
-                                                                     területen, és továbbra is folytatom a folyamatot, időnként elmegyek a
-                                                                     pillanatban folytatom a kezelést.
+                                                                    Megtöltettem és bevontam. Ebben a folyamatban nagyon meg voltam elégedve
+                                                                    az övével érdeklődését és érdeklődését páciense iránt, valamint
+                                                                    tapasztalatait a területen, és továbbra is folytatom a folyamatot,
+                                                                    időnként elmegyek a pillanatban folytatom a kezelést.
                                                                 </Typography>
                                                             </Grid>
                                                         </Grid>
@@ -534,7 +522,6 @@ const SingleDoctor = () => {
                     )}
                 </Box>
 
-
                 <CreateClinicAppointment ref={ref} onClose={() => setSelected(initialState)} />
             </Container>
         </Layout>
@@ -542,7 +529,6 @@ const SingleDoctor = () => {
 }
 
 export default SingleDoctor
-
 
 export const getStaticProps = async ({ locale }) => {
     return {
@@ -555,5 +541,5 @@ export async function getStaticPaths() {
     return {
         paths: [], // No pre-defined paths
         fallback: 'blocking', // Render new paths on-demand
-    };
+    }
 }
