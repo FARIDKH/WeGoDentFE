@@ -31,6 +31,7 @@ import { apiUrl } from '../../lib/fetchJson'
 import { GetStaticPaths } from 'next'
 import { useTranslation } from 'next-i18next'
 import DoctorPicture from '../../modules/Doctor/DoctorPicture'
+import { useMobile } from '../../ui-component/hooks/useMobile'
 
 dayjs.extend(isBetween)
 
@@ -43,6 +44,7 @@ const initialState = {
 
 const SingleClinic = () => {
     const ref = useRef(null)
+    const isMobile = useMobile()
 
     const { isLoggedIn } = useUser(false)
 
@@ -132,14 +134,14 @@ const SingleClinic = () => {
                 ) : (
                     <>
                         <Container maxWidth="lg">
-                            <Box key={clinic?.id}>
+                        <Box key={clinic?.id}>
                                 <Box
                                     display="flex"
+                                    flexDirection={{ md: 'row', xs: 'column' }}
                                     sx={{
-                                        flexDirection: {
-                                            md: 'row',
-                                            xs: 'column',
-                                        },
+                                        alignItems: 'center',
+                                        mt: 3,
+                                        mb: 10,
                                     }}
                                 >
                                     <Box
@@ -150,49 +152,65 @@ const SingleClinic = () => {
                                         flex={1}
                                         justifyContent="space-between"
                                         gap="60px"
-                                        sx={{
-                                            mt: 3,
-                                            mb: {
-                                                sm: 0,
-                                                xs: 3,
-                                            },
-                                        }}
-                                        mb={10}
                                     >
-                                        <Box flex={1}>
-                                            <Typography variant="h1" fontSize="36px">
-                                                <strong>{clinic?.name}</strong>
-                                            </Typography>
-
-                                            <Box mt={1} display="flex" alignItems="center" gap={2}>
-                                                <Typography>{clinic?.officeLocationName}</Typography>
-                                                <Box display="flex" alignItems="center">
-                                                    <Star
+                                        {isMobile ? (
+                                            // Mobile layout: ClinicPicture to the right of the clinic name
+                                            <>
+                                                <Box display="flex" flexDirection="row" alignItems="center">
+                                                    <Box
+                                                        width="100px"
+                                                        height="100px"
+                                                        borderRadius="50%"
                                                         sx={{
-                                                            fill: '#FFE817',
-                                                            width: '20px',
-                                                            height: '20px',
+                                                            p: 2,
+                                                            border: '1px solid #329DFF',
+                                                            display: 'flex',
+                                                            justifyContent: 'center',
+                                                            alignItems: 'center',
+                                                            marginRight: '10px',
                                                         }}
-                                                    />
-                                                    <Typography mt="2px">{value}</Typography>
+                                                    >
+                                                        <ClinicPicture clinic={clinic} />
+                                                    </Box>
+                                                    <Box>
+                                                        <Typography variant="h1" fontSize="36px">
+                                                            <strong>{clinic?.name}</strong>
+                                                        </Typography>
+                                                    </Box>
                                                 </Box>
-                                            </Box>
-
-                                            <Typography mt="40px" lineHeight="24px">
-                                                <div dangerouslySetInnerHTML={{ __html: clinic?.description || "" }} />
-                                            </Typography>
-                                        </Box>
-                                        <Box
-                                            width="350px"
-                                            height="350px"
-                                            borderRadius="50%"
-                                            sx={{
-                                                p: 2,
-                                                border: '1px solid #329DFF',
-                                            }}
-                                        >
-                                            <ClinicPicture clinic={clinic} />
-                                        </Box>
+                                                <Typography mt="40px" lineHeight="24px">
+                                                    <div dangerouslySetInnerHTML={{ __html: clinic?.description || '' }} />
+                                                </Typography>
+                                                
+                                                
+                                            </>
+                                        ) : (
+                                            // Default layout for larger screens
+                                            <>
+                                                <Box flex={1}>
+                                                    <Typography variant="h1" fontSize="36px">
+                                                        <strong>{clinic?.name}</strong>
+                                                    </Typography>
+                                                    <Typography mt="40px" lineHeight="24px">
+                                                        <div dangerouslySetInnerHTML={{ __html: clinic?.description || '' }} />
+                                                    </Typography>
+                                                </Box>
+                                                <Box
+                                                    width="350px"
+                                                    height="350px"
+                                                    borderRadius="50%"
+                                                    sx={{
+                                                        p: 2,
+                                                        border: '1px solid #329DFF',
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    <ClinicPicture clinic={clinic} />
+                                                </Box>
+                                            </>
+                                        )}
                                     </Box>
                                 </Box>
                             </Box>
@@ -219,7 +237,7 @@ const SingleClinic = () => {
                                                 const user = doctor?.userDTO
                                                 const doctorUrl = `/fogorvosok/` + user?.firstName?.toLowerCase() + `-` + user?.lastName?.toLowerCase()
                                                 return (
-                                                    <Grid key={doctor?.id} item xs={3}>
+                                                    <Grid key={doctor?.id} item xs={12} sm={6} md={4} lg={3}>
                                                         <Box
                                                             width="100%"
                                                             height="400px"
@@ -229,13 +247,17 @@ const SingleClinic = () => {
                                                                 border: '1px solid #D3D3D3',
                                                             }}
                                                         >
-                                                            <DoctorPicture width="100%"
-                                                            height="400px"
-                                                            sx={{
-                                                                borderRadius: '8px',
-                                                                position: 'relative',
-                                                                border: '1px solid #D3D3D3',
-                                                            }} doctor={doctor}/>
+                                                            {/* Your DoctorPicture component here, ensure it's responsive */}
+                                                            <DoctorPicture
+                                                                width="100%"
+                                                                height="400px"
+                                                                sx={{
+                                                                    borderRadius: '8px',
+                                                                    position: 'relative',
+                                                                    border: '1px solid #D3D3D3',
+                                                                }}
+                                                                doctor={doctor}
+                                                            />
 
                                                             <Box
                                                                 width="100%"
@@ -254,10 +276,18 @@ const SingleClinic = () => {
                                                                     borderTopRightRadius: 0,
                                                                 }}
                                                             >
-                                                                <Typography variant="h2" color="black">
+                                                                <Typography
+                                                                    variant="h2"
+                                                                    color="black"
+                                                                    sx={{ fontSize: { xs: '18px', sm: '20px', md: '24px' } }}
+                                                                >
                                                                     Dr. {doctor?.userDTO?.lastName}
                                                                 </Typography>
-                                                                <Typography variant="h4" color="black">
+                                                                <Typography
+                                                                    variant="h4"
+                                                                    color="black"
+                                                                    sx={{ fontSize: { xs: '16px', sm: '18px' } }}
+                                                                >
                                                                     {doctor?.doctorType?.replace('_', ' ')}
                                                                 </Typography>
                                                                 <Link href={doctorUrl} style={{ textDecoration: 'none' }}>
@@ -269,6 +299,7 @@ const SingleClinic = () => {
                                                                             borderRadius: '8px',
                                                                             color: 'white',
                                                                             marginTop: '8px',
+                                                                            fontSize: { xs: '14px', sm: '16px' },
                                                                         }}
                                                                     >
                                                                         Időpont egyeztetés
@@ -284,16 +315,27 @@ const SingleClinic = () => {
                                 </>
                             )}
 
+                             
+
                             <Box mt="150px" textAlign="center">
-                                <Typography variant="h3" sx={{ color: '#00624F', fontSize: '30px' }}>
-                                    HOGYAN MEGTALÁLHATJUK FOGORVOSI RENDELŐNKET
+                                <Typography variant="h3" sx={{ color: '#00624F', fontSize: { xs: '24px', md: '30px' } }}>
+                                HOGYAN MEGTALÁLHATJUK FOGORVOSI RENDELŐNKET
                                 </Typography>
-                                <Typography mt={3} mb={3} variant="h5">
+                                <Typography mt={3} mb={3} variant="h5" sx={{ fontSize: { xs: '16px', sm: '18px' } }}>
                                 Mindegy, hogy professzionális fogtisztításra van szüksége, implantátum iránt érdeklődik, vagy egyszerűen csak egy vizsgálatra van szüksége – mi állunk rendelkezésére.
                                 </Typography>
                             </Box>
 
-                            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '45px', paddingX: '150px' }}>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: { xs: 'column', md: 'row' }, // Column layout on small screens
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    gap: { xs: '20px', md: '45px' }, // Adjust gap for different screen sizes
+                                    paddingX: { xs: '20px', md: '150px' }, // Adjust padding for different screen sizes
+                                }}
+                            >
                                 <Box
                                     sx={{
                                         padding: '40px',
@@ -334,20 +376,29 @@ const SingleClinic = () => {
                                         }}
                                     >
                                         <CalendarMonthIcon sx={{ color: '#00624F', fontSize: 32 }} />
-                                        <Typography variant="h5">H-V: 8:00-20:00</Typography>
+                                        <Typography variant="h5">Mon - Sun: 8:00-20:00</Typography>
                                     </div>
                                 </Box>
 
-                                <Box style={{ height: '360px', background: '#ccc', flex: 1, borderRadius: '8px' }}>
+                                <Box
+                                    sx={{
+                                        height: { xs: '300px', md: '360px' }, // Adjust height for different screen sizes
+                                        width: { xs: '100%', sm: '450px', md: 'auto' }, // Fixed width for small screens, auto for larger
+                                        background: '#ccc',
+                                        flex: { md: 1 }, // flex property active only for md and larger screens
+                                        borderRadius: '8px',
+                                        overflow: 'hidden', // Ensure the map doesn't overflow the container
+                                    }}
+                                >
                                     <GoogleMap clinics={[]} address={clinic?.officeLocationName} />
                                 </Box>
                             </Box>
 
-                            <Box mt="150px" sx={{ textAlign: 'center', paddingX: '150px' }}>
-                                <Typography variant="h3" sx={{ color: '#00624F', fontSize: '30px' }}>
+                            <Box  mt="150px" sx={{ textAlign: 'center', paddingX: { xs: '20px', md: '150px' } }}>
+                                <Typography  variant="h3" sx={{ color: '#00624F', fontSize: { xs: '24px', md: '30px' } }}>
                                     A naptárunk
                                 </Typography>
-                                <Typography mb={5} mt={3} variant="h5">
+                                <Typography mb={5} mt={3} variant="h5" sx={{ fontSize: { xs: '16px', sm: '18px' } }}>
                                     Érdeklődni a nyitvatartási időnkban lehet
                                 </Typography>
 

@@ -154,24 +154,22 @@ const SingleDoctor = () => {
                                     <Box key={doctor?.id}>
                                         <Box
                                             display="flex"
+                                            flexDirection={{ md: 'row', xs: 'column' }}
                                             sx={{
-                                                flexDirection: {
-                                                    md: 'row',
-                                                    xs: 'column',
-                                                },
+                                                mt: 3,
+                                                mb: 10,
                                             }}
                                         >
                                             <Box
                                                 className="doctorInfo"
-                                                sx={{
-                                                    mt: 3,
-                                                    mb: {
-                                                        sm: 0,
-                                                        xs: 3,
-                                                    },
-                                                }}
+                                                display="flex"
+                                                flexWrap="wrap"
+                                                alignItems="center"
+                                                flex={1}
+                                                justifyContent="space-between"
+                                                gap="60px"
                                             >
-                                                <Box display="flex" flexWrap="wrap" alignItems="center" flex={1}>
+                                                <Box display="flex" alignItems="center" flex={1}>
                                                     <Box sx={{ width: '150px', height: '150px', borderRadius: '100%' }}>
                                                         <DoctorPicture doctor={doctor} />
                                                     </Box>
