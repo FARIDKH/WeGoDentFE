@@ -1,6 +1,25 @@
-import { Box, Container, Typography, Grid, Button, Link } from '@material-ui/core'
+import {
+    Box,
+    Container,
+    Typography,
+    Grid,
+    Button,
+    Link,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    IconButton,
+    Collapse,
+    makeStyles,
+    Paper,
+    TableContainer,
+} from '@material-ui/core'
 import { useRouter } from 'next/router'
 import * as React from 'react'
+import {} from '@material-ui/core'
+import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons'
 
 import PhoneIphoneIcon from '@mui/icons-material/LocalPhoneOutlined'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
@@ -34,6 +53,8 @@ import { storage } from '../../utils/firebase' // make sure to import your Fireb
 import defaultImage from '../../assets/images/dentist-profile-pic.png' // Path to your default image
 import DoctorPicture from '../../modules/Doctor/DoctorPicture'
 import { useMobile } from '../../ui-component/hooks/useMobile'
+import axios from 'axios'
+import { useQuery } from 'react-query'
 
 dayjs.extend(isBetween)
 
@@ -65,8 +86,135 @@ const SingleClinic = () => {
     const { t, i18n } = useTranslation('common')
     const curLang = i18n.language
 
+    const useStyles = makeStyles((theme) => ({
+        tableContainer: {
+            boxShadow: 'none',
+            border: 'none',
+            marginTop: theme.spacing(2),
+            marginBottom: theme.spacing(2),
+        },
+        table: {
+            borderCollapse: 'collapse',
+        },
+        headerCell: {
+            borderBottom: `1px solid ${theme.palette.divider}`,
+            backgroundColor: theme.palette.background.paper,
+            fontWeight: 'bold',
+            textTransform: 'uppercase',
+            fontSize: '0.875rem',
+            padding: theme.spacing(1),
+        },
+        iconCell: {
+            padding: theme.spacing(0, 1),
+        },
+        icon: {
+            transition: theme.transitions.create('transform'),
+            transform: 'rotate(0deg)',
+            '&.expanded': {
+                transform: 'rotate(180deg)',
+            },
+        },
+        categoryCell: {
+            borderBottom: 'none',
+            padding: theme.spacing(1),
+            fontWeight: 'bold',
+        },
+        treatmentName: {
+            borderBottom: 'none',
+            fontSize: '1rem',
+            padding: theme.spacing(1),
+        },
+        treatmentCost: {
+            borderBottom: 'none',
+            fontWeight: 'bold',
+            fontSize: '1rem',
+            padding: theme.spacing(1),
+        },
+        collapseContainer: {
+            padding: 0,
+        },
+    }))
+    
+    const {
+        data: treatmentsData,
+    } = useQuery(['Treatment', clinic], async ({ signal }) => {
+        const result = await axios(`/api/clinics/${clinic?.clinicId}/treatments`, { signal })
+        return result.data
+    })
+
+    const categorizeTreatments = (treatments) => {
+        const categories = treatments?.reduce((acc, treatment) => {
+            const prefixMatch = treatment?.name?.match(/(.*?)\s*\|\s*(.*)/)
+            const category = prefixMatch ? prefixMatch[1] : 'OTHER'
+            const name = prefixMatch ? prefixMatch[2] : treatment?.name
+
+            if (!acc[category]) {
+                acc[category] = []
+            }
+            acc[category].push({ ...treatment, name })
+
+            return acc
+        }, {})
+        return categories
+    }
+
+    const TreatmentTable = ({ treatmentsData }) => {
+        const classes = useStyles()
+
+        // Assume treatmentsData is already fetched and categorized
+        const categorizedTreatments = categorizeTreatments(treatmentsData)
+
+        return (
+            <TableContainer   component={Paper} className={classes.tableContainer}>
+                <Table className={classes.table} aria-label="collapsible table">
+                    <TableBody>
+                        {treatmentsData &&
+                            Object.entries(categorizedTreatments).map(([category, treatments]) => (
+                                <CategoryRow key={category} category={category} treatments={treatments} classes={classes} />
+                            ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        )
+    }
+
+    const CategoryRow = ({ category, treatments, classes }) => {
+        const [open, setOpen] = useState(false)
+
+        return (
+            <>
+                <TableRow>
+                    <TableCell className={classes.iconCell}>
+                        <IconButton onClick={() => setOpen(!open)} size="small">
+                            <KeyboardArrowDown className={`${classes.icon} ${open ? 'expanded' : ''}`} />
+                        </IconButton>
+                    </TableCell>
+                    <TableCell className={classes.categoryCell} colSpan={2}>
+                        {category}
+                    </TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
+                        <Collapse in={open} timeout="auto" unmountOnExit>
+                            <Table size="small">
+                                <TableBody>
+                                    {treatments.map((treatment) => (
+                                        <TableRow key={treatment.id}>
+                                            <TableCell className={classes.treatmentName}>{treatment.name}</TableCell>
+                                            <TableCell className={classes.treatmentCost}>{treatment.cost} HUF</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </Collapse>
+                    </TableCell>
+                </TableRow>
+            </>
+        )
+    }
+
     useEffect(() => {
-        if (Object.values(selected).every((val) => !!val)) {
+        if (Object?.values(selected).every((val) => !!val)) {
             ref?.current?.open(selected)
         }
     }, [selected])
@@ -105,6 +253,7 @@ const SingleClinic = () => {
             return getDefaultImageUrl()
         }
     }
+    
 
     function getDescription(language: 'en' | 'hu', description: string): string {
         // Splitting the description based on the language tags
@@ -192,8 +341,6 @@ const SingleClinic = () => {
                                                 <Typography mt="40px" lineHeight="24px">
                                                     <div dangerouslySetInnerHTML={{ __html: clinic?.description || '' }} />
                                                 </Typography>
-                                                
-                                                
                                             </>
                                         ) : (
                                             // Default layout for larger screens
@@ -331,6 +478,18 @@ const SingleClinic = () => {
                                     </Box>
                                 </>
                             )}
+
+                            <Box mt="150px" textAlign="center">
+                                <Typography variant="h3" sx={{ color: '#00624F', fontSize: { xs: '24px', md: '30px' } }}>
+                                    OUR TREATMENTS - WHAT WE OFFER
+                                </Typography>
+                                <Typography mt={3} mb={3} variant="h5" sx={{ fontSize: { xs: '16px', sm: '18px' } }}>
+                                    Below you can find list of dental treamtment our clinic provides. For more information, please contact
+                                    us.
+                                </Typography>
+
+                               {treatmentsData && (<TreatmentTable treatmentsData={treatmentsData} />) } 
+                            </Box>
 
                             <Box mt="150px" textAlign="center">
                                 <Typography variant="h3" sx={{ color: '#00624F', fontSize: { xs: '24px', md: '30px' } }}>
