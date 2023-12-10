@@ -1,6 +1,25 @@
-import { Box, Container, Typography, Grid, Button, Link } from '@material-ui/core'
+import {
+    Box,
+    Container,
+    Typography,
+    Grid,
+    Button,
+    Link,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    IconButton,
+    Collapse,
+    makeStyles,
+    Paper,
+    TableContainer,
+} from '@material-ui/core'
 import { useRouter } from 'next/router'
 import * as React from 'react'
+import {} from '@material-ui/core'
+import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons'
 
 import PhoneIphoneIcon from '@mui/icons-material/LocalPhoneOutlined'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
@@ -32,6 +51,8 @@ import { GetStaticPaths } from 'next'
 import { useTranslation } from 'next-i18next'
 import DoctorPicture from '../../modules/Doctor/DoctorPicture'
 import { useMobile } from '../../ui-component/hooks/useMobile'
+import { useQuery } from 'react-query'
+import axios from 'axios'
 
 dayjs.extend(isBetween)
 
@@ -62,7 +83,7 @@ const SingleClinic = () => {
     })
 
     const { t, i18n } = useTranslation('common')
-    const curLang = i18n.language;
+    const curLang = i18n.language
 
     useEffect(() => {
         console.log('selected', selected)
@@ -91,36 +112,169 @@ const SingleClinic = () => {
 
     function getDescription(language: 'en' | 'hu', description: string): string {
         // Splitting the description based on the language tags
-        const parts = description?.split(/<b>English<\/b>:|<br>\s*<b> Hungarian: <\/b>/);
-        
+        const parts = description?.split(/<b>English<\/b>:|<br>\s*<b> Hungarian: <\/b>/)
+
         if (parts?.length < 3) {
-          // If the parts array doesn't contain the expected elements, return an empty string or a default message
-          return description.slice(0, 160);
+            // If the parts array doesn't contain the expected elements, return an empty string or a default message
+            return description.slice(0, 160)
         }
-      
-        let selectedDescription = '';
-        if(parts == undefined) return null;
-      
+
+        let selectedDescription = ''
+        if (parts == undefined) return null
+
         if (language === 'en') {
-          // Extracting the English part, using optional chaining for safety
-          selectedDescription = parts[1]?.trim();
+            // Extracting the English part, using optional chaining for safety
+            selectedDescription = parts[1]?.trim()
         } else if (language === 'hu') {
-          // Extracting the Hungarian part, using optional chaining for safety
-          selectedDescription = parts[2]?.trim();
+            // Extracting the Hungarian part, using optional chaining for safety
+            selectedDescription = parts[2]?.trim()
         }
-      
+
         // Returning the first 160 characters of the selected part
-        return selectedDescription.slice(0, 160);
-      }
-      
-      // Example usage
+        return selectedDescription.slice(0, 160)
+    }
+
+    // Example usage
     //   const description = getDescription('hu',clinic?.description)
 
-      
     //   const description = '<b>English</b>: Our dental clinic specializes in general dentistry, offering a comprehensive range of treatments tailored to meet the unique needs of every patient. Our team of experienced professionals is dedicated to providing exceptional care in a comfortable environment, ensuring your dental health is in the best hands. <br> <b> Hungarian: </b> A fogászati rendelőnk általános fogászatra szakosodott, széleskörű kezeléseket kínálva, amelyeket minden páciens egyedi igényeihez igazítanak. Tapasztalt szakembereink elkötelezettek a kiváló ellátás nyújtása mellett egy kényelmes környezetben, garantálva, hogy fogászati egészsége a legjobb kezekben van.';
-      
-    
-    const description = getDescription('hu',clinic?.description)
+
+    const description = getDescription('hu', clinic?.description)
+
+    const useStyles = makeStyles((theme) => ({
+        tableContainer: {
+            boxShadow: 'none',
+            border: 'none',
+            marginTop: theme.spacing(2),
+            marginBottom: theme.spacing(2),
+        },
+        table: {
+            borderCollapse: 'collapse',
+        },
+        headerCell: {
+            borderBottom: `1px solid ${theme.palette.divider}`,
+            backgroundColor: theme.palette.background.paper,
+            fontWeight: 'bold',
+            textTransform: 'uppercase',
+            fontSize: '0.875rem',
+            padding: theme.spacing(1),
+        },
+        iconCell: {
+            padding: theme.spacing(0, 1),
+        },
+        icon: {
+            transition: theme.transitions.create('transform'),
+            transform: 'rotate(0deg)',
+            '&.expanded': {
+                transform: 'rotate(180deg)',
+            },
+        },
+        categoryCell: {
+            borderBottom: 'none',
+            padding: theme.spacing(1),
+            fontWeight: 'bold',
+        },
+        treatmentName: {
+            borderBottom: 'none',
+            fontSize: '1rem',
+            padding: theme.spacing(1),
+        },
+        treatmentCost: {
+            borderBottom: 'none',
+            fontWeight: 'bold',
+            fontSize: '1rem',
+            padding: theme.spacing(1),
+        },
+        collapseContainer: {
+            padding: 0,
+        },
+    }))
+    // const treatmentsData = [
+    //     { name: 'ORTO | root canal' },
+    //     { name: 'ORTO | whitening' },
+    //     { name: 'PIMPO | tooth removal' },
+    //     { name: 'Regular Checkup' }, // No prefix, goes to OTHER
+    // ]
+
+    const {
+        data: treatmentsData,
+        isError,
+        refetch,
+    } = useQuery(['Treatment', clinic], async ({ signal }) => {
+        const result = await axios(`/api/clinics/${clinic?.clinicId}/treatments`, { signal })
+        return result.data
+    })
+
+    const categorizeTreatments = (treatments) => {
+        const categories = treatments?.reduce((acc, treatment) => {
+            const prefixMatch = treatment?.name?.match(/(.*?)\s*\|\s*(.*)/)
+            const category = prefixMatch ? prefixMatch[1] : 'OTHER'
+            const name = prefixMatch ? prefixMatch[2] : treatment?.name
+
+            if (!acc[category]) {
+                acc[category] = []
+            }
+            acc[category].push({ ...treatment, name })
+
+            return acc
+        }, {})
+        return categories
+    }
+
+    const TreatmentTable = ({ treatmentsData }) => {
+        const classes = useStyles()
+
+        // Assume treatmentsData is already fetched and categorized
+        const categorizedTreatments = categorizeTreatments(treatmentsData)
+
+        return (
+            <TableContainer component={Paper} className={classes.tableContainer}>
+                <Table className={classes.table} aria-label="collapsible table">
+                    <TableBody>
+                        {treatmentsData &&
+                            Object.entries(categorizedTreatments).map(([category, treatments]) => (
+                                <CategoryRow key={category} category={category} treatments={treatments} classes={classes} />
+                            ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        )
+    }
+
+    const CategoryRow = ({ category, treatments, classes }) => {
+        const [open, setOpen] = useState(false)
+
+        return (
+            <>
+                <TableRow>
+                    <TableCell className={classes.iconCell}>
+                        <IconButton onClick={() => setOpen(!open)} size="small">
+                            <KeyboardArrowDown className={`${classes.icon} ${open ? 'expanded' : ''}`} />
+                        </IconButton>
+                    </TableCell>
+                    <TableCell className={classes.categoryCell} colSpan={2}>
+                        {category}
+                    </TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
+                        <Collapse in={open} timeout="auto" unmountOnExit>
+                            <Table size="small">
+                                <TableBody>
+                                    {treatments.map((treatment) => (
+                                        <TableRow key={treatment.id}>
+                                            <TableCell className={classes.treatmentName}>{treatment.name}</TableCell>
+                                            <TableCell className={classes.treatmentCost}>{treatment.cost} HUF</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </Collapse>
+                    </TableCell>
+                </TableRow>
+            </>
+        )
+    }
 
     return (
         <Layout title={clinic?.name} description={description}>
@@ -134,7 +288,7 @@ const SingleClinic = () => {
                 ) : (
                     <>
                         <Container maxWidth="lg">
-                        <Box key={clinic?.id}>
+                            <Box key={clinic?.id}>
                                 <Box
                                     display="flex"
                                     flexDirection={{ md: 'row', xs: 'column' }}
@@ -181,8 +335,6 @@ const SingleClinic = () => {
                                                 <Typography mt="40px" lineHeight="24px">
                                                     <div dangerouslySetInnerHTML={{ __html: clinic?.description || '' }} />
                                                 </Typography>
-                                                
-                                                
                                             </>
                                         ) : (
                                             // Default layout for larger screens
@@ -222,7 +374,8 @@ const SingleClinic = () => {
                                             Találkozni a csapattal
                                         </Typography>
                                         <Typography mt={3} mb={3} variant="h5">
-                                        Mindegy, hogy professzionális fogtisztításra van szüksége, implantátum iránt érdeklődik, vagy egyszerűen csak egy vizsgálatra van szüksége – mi állunk rendelkezésére.
+                                            Mindegy, hogy professzionális fogtisztításra van szüksége, implantátum iránt érdeklődik, vagy
+                                            egyszerűen csak egy vizsgálatra van szüksége – mi állunk rendelkezésére.
                                         </Typography>
                                         <Grid
                                             direction="row"
@@ -235,7 +388,8 @@ const SingleClinic = () => {
                                         >
                                             {doctors?.map((doctor) => {
                                                 const user = doctor?.userDTO
-                                                const doctorUrl = `/fogorvosok/` + user?.firstName?.toLowerCase() + `-` + user?.lastName?.toLowerCase()
+                                                const doctorUrl =
+                                                    `/fogorvosok/` + user?.firstName?.toLowerCase() + `-` + user?.lastName?.toLowerCase()
                                                 return (
                                                     <Grid key={doctor?.id} item xs={12} sm={6} md={4} lg={3}>
                                                         <Box
@@ -315,14 +469,25 @@ const SingleClinic = () => {
                                 </>
                             )}
 
-                             
+                            <Box mt="150px" textAlign="center">
+                                <Typography variant="h3" sx={{ color: '#00624F', fontSize: { xs: '24px', md: '30px' } }}>
+                                    KEZELÉSEINK – AMIT KÍNÁLUNK
+                                </Typography>
+                                <Typography mt={3} mb={3} variant="h5" sx={{ fontSize: { xs: '16px', sm: '18px' } }}>
+                                    Below you can find list of dental treatment our clinic provides. For more information, please contact
+                                    us.
+                                </Typography>
+
+                                <TreatmentTable treatmentsData={treatmentsData} />
+                            </Box>
 
                             <Box mt="150px" textAlign="center">
                                 <Typography variant="h3" sx={{ color: '#00624F', fontSize: { xs: '24px', md: '30px' } }}>
-                                HOGYAN MEGTALÁLHATJUK FOGORVOSI RENDELŐNKET
+                                    HOGYAN MEGTALÁLHATJUK FOGORVOSI RENDELŐNKET
                                 </Typography>
                                 <Typography mt={3} mb={3} variant="h5" sx={{ fontSize: { xs: '16px', sm: '18px' } }}>
-                                Mindegy, hogy professzionális fogtisztításra van szüksége, implantátum iránt érdeklődik, vagy egyszerűen csak egy vizsgálatra van szüksége – mi állunk rendelkezésére.
+                                    Az alábbiakban megtalálja a klinikánk által nyújtott fogászati kezelések listáját. További információért
+                                    forduljon minket.
                                 </Typography>
                             </Box>
 
@@ -394,8 +559,8 @@ const SingleClinic = () => {
                                 </Box>
                             </Box>
 
-                            <Box  mt="150px" sx={{ textAlign: 'center', paddingX: { xs: '20px', md: '150px' } }}>
-                                <Typography  variant="h3" sx={{ color: '#00624F', fontSize: { xs: '24px', md: '30px' } }}>
+                            <Box mt="150px" sx={{ textAlign: 'center', paddingX: { xs: '20px', md: '150px' } }}>
+                                <Typography variant="h3" sx={{ color: '#00624F', fontSize: { xs: '24px', md: '30px' } }}>
                                     A naptárunk
                                 </Typography>
                                 <Typography mb={5} mt={3} variant="h5" sx={{ fontSize: { xs: '16px', sm: '18px' } }}>
@@ -511,9 +676,8 @@ export const getStaticProps = async ({ locale }) => {
 }
 
 export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
-
     return {
         paths: [], //indicates that no page needs be created at build time
-        fallback: 'blocking' //indicates the type of fallback
+        fallback: 'blocking', //indicates the type of fallback
     }
 }

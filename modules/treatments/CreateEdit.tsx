@@ -12,15 +12,20 @@ import { useOpenState } from '../../ui-component/hooks/useOpenState'
 
 interface IProps {
     onSuccess?: () => void
+    clinicId : Number
 }
 
-const CreateEditForm = forwardRef(({ onSuccess }: IProps, ref) => {
+const CreateEditForm = forwardRef(({ onSuccess, clinicId }: IProps, ref) => {
     const { user } = useUser()
     const { isOpen, open, close } = useOpenState()
     const [data, setData] = useState(null)
 
+    
+    
+    console.log(clinicId)
+    
     const { isLoading, mutate } = useMutation(
-        (values: any) => (data?.id ? axios.put(`/api/treatment/${data?.id}`, values) : axios.post('/api/treatment', values)),
+        (values: any) => (data?.id ? axios.put(`/api/treatment/${data?.id}`, values) : axios.post(`/api/clinics/${clinicId}/treatments`, values)),
         {
             onSuccess: () => {
                 store.dispatch({
