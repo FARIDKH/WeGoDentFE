@@ -111,7 +111,7 @@ const useMenuItems = () => {
                     url: '/admin/treatments',
                     icon: icons['IconPill'],
                     breadcrumbs: false,
-                    hide: !isDoctor && !isAdmin,
+                    hide: !isDoctor && !isManager && !isAdmin ,
                 },
                 {
                     id: 'blogs',

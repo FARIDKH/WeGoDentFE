@@ -5,23 +5,23 @@ import user3 from '../../assets/images/user3.png'
 
 const reviews = [
     {
-        username: 'Meghan Smith',
+        username: 'Tamas Kondor',
         description:
-            'Whether you need a professional teeth cleaning, are interested in an implant or simply want a check-up appointment - we are here for you.',
+            'Legyen szó professzionális fogtisztításról, egy implantátum iránti érdeklődésről vagy egyszerű ellenőrzési időpont egyeztetésről - mi itt vagyunk Önnek.',
         point: 3,
-        profilePicture: user1.src,
-    },
-    {
-        username: 'Sam Row',
-        description:
-            'Whether you need a professional teeth cleaning, are interested in an implant or simply want a check-up appointment - we are here for you.',
-        point: 4,
         profilePicture: user2.src,
     },
     {
-        username: 'Andrew Shawn',
+        username: 'Bergi Bernath',
         description:
-            'Whether you need a professional teeth cleaning, are interested in an implant or simply want a check-up appointment - we are here for you.',
+            'Bármilyen fogászati gondja akad, akár sürgős segítségre van szüksége, csapatunk készen áll, hogy a legjobb ellátást nyújtsa',
+        point: 4,
+        profilePicture: user1.src,
+    },
+    {
+        username: 'Gabor Bethlen',
+        description:
+            'A mosolya értékes számunkra, ezért minden erőfeszítést megteszünk annak érdekében, hogy a lehető legmagasabb minőségű kezelést kapja.',
         point: 5,
         profilePicture: user3.src,
     },

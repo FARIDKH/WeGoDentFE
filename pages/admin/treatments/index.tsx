@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 
 import { Box, Typography } from '@material-ui/core'
 import { useQuery } from 'react-query'
@@ -11,23 +11,45 @@ import CreateEditForm from '../../../modules/treatments/CreateEdit'
 import CreateEditPhaseForm from '../../../modules/treatments/CreateEditPhase'
 import { trimString } from '../../../utils/string'
 
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import ClinicSelect from '../../../ui-component/Form/selects/ClinicSelect'
 
 const Treatments = () => {
     const createEditRef = useRef(null)
     const createEditPhaseRef = useRef(null)
 
-    const { data, isFetching, isError, refetch } = useQuery(['Treatment'], async ({ signal }) => {
-        const result = await axios(`/api/treatment`, { signal })
+    const [selectedClinicId, setSelectedClinicId] = useState(null)
+
+    const { data, isFetching, isError, refetch } = useQuery(['Treatment', selectedClinicId], async ({ signal }) => {
+        if (selectedClinicId == null) return []
+        const result = await axios(`/api/clinics/${selectedClinicId}/treatments`, { signal })
         return result.data
     })
+
+    // ... other code ...
+
+    const handleClinicSelect = (clinicId) => {
+        setSelectedClinicId(clinicId)
+        // Call refetch or other necessary actions after clinic selection
+    }
 
     return (
         <>
             <MainLayout>
                 <Typography variant="h1" mb={2}>
                     Treatments
+                </Typography>
+
+                <Typography variant="h6" mb={2}>
+                    Select clinic:
+                    <ClinicSelect
+                        onChange={(event) => handleClinicSelect(event.target.value)}
+                        fetch={true}
+                        name={''}
+                        value={undefined}
+                        onBlur={undefined}
+                        error={''}
+                    />
                 </Typography>
 
                 <MainCard>
@@ -61,7 +83,7 @@ const Treatments = () => {
                                     id: 'cost',
                                     numeric: false,
                                     label: 'Cost',
-                                    align: 'left'
+                                    align: 'left',
                                 },
                             ]}
                             actions={[
@@ -72,17 +94,19 @@ const Treatments = () => {
                                 {
                                     label: 'Phases',
                                     onClick: (treatment) => createEditPhaseRef?.current?.open(treatment),
-                                }
-                                
+                                },
                             ]}
                         />
                     </Box>
                 </MainCard>
 
-                <CreateButtonFab onClick={() => createEditRef?.current?.open()} />
-
-                <CreateEditForm ref={createEditRef} onSuccess={refetch} />
-                <CreateEditPhaseForm ref={createEditPhaseRef} onSuccess={refetch} />
+                {selectedClinicId && (
+                    <>
+                        <CreateButtonFab onClick={() => createEditRef?.current?.open()} />
+                        <CreateEditForm ref={createEditRef} onSuccess={refetch} clinicId={selectedClinicId} />
+                        <CreateEditPhaseForm ref={createEditPhaseRef} onSuccess={refetch} />
+                    </>
+                )}
             </MainLayout>
         </>
     )
@@ -92,8 +116,8 @@ export default Treatments
 
 export const getStaticProps = async ({ locale }) => {
     return {
-      props: {
-        ...(await serverSideTranslations(locale, ["doctor"])),
-      },
-    };
-  };
+        props: {
+            ...(await serverSideTranslations(locale, ['doctor'])),
+        },
+    }
+}
