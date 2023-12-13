@@ -9,11 +9,8 @@ import PaginatedTableGenerator from '../../../ui-component/PaginatedTableGenerat
 import CreateButtonFab from '../../../ui-component/CreateButtonFab'
 import CreateEditForm from '../../../modules/manager/CreateEdit'
 import DeleteForm from '../../../modules/Doctor/Delete'
-import { trimString } from '../../../utils/string'
 
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-
-
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 const Users = () => {
     const createEditRef = useRef(null)
@@ -58,8 +55,7 @@ const Users = () => {
                                     numeric: false,
                                     label: 'Type',
                                     align: 'left',
-                                    renderAs: ({ groupRoleResponseDTOS }) => (groupRoleResponseDTOS?.[0]?.code)
-
+                                    renderAs: ({ groupRoleResponseDTOS }) => groupRoleResponseDTOS?.[0]?.code,
                                 },
                             ]}
                             actions={[
@@ -91,8 +87,8 @@ export default Users
 
 export const getStaticProps = async ({ locale }) => {
     return {
-      props: {
-        ...(await serverSideTranslations(locale, ["doctor"])),
-      },
-    };
-  };
+        props: {
+            ...(await serverSideTranslations(locale, ['doctor'])),
+        },
+    }
+}

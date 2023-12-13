@@ -1,23 +1,18 @@
-import React, { useState } from 'react';
-import { Button, ButtonGroup, CardContent, Typography } from '@material-ui/core'
+import React from 'react'
+import { CardContent } from '@material-ui/core'
 
 import useUser from '../../lib/useUser'
 import MainLayout from '../../layout/admin/MainLayout'
 import MainCard from '../../ui-component/cards/MainCard'
 import CurrentUser from '../../ui-component/CurrentUser'
-import DescriptionGridGenerator from '../../ui-component/DescriptionGridGenerator'
 import UpdateDoctor from '../../modules/Doctor/UpdateDoctor'
 import UpdatePatient from '../../modules/patients/UpdatePatient'
 import UpdateAccount from '../../modules/account/UpdateAccount'
-// import UpdatePatient from '../../modules/mnager/CreateEdit'
-
 
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-
 const ProfilePage = () => {
-
-    const { isDoctor, isPatient, isManager,isReceptionist, info } = useUser()
+    const { isPatient, isManager, isReceptionist } = useUser()
     return (
         <CurrentUser>
             {({ info, isDoctor }) => {
@@ -25,13 +20,10 @@ const ProfilePage = () => {
                     <MainLayout>
                         <MainCard content={false}>
                             <CardContent>
-                                {isDoctor && (<UpdateDoctor doctor={info}  />)}
-                                {/* {isDoctor && (<UpdatePatient doctor={info}  />)} */}
-                                {isPatient && (<UpdatePatient patient={info}  />)}
-                                {isManager && (<UpdateAccount account={info}  />)}
-                                {isReceptionist && (<UpdateAccount account={info}  />)}
-                        
-
+                                {isDoctor && <UpdateDoctor doctor={info} />}
+                                {isPatient && <UpdatePatient patient={info} />}
+                                {isManager && <UpdateAccount account={info} />}
+                                {isReceptionist && <UpdateAccount account={info} />}
                             </CardContent>
                         </MainCard>
                     </MainLayout>
@@ -50,4 +42,3 @@ export const getStaticProps = async ({ locale }) => {
         },
     }
 }
-

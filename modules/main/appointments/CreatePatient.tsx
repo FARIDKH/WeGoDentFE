@@ -6,6 +6,7 @@ import { SNACKBAR_OPEN } from '../../../store/actions'
 import Input from '../../../ui-component/Form/Input'
 import PasswordInput from '../../../ui-component/Form/PasswordInput'
 import axios from '../../../utils/axios'
+import * as yup from 'yup'
 
 const CreatePatient = ({ onSuccess }) => {
     const { isLoading, mutate } = useMutation(
@@ -48,7 +49,13 @@ const CreatePatient = ({ onSuccess }) => {
                 phoneNumber: '',
                 password: '',
             }}
-            // validationSchema={blogValidationSchema}
+            validationSchema={yup.object({
+                firstName: yup.string().required('First Name is required'),
+                lastName: yup.string().required('Last Name is required'),
+                phoneNumber: yup.string().required('Phone Number is required'),
+                email: yup.string().required('Email is required').email('Email format is not valid'),
+                password: yup.string().required('Password is required'),
+            })}
             onSubmit={(values) => mutate(values)}
         >
             {(form) => {
@@ -115,14 +122,17 @@ const CreatePatient = ({ onSuccess }) => {
                                 error={errors?.phoneNumber}
                                 isTouched={touched?.phoneNumber}
                             />
-                    <p style={{ color:"gray" }}>
-                        By clicking Create, you agree to our <Link target="_blank" href="/terms_and_conditions">Terms</Link>. Learn how we collect, 
-                        use and share your data in our <Link href="/privacy_policy" target="_blank">Privacy Policy</Link>. 
-
-                        You may receive e-mail notifications from us and can opt out at any time.
-
-
-                        </p>
+                            <p style={{ color: 'gray' }}>
+                                By clicking Create, you agree to our{' '}
+                                <Link target="_blank" href="/terms_and_conditions">
+                                    Terms
+                                </Link>
+                                . Learn how we collect, use and share your data in our{' '}
+                                <Link href="/privacy_policy" target="_blank">
+                                    Privacy Policy
+                                </Link>
+                                . You may receive e-mail notifications from us and can opt out at any time.
+                            </p>
                             <Button
                                 disableElevation
                                 disabled={isLoading}
@@ -132,14 +142,11 @@ const CreatePatient = ({ onSuccess }) => {
                                 color="secondary"
                                 style={{ margin: '0 10px' }}
                             >
-                                
                                 Create
                                 {isLoading && <CircularProgress size={20} />}
                             </Button>
                         </Box>
-                        
                     </form>
-                    
                 )
             }}
         </Formik>
