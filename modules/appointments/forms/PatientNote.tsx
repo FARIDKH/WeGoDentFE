@@ -29,7 +29,7 @@ const PatientNoteForm = ({ onSuccess }) => {
                             size="medium"
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            label="Note"
+                            label="Please describe the dental issue you're experiencing"
                             error={errors?.patientNote}
                             isTouched={touched?.patientNote}
                             multiline
