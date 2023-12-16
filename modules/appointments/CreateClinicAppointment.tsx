@@ -13,7 +13,9 @@ import LoginForm from '../auth/LoginForm'
 import CreatePatient from '../main/appointments/CreatePatient'
 import Loading from '../../ui-component/Loading'
 import GoogleAuthButton from '../../ui-component/auth/GoogleAuthButton'
-import UserDetailFormModal from '../../ui-component/auth/UserDetailFormModal'
+import UserDetailFormModal from '../auth/UserDetailFormModal'
+import { useRouter } from 'next/router'
+import PatientNoteForm from './forms/PatientNote'
 
 interface IProps {
     onSuccess?: () => void
@@ -21,7 +23,10 @@ interface IProps {
 }
 
 const CreateClinicAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref) => {
-    const [isLoginStep, setLoginStep] = useState(true)
+    const { query } = useRouter()
+    const [step, setStep] = useState<'login' | 'register' | 'note'>('login')
+    const isLoginStep = step === 'login'
+
     const { isLoading, isLoggedIn, info, refetch: refetchUser } = useUser(false)
     const userDetailFormModalRef = useRef(null)
 
@@ -31,7 +36,7 @@ const CreateClinicAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref)
     const handleClose = () => {
         setData(null)
         onClose?.()
-        setLoginStep(true)
+        setStep('login')
         close()
     }
 
@@ -41,7 +46,7 @@ const CreateClinicAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref)
     }
 
     const { mutate: createAppointment, isLoading: isCreatingAppointment } = useMutation(
-        async () => {
+        async (patientNote) => {
             const day = dayjs(data?.day).format('YYYY-MM-DD')
             const time = dayjs(data?.time)
             const startTime = time.format('THH:mm:ss.000[Z]')
@@ -56,6 +61,8 @@ const CreateClinicAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref)
                 patientId: info?.id,
                 appointmentStart: startDate,
                 appointmentEnd: endDate,
+                requestedDoctorType: query?.doctorType,
+                patientNote,
             }
 
             return await axios.post(`/api/appointment/clinic`, requestBody)
@@ -95,14 +102,13 @@ const CreateClinicAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref)
 
         if (!info?.userDTO?.phoneNumber) {
             userDetailFormModalRef?.current?.open()
-        } else if (data) {
-            createAppointment()
+        } else {
+            setStep('note')
         }
-    }, [isOpen, data, isLoggedIn])
+    }, [isOpen, isLoggedIn])
 
     const onUserDetailFormSuccess = () => {
         refetchUser()
-        createAppointment()
     }
 
     React.useImperativeHandle(
@@ -115,12 +121,7 @@ const CreateClinicAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref)
 
     return (
         <>
-            <Dialog
-                sx={{ '& .MuiDialog-paper': { width: '30rem', maxHeight: 600 } }}
-                maxWidth="lg"
-                open={isOpen}
-                onBackdropClick={handleClose}
-            >
+            <Dialog sx={{ '& .MuiDialog-paper': { width: '30rem' } }} maxWidth="lg" open={isOpen} onBackdropClick={handleClose}>
                 <DialogTitle
                     sx={{
                         textAlign: 'center',
@@ -136,28 +137,38 @@ const CreateClinicAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref)
                     ) : (
                         <>
                             {isLoginStep ? (
-                                <LoginForm onSuccess={() => (data?.clinicIsSubscribed ? createAppointment() : handleClinicClose())} />
+                                <LoginForm onSuccess={() => (data?.clinicIsSubscribed ? setStep('note') : handleClinicClose())} />
+                            ) : step == 'register' ? (
+                                <CreatePatient onSuccess={() => setStep('login')} />
                             ) : (
-                                <CreatePatient onSuccess={() => setLoginStep(true)} />
+                                <PatientNoteForm onSuccess={(patientNote) => createAppointment(patientNote)} />
                             )}
 
-                            <Divider
-                                sx={{
-                                    marginY: 2,
-                                }}
-                            />
-                            <Box display="flex" justifyContent="center" alignItems="center">
-                                <span>
-                                    <Button onClick={() => setLoginStep((prev) => !prev)} variant="outlined" color="secondary">
-                                        {isLoginStep ? 'Create new account' : 'Login'}
-                                    </Button>
-                                </span>
+                            {!isLoggedIn && (
+                                <>
+                                    <Divider
+                                        sx={{
+                                            marginY: 2,
+                                        }}
+                                    />
+                                    <Box display="flex" justifyContent="center" alignItems="center">
+                                        <span>
+                                            <Button
+                                                onClick={() => setStep(isLoginStep ? 'register' : 'login')}
+                                                variant="outlined"
+                                                color="secondary"
+                                            >
+                                                {isLoginStep ? 'Create new account' : 'Login'}
+                                            </Button>
+                                        </span>
 
-                                <span style={{ marginLeft: '10px', display: 'flex', alignItems: 'center' }}>
-                                    or sign up with
-                                    <GoogleAuthButton />
-                                </span>
-                            </Box>
+                                        <span style={{ marginLeft: '10px', display: 'flex', alignItems: 'center' }}>
+                                            or sign up with
+                                            <GoogleAuthButton />
+                                        </span>
+                                    </Box>
+                                </>
+                            )}
                         </>
                     )}
                 </DialogContent>

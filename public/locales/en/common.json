@@ -48,5 +48,6 @@
         "Cosmetic_Dentist": "Cosmetic Dentist",
         "Emergency_Dentist": "Emergency Dentist"
     
-    }
+    },
+    "labelSelectDateAndTime": "Please select date and time for creating appointment"
 } 
