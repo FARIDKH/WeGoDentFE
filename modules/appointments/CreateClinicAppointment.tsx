@@ -107,8 +107,9 @@ const CreateClinicAppointment = forwardRef(({ onSuccess, onClose }: IProps, ref)
         }
     }, [isOpen, isLoggedIn])
 
-    const onUserDetailFormSuccess = () => {
-        refetchUser()
+    const onUserDetailFormSuccess = async () => {
+        await refetchUser()
+        setStep('note')
     }
 
     React.useImperativeHandle(
