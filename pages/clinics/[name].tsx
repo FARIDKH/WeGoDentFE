@@ -52,6 +52,55 @@ import { useQuery } from 'react-query'
 
 dayjs.extend(isBetween)
 
+const useStyles = makeStyles((theme) => ({
+    tableContainer: {
+        boxShadow: 'none',
+        border: 'none',
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+    },
+    table: {
+        borderCollapse: 'collapse',
+    },
+    headerCell: {
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        backgroundColor: theme.palette.background.paper,
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+        fontSize: '0.875rem',
+        padding: theme.spacing(1),
+    },
+    iconCell: {
+        padding: theme.spacing(0, 1),
+    },
+    icon: {
+        transition: theme.transitions.create('transform'),
+        transform: 'rotate(0deg)',
+        '&.expanded': {
+            transform: 'rotate(180deg)',
+        },
+    },
+    categoryCell: {
+        borderBottom: 'none',
+        padding: theme.spacing(1),
+        fontWeight: 'bold',
+    },
+    treatmentName: {
+        borderBottom: 'none',
+        fontSize: '1rem',
+        padding: theme.spacing(1),
+    },
+    treatmentCost: {
+        borderBottom: 'none',
+        fontWeight: 'bold',
+        fontSize: '1rem',
+        padding: theme.spacing(1),
+    },
+    collapseContainer: {
+        padding: 0,
+    },
+}))
+
 const initialState = {
     day: null,
     time: null,
@@ -75,57 +124,8 @@ const SingleClinic = () => {
         checkAuth: false,
     })
 
-    const { i18n } = useTranslation('common')
+    const { i18n, t } = useTranslation('common')
     const curLang = i18n.language
-
-    const useStyles = makeStyles((theme) => ({
-        tableContainer: {
-            boxShadow: 'none',
-            border: 'none',
-            marginTop: theme.spacing(2),
-            marginBottom: theme.spacing(2),
-        },
-        table: {
-            borderCollapse: 'collapse',
-        },
-        headerCell: {
-            borderBottom: `1px solid ${theme.palette.divider}`,
-            backgroundColor: theme.palette.background.paper,
-            fontWeight: 'bold',
-            textTransform: 'uppercase',
-            fontSize: '0.875rem',
-            padding: theme.spacing(1),
-        },
-        iconCell: {
-            padding: theme.spacing(0, 1),
-        },
-        icon: {
-            transition: theme.transitions.create('transform'),
-            transform: 'rotate(0deg)',
-            '&.expanded': {
-                transform: 'rotate(180deg)',
-            },
-        },
-        categoryCell: {
-            borderBottom: 'none',
-            padding: theme.spacing(1),
-            fontWeight: 'bold',
-        },
-        treatmentName: {
-            borderBottom: 'none',
-            fontSize: '1rem',
-            padding: theme.spacing(1),
-        },
-        treatmentCost: {
-            borderBottom: 'none',
-            fontWeight: 'bold',
-            fontSize: '1rem',
-            padding: theme.spacing(1),
-        },
-        collapseContainer: {
-            padding: 0,
-        },
-    }))
 
     const { data: treatmentsData } = useQuery(['Treatment', clinic], async ({ signal }) => {
         const result = await axios(`/api/clinics/${clinic?.clinicId}/treatments`, { signal })
@@ -542,9 +542,8 @@ const SingleClinic = () => {
                                 <Typography variant="h3" sx={{ color: '#00624F', fontSize: { xs: '24px', md: '30px' } }}>
                                     Our calendar
                                 </Typography>
-                                <Typography mb={5} mt={3} variant="h5" sx={{ fontSize: { xs: '16px', sm: '18px' } }}>
-                                    Whether you need a professional teeth cleaning, are interested in an implant or simply want a check-up
-                                    appointment - we are here for you.
+                                <Typography mb={5} mt={1} variant="h5" sx={{ fontSize: { xs: '16px', sm: '18px' } }}>
+                                    {t('labelSelectDateAndTime')}
                                 </Typography>
 
                                 <Box display="flex" alignItems="center" justifyContent="center">

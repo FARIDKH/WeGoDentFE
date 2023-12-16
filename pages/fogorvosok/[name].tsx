@@ -426,7 +426,10 @@ const SingleDoctor = () => {
                                                 </Box>
                                             </Box>
 
-                                            <Box mt="25px" sx={{ textAlign: 'center', paddingX: '75px' }}>
+                                            <Box sx={{ textAlign: 'center', paddingX: '75px' }}>
+                                                <Typography mb={5} variant="h5" sx={{ fontSize: { xs: '16px', sm: '18px' } }}>
+                                                    {t('labelSelectDateAndTime')}
+                                                </Typography>
                                                 <Box display="flex" alignItems="center" justifyContent="center">
                                                     <Box
                                                         className="appointment"
