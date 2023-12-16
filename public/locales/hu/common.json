@@ -47,5 +47,6 @@
         "Oral_Medicine_Specialist": "Szájüregi Betegségek Szakorvosa",
         "Cosmetic_Dentist": "Esztétikai Fogorvos",
         "Emergency_Dentist": "Sürgősségi Fogorvos"
-    }
+    },
+    "labelSelectDateAndTime": "Kérjük, válassza ki a dátumot és az időt az időpont egyeztetéséhez"
 } 
