@@ -1,4 +1,4 @@
-import { Box, Button, Container, List, ListItem, makeStyles, TextField, Typography } from '@material-ui/core'
+import { Box, Button, Container, Link, List, ListItem, makeStyles, TextField, Typography } from '@material-ui/core'
 import { useState } from 'react'
 
 const useStyle = makeStyles(() => ({
@@ -78,6 +78,19 @@ const Footer = () => {
                             <List>
                                 <ListItem disableGutters>Budapest, Hungary</ListItem>
                             </List>
+                        </Box>
+                        <Box mb={1}>
+                            <Typography variant="h2" color="inherit">
+                                Privacy Policy and T&C
+                            </Typography>
+                            <Link style={{ color : 'lightgray' }} href="/privacy_policy" target="_blank">
+                                Privacy Policy
+                            </Link>
+                            <br></br>
+
+                            <Link style={{ color : 'lightgray' }}  target="_blank" href="/terms_and_conditions">
+                                Terms
+                            </Link>
                         </Box>
                         <Box>
                             <Typography variant="h2" color="inherit">
