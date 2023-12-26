@@ -112,7 +112,7 @@ const PolicyPage = () => {
                         <bdt class="block-component"></bdt> We do not receive any information from third parties. <bdt class="else-block"></bdt>
                     </span> </span> </div>
             <div style="line-height: 1.5;"><br></div>
-            <div style="line-height: 1.5;"><span style="font-size: 15px;"><span data-custom-class="body_text"><strong>How do we process your information?</strong> We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with law. We may also process your information for other purposes with your consent. We process your information only when we have a valid legal reason to do so. Learn more about&nbsp;</span></span><a data-custom-class="link" href="#infouse"><span style="color: rgb(0, 58, 250); font-size: 15px;"><span data-custom-class="body_text">how we process your information</span></span></a><span data-custom-class="body_text">.</span></div>
+            <div style="line-height: 1.5;"><span style="font-size: 15px;"><span data-custom-class="body_text"><strong>How do we process your information and how we use your Google Data?</strong> We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with law. We may also process your information for other purposes with your consent. We process your information only when we have a valid legal reason to do so. Learn more about&nbsp;</span></span><a data-custom-class="link" href="#infouse"><span style="color: rgb(0, 58, 250); font-size: 15px;"><span data-custom-class="body_text">how we process your information</span></span></a><span data-custom-class="body_text">.</span></div>
             <div style="line-height: 1.5;"><br></div>
             <div style="line-height: 1.5;"> <span style="font-size: 15px;"> <span data-custom-class="body_text"> <strong> In what situations and with which <bdt class="block-component"></bdt> parties do we share personal information? </strong> We may share information in specific situations and with specific <bdt class="block-component"></bdt> third parties. Learn more about&nbsp; </span> </span> <a data-custom-class="link" href="#whoshare"><span style="color: rgb(0, 58, 250); font-size: 15px;"><span data-custom-class="body_text">when and with whom we share your personal information</span></span></a> <span style="font-size: 15px;"> <span data-custom-class="body_text"> . <bdt class="block-component"></bdt> </span> </span> </div>
             <div style="line-height: 1.5;"><br></div>
@@ -132,7 +132,7 @@ const PolicyPage = () => {
             <div id="toc" style="line-height: 1.5;"><span style="font-size: 15px;"><span style="color: rgb(127, 127, 127);"><span style="color: rgb(0, 0, 0);"><strong><span data-custom-class="heading_1">TABLE OF CONTENTS</span></strong></span></span></span></div>
             <div style="line-height: 1.5;"><br></div>
             <div style="line-height: 1.5;"><span style="font-size: 15px;"><a data-custom-class="link" href="#infocollect"><span style="color: rgb(0, 58, 250);">1. WHAT INFORMATION DO WE COLLECT?</span></a></span></div>
-            <div style="line-height: 1.5;"> <span style="font-size: 15px;"> <a data-custom-class="link" href="#infouse"> <span style="color: rgb(0, 58, 250);"> 2. HOW DO WE PROCESS YOUR INFORMATION? <bdt class="block-component"></bdt> </span> </a> </span> </div>
+            <div style="line-height: 1.5;"> <span style="font-size: 15px;"> <a data-custom-class="link" href="#infouse"> <span style="color: rgb(0, 58, 250);"> 2. HOW DO WE PROCESS YOUR INFORMATION AND HOW DO WE USE YOUR GOOGLE RELATED DATA? <bdt class="block-component"></bdt> </span> </a> </span> </div>
             <div style="line-height: 1.5;"> <span style="font-size: 15px;"> <a data-custom-class="link" href="#legalbases"> <span style="color: rgb(0, 58, 250);"> 3. <span style="font-size: 15px;"><span style="color: rgb(0, 58, 250);">WHAT LEGAL BASES DO WE RELY ON TO PROCESS YOUR PERSONAL INFORMATION?</span></span>
                             <bdt class="statement-end-if-in-editor"></bdt>
                         </span> </a> </span> </div>
@@ -457,12 +457,21 @@ const PolicyPage = () => {
                                 <bdt class="block-component"></bdt>
                             </span> </span>
                     </div>
-                    <div id="infouse" style="line-height: 1.5;"><span style="color: rgb(127, 127, 127);"><span style="color: rgb(89, 89, 89); font-size: 15px;"><span style="font-size: 15px; color: rgb(89, 89, 89);"><span style="font-size: 15px; color: rgb(89, 89, 89);"><span id="control" style="color: rgb(0, 0, 0);"><strong><span data-custom-class="heading_1">2. HOW DO WE PROCESS YOUR INFORMATION?</span></strong></span></span></span></span></span></div>
+                    <div id="infouse" style="line-height: 1.5;"><span style="color: rgb(127, 127, 127);"><span style="color: rgb(89, 89, 89); font-size: 15px;"><span style="font-size: 15px; color: rgb(89, 89, 89);"><span style="font-size: 15px; color: rgb(89, 89, 89);"><span id="control" style="color: rgb(0, 0, 0);"><strong><span data-custom-class="heading_1">2. HOW DO WE PROCESS YOUR INFORMATION AND HOW DO WE USE YOUR GOOGLE RELATED DATA?</span></strong></span></span></span></span></span></div>
                     <div>
                         <div style="line-height: 1.5;"><br></div>
                         <div style="line-height: 1.5;"><span style="color: rgb(127, 127, 127);"><span style="color: rgb(89, 89, 89); font-size: 15px;"><span data-custom-class="body_text"><span style="font-size: 15px; color: rgb(89, 89, 89);"><span style="font-size: 15px; color: rgb(89, 89, 89);"><span data-custom-class="body_text"><strong><em>In Short:&nbsp;</em></strong><em>We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with law. We may also process your information for other purposes with your consent.</em></span></span></span></span></span></span></div>
                     </div>
                     <div style="line-height: 1.5;"><br></div>
+                    <div style="line-height: 1.5;">
+                    <span style="font-size: 15px; color: rgb(89, 89, 89);"> <span style="font-size: 15px; color: rgb(89, 89, 89);"> <span data-custom-class="body_text"> <strong>We utilize Google APIs for the sole purpose of authenticating and registering users to our website. During this process, we may access basic profile information from Google, which includes your name, email address, and profile picture. This information is used exclusively to create and link your account on our platform. We do not share this information with any third parties, and it is handled in strict accordance with our privacy and security measures. Our practices are in full compliance with Google's User Data Policy and our own commitments to user privacy.</strong>
+                    <bdt class="block-component"></bdt>
+                </span> </span> </span>
+
+                <div style="line-height: 1.5;"><br></div>
+                    
+                    </div>
+                    
                     <div style="line-height: 1.5;"> <span style="font-size: 15px; color: rgb(89, 89, 89);"> <span style="font-size: 15px; color: rgb(89, 89, 89);"> <span data-custom-class="body_text"> <strong>We process your personal information for a variety of reasons, depending on how you interact with our Services, including:</strong>
                                     <bdt class="block-component"></bdt>
                                 </span> </span> </span> </div>
