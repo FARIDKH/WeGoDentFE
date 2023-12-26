@@ -5,11 +5,11 @@ import { useMutation } from 'react-query'
 import useUser from '../../lib/useUser'
 import { store } from '../../pages/_app'
 import { SNACKBAR_OPEN } from '../../store/actions'
-import { useOpenState } from '../hooks/useOpenState'
+import { useOpenState } from '../../ui-component/hooks/useOpenState'
 import axios from '../../utils/axios'
 
 import { Formik } from 'formik'
-import Input from '../Form/Input'
+import Input from '../../ui-component/Form/Input'
 import * as yup from 'yup'
 
 interface IProps {

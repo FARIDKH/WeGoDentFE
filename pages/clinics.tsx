@@ -24,8 +24,6 @@ import ClinicPicture from '../modules/clinics/ClinicPicture'
 import { useTranslation } from 'next-i18next'
 import DOMPurify from 'dompurify'
 
-
-
 dayjs.extend(isBetween)
 
 const initialState = {
@@ -51,12 +49,11 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const ClinicsPage = () => {
-    
     const ref = useRef(null)
     const { isLoggedIn, refetch } = useUser(false)
     const [page, setPage] = useState(1)
     const { t, i18n } = useTranslation('common')
-    const curLang = i18n.language;
+    const curLang = i18n.language
     const ITEMS_PER_PAGE = 4
 
     const [selected, setSelected] = useState(initialState)
@@ -75,15 +72,15 @@ const ClinicsPage = () => {
         setPage(value)
     }
 
-    let translatedDoctorType = doctorType;
-    var metaDescription = "Wegodent makes it easy to browse dental clinics near you. Take care of your healthy smile today!";
-    var metaTitle = "The best dental clinics near you - Wegodent";
+    let translatedDoctorType = doctorType
+    var metaDescription = 'Wegodent makes it easy to browse dental clinics near you. Take care of your healthy smile today!'
+    var metaTitle = 'The best dental clinics near you - Wegodent'
     if (curLang === 'hu') {
-        translatedDoctorType = t(`DoctorType.${doctorType}`);
-        metaDescription = "Wegodent könnyedén böngészhet a közelben található fogászati klinikák között. Gondoskodjon egészséges mosolyáról ma!";
-        metaTitle = "A legjobb fogászati klinikák a közelben - Wegodent";
+        translatedDoctorType = t(`DoctorType.${doctorType}`)
+        metaDescription =
+            'Wegodent könnyedén böngészhet a közelben található fogászati klinikák között. Gondoskodjon egészséges mosolyáról ma!'
+        metaTitle = 'A legjobb fogászati klinikák a közelben - Wegodent'
     }
-
 
     const officeLocations = clinics?.map((clinic) => clinic.officeLocationName) ?? []
 
@@ -114,25 +111,25 @@ const ClinicsPage = () => {
     }
 
     const getDescriptionSnippet = (description: string, href: string) => {
-        const maxLength = 255;
-        let sanitizedDescription = DOMPurify.sanitize(description);
-        
+        const maxLength = 255
+        let sanitizedDescription = DOMPurify.sanitize(description)
+
         if (sanitizedDescription.length <= maxLength) {
-            return <span dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />;
+            return <span dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
         }
-    
+
         // Truncate description and ensure it doesn't cut off in the middle of a word
-        const truncated = sanitizedDescription.substring(0, sanitizedDescription.lastIndexOf(' ', maxLength)) + '... ';
-        
+        const truncated = sanitizedDescription.substring(0, sanitizedDescription.lastIndexOf(' ', maxLength)) + '... '
+
         return (
             <>
                 <Typography variant="body1" component="span" dangerouslySetInnerHTML={{ __html: truncated }} />
-                <Link rel='alternate' hrefLang={curLang} href={href} color="primary">
+                <Link rel="alternate" hrefLang={curLang} href={href} color="primary">
                     {t('labelMoreInfo')}
                 </Link>
             </>
-        );
-    };
+        )
+    }
 
     // First, add an index to each item using reduce
     const clinicsWithIndex = clinics.reduce((acc, clinic, index) => {
@@ -209,8 +206,8 @@ const ClinicsPage = () => {
                                         const clinicName = clinic?.name
                                         const clinicId = clinic?.clinicId
                                         const isSelectedDoctor = clinic?.clinicId === selected?.clinicId
-                                        const modifiedName = clinicName.toLowerCase().replace(/\s+/g, '-');
-                                        const clinicLink = curLang === 'en' ? '/en/clinics/' + modifiedName : '/klinikak/' + modifiedName ;
+                                        const modifiedName = clinicName.toLowerCase().replace(/\s+/g, '-')
+                                        const clinicLink = curLang === 'en' ? '/en/clinics/' + modifiedName : '/klinikak/' + modifiedName
                                         return (
                                             <Box key={clinicId}>
                                                 <Box
@@ -235,11 +232,25 @@ const ClinicsPage = () => {
                                                             }}
                                                         >
                                                             <Box>
-                                                                <ClinicPicture clinic={clinic} style={{ borderRadius:'50%', objectFit: "cover" ,width: 75, height: 75 }} />
+                                                                <ClinicPicture
+                                                                    clinic={clinic}
+                                                                    style={{
+                                                                        borderRadius: '50%',
+                                                                        objectFit: 'cover',
+                                                                        width: 75,
+                                                                        height: 75,
+                                                                    }}
+                                                                />
                                                             </Box>
                                                             <Box ml="12px">
                                                                 <Typography variant="h4">
-                                                                    <Link rel='alternate' hrefLang={curLang} underline="none" key={clinicId} href={clinicLink}>
+                                                                    <Link
+                                                                        rel="alternate"
+                                                                        hrefLang={curLang}
+                                                                        underline="none"
+                                                                        key={clinicId}
+                                                                        href={clinicLink}
+                                                                    >
                                                                         <Box display="flex" alignItems="center">
                                                                             <strong style={{ marginRight: '10px', color: 'black' }}>
                                                                                 {clinicName}
@@ -338,7 +349,7 @@ const ClinicsPage = () => {
                                                                             '& .MuiDigitalClock-item': {
                                                                                 padding: {
                                                                                     sm: '8px 16px',
-                                                                                    xs: 0, 
+                                                                                    xs: 0,
                                                                                 },
                                                                                 fontSize: {
                                                                                     sm: 'inherit',

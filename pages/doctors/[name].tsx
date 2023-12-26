@@ -119,7 +119,7 @@ const SingleDoctor = () => {
         return `${hiddenDigits}${visibleDigits}`
     }
 
-    const title = "Dr. " + doctors[0]?.userDTO?.firstName + " " + doctors[0]?.userDTO?.lastName
+    const title = 'Dr. ' + doctors[0]?.userDTO?.firstName + ' ' + doctors[0]?.userDTO?.lastName
 
     return (
         <Layout title={title} description={doctors[0]?.experience?.slice(0, 160)}>
@@ -148,8 +148,8 @@ const SingleDoctor = () => {
                                 const doctorName = `${doctor?.userDTO?.firstName} ${doctor?.userDTO?.lastName}`
 
                                 const isSelectedDoctor = doctor?.id === selected?.doctorId
-                                const modifiedName = doctor?.clinicName?.toLowerCase().replace(/\s+/g, '-');
-                                const clinicLink = '/en/clinics/' + modifiedName;
+                                const modifiedName = doctor?.clinicName?.toLowerCase().replace(/\s+/g, '-')
+                                const clinicLink = '/en/clinics/' + modifiedName
                                 return (
                                     <Box key={doctor?.id}>
                                         <Box
@@ -426,7 +426,10 @@ const SingleDoctor = () => {
                                                 </Box>
                                             </Box>
 
-                                            <Box mt="25px" sx={{ textAlign: 'center', paddingX: '75px' }}>
+                                            <Box sx={{ textAlign: 'center', paddingX: '75px' }}>
+                                                <Typography mb={5} variant="h5" sx={{ fontSize: { xs: '16px', sm: '18px' } }}>
+                                                    {t('labelSelectDateAndTime')}
+                                                </Typography>
                                                 <Box display="flex" alignItems="center" justifyContent="center">
                                                     <Box
                                                         className="appointment"
@@ -523,7 +526,6 @@ const SingleDoctor = () => {
                     )}
                 </Box>
 
-
                 <CreateClinicAppointment ref={ref} onClose={() => setSelected(initialState)} />
             </Container>
         </Layout>
@@ -531,7 +533,6 @@ const SingleDoctor = () => {
 }
 
 export default SingleDoctor
-
 
 export const getStaticProps = async ({ locale }) => {
     return {
@@ -542,9 +543,8 @@ export const getStaticProps = async ({ locale }) => {
 }
 
 export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
-
     return {
         paths: [], //indicates that no page needs be created at build time
-        fallback: 'blocking' //indicates the type of fallback
+        fallback: 'blocking', //indicates the type of fallback
     }
 }

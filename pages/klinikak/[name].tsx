@@ -8,7 +8,6 @@ import {
     Table,
     TableBody,
     TableCell,
-    TableHead,
     TableRow,
     IconButton,
     Collapse,
@@ -19,7 +18,7 @@ import {
 import { useRouter } from 'next/router'
 import * as React from 'react'
 import {} from '@material-ui/core'
-import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons'
+import { KeyboardArrowDown } from '@material-ui/icons'
 
 import PhoneIphoneIcon from '@mui/icons-material/LocalPhoneOutlined'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
@@ -43,10 +42,8 @@ import { useEffect, useRef, useState } from 'react'
 
 import CreateClinicAppointment from '../../modules/appointments/CreateClinicAppointment'
 import Header2 from '../../layout/main/Header2'
-import { Star } from '@material-ui/icons'
 import Reviews from '../../modules/clinics/Reviews'
 import ClinicPicture from '../../modules/clinics/ClinicPicture'
-import { apiUrl } from '../../lib/fetchJson'
 import { GetStaticPaths } from 'next'
 import { useTranslation } from 'next-i18next'
 import DoctorPicture from '../../modules/Doctor/DoctorPicture'
@@ -74,8 +71,6 @@ const SingleClinic = () => {
     const { query } = useRouter()
 
     const { name } = query ?? {}
-
-    const [value, setValue] = useState<number | null>(5)
 
     const { data: clinic, isFetching } = useClinicByName({
         name,
@@ -196,11 +191,7 @@ const SingleClinic = () => {
     //     { name: 'Regular Checkup' }, // No prefix, goes to OTHER
     // ]
 
-    const {
-        data: treatmentsData,
-        isError,
-        refetch,
-    } = useQuery(['Treatment', clinic], async ({ signal }) => {
+    const { data: treatmentsData } = useQuery(['Treatment', clinic], async ({ signal }) => {
         const result = await axios(`/api/clinics/${clinic?.clinicId}/treatments`, { signal })
         return result.data
     })
@@ -563,8 +554,8 @@ const SingleClinic = () => {
                                 <Typography variant="h3" sx={{ color: '#00624F', fontSize: { xs: '24px', md: '30px' } }}>
                                     A naptárunk
                                 </Typography>
-                                <Typography mb={5} mt={3} variant="h5" sx={{ fontSize: { xs: '16px', sm: '18px' } }}>
-                                    Érdeklődni a nyitvatartási időnkban lehet
+                                <Typography mb={5} mt={1} variant="h5" sx={{ fontSize: { xs: '16px', sm: '18px' } }}>
+                                    {t('labelSelectDateAndTime')}
                                 </Typography>
 
                                 <Box display="flex" alignItems="center" justifyContent="center">
