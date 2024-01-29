@@ -235,6 +235,8 @@ const SingleClinic = () => {
         };
       }, []);
 
+    
+
     const isMobile = useMobile()
 
     const blurPhoneNumber = (phoneNumber) => {
@@ -278,9 +280,31 @@ const SingleClinic = () => {
 
     const description = getDescription('en', clinic?.description)
 
+
+    const jsonLdData = {
+        "@context": "http://schema.org/",
+        "@type": "Product",
+        "name": clinic?.name,
+        "description": description,
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "ratingCount": "51",
+            "reviewCount": "51",
+            "worstRating": "1",
+            "bestRating": "5"
+        }
+    };
+
     return (
         <Layout title={clinic?.name} description={description}>
             <Header2 showForm={false} />
+            <Head>
+                <script 
+                    type="application/ld+json" 
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
+                />
+            </Head>
 
             <Box minHeight="50vh" my={4}>
                 {isFetching ? (

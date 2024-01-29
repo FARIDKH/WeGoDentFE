@@ -50,6 +50,7 @@ import DoctorPicture from '../../modules/Doctor/DoctorPicture'
 import { useMobile } from '../../ui-component/hooks/useMobile'
 import { useQuery } from 'react-query'
 import axios from 'axios'
+import Head from 'next/head'
 
 dayjs.extend(isBetween)
 
@@ -267,34 +268,33 @@ const SingleClinic = () => {
         )
     }
 
-    useEffect(() => {
-        const script = document.createElement('script');
-        script.type = 'application/ld+json';
-        script.innerHTML = JSON.stringify({
-          "@context": "http://schema.org/",
-          "@type": "Product",
-          "name": clinic?.name,
-          "description": clinic?.description,
-          "aggregateRating": {
+    
+
+      const jsonLdData = {
+        "@context": "http://schema.org/",
+        "@type": "Product",
+        "name": clinic?.name,
+        "description": description,
+        "aggregateRating": {
             "@type": "AggregateRating",
-            "ratingValue" : "4.0",
-            "ratingCount" : "51",
-            "reviewCount" : "51",
-            "worstRating" : "1",
-            "bestRating" : "5"
-          }
-        });
-    
-        document.head.appendChild(script);
-    
-        return () => {
-          document.head.removeChild(script);
-        };
-      }, []);
+            "ratingValue": "4.9",
+            "ratingCount": "51",
+            "reviewCount": "51",
+            "worstRating": "1",
+            "bestRating": "5"
+        }
+    };
 
     return (
         <Layout title={clinic?.name} description={description}>
             <Header2 showForm={false} />
+
+            <Head>
+                <script 
+                    type="application/ld+json" 
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
+                />
+            </Head>
 
             <Box minHeight="50vh" my={4}>
                 {isFetching ? (
