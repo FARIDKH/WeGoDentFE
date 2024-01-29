@@ -267,6 +267,31 @@ const SingleClinic = () => {
         )
     }
 
+    useEffect(() => {
+        const script = document.createElement('script');
+        script.type = 'application/ld+json';
+        script.innerHTML = JSON.stringify({
+          "@context": "http://schema.org/",
+          "@type": "Product",
+          "name": clinic?.title,
+          "description": clinic?.description,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue" : "4.0",
+            "ratingCount" : "51",
+            "reviewCount" : "51",
+            "worstRating" : "1",
+            "bestRating" : "5"
+          }
+        });
+    
+        document.head.appendChild(script);
+    
+        return () => {
+          document.head.removeChild(script);
+        };
+      }, []);
+
     return (
         <Layout title={clinic?.name} description={description}>
             <Header2 showForm={false} />
