@@ -273,7 +273,7 @@ const SingleClinic = () => {
         script.innerHTML = JSON.stringify({
           "@context": "http://schema.org/",
           "@type": "Product",
-          "name": clinic?.title,
+          "name": clinic?.name,
           "description": clinic?.description,
           "aggregateRating": {
             "@type": "AggregateRating",
