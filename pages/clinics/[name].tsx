@@ -49,6 +49,7 @@ import DoctorPicture from '../../modules/Doctor/DoctorPicture'
 import { useMobile } from '../../ui-component/hooks/useMobile'
 import axios from 'axios'
 import { useQuery } from 'react-query'
+import Head from 'next/head';
 
 dayjs.extend(isBetween)
 
@@ -208,6 +209,31 @@ const SingleClinic = () => {
             ref?.current?.open(selected)
         }
     }, [selected])
+
+    useEffect(() => {
+        const script = document.createElement('script');
+        script.type = 'application/ld+json';
+        script.innerHTML = JSON.stringify({
+          "@context": "http://schema.org/",
+          "@type": "Product",
+          "name": clinic?.title,
+          "description": clinic?.description,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue" : "4.0",
+            "ratingCount" : "51",
+            "reviewCount" : "51",
+            "worstRating" : "1",
+            "bestRating" : "5"
+          }
+        });
+    
+        document.head.appendChild(script);
+    
+        return () => {
+          document.head.removeChild(script);
+        };
+      }, []);
 
     const isMobile = useMobile()
 
@@ -635,6 +661,7 @@ const SingleClinic = () => {
             </Box>
 
             <CreateClinicAppointment ref={ref} onClose={() => setSelected(initialState)} />
+                                                   
         </Layout>
     )
 }
