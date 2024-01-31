@@ -273,7 +273,7 @@ const SingleClinic = () => {
       const jsonLdData = {
         "@context": "http://schema.org/",
         "@type": "Product",
-        "name": clinic?.name,
+        "name": clinic?.name + " - Wegodent",
         "description": description,
         "aggregateRating": {
             "@type": "AggregateRating",
@@ -292,7 +292,7 @@ const SingleClinic = () => {
             <Head>
                 <script 
                     type="application/ld+json" 
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData, null, 2) }}
                 />
             </Head>
 
