@@ -210,30 +210,7 @@ const SingleClinic = () => {
         }
     }, [selected])
 
-    useEffect(() => {
-        const script = document.createElement('script');
-        script.type = 'application/ld+json';
-        script.innerHTML = JSON.stringify({
-          "@context": "http://schema.org/",
-          "@type": "Product",
-          "name": clinic?.name,
-          "description": clinic?.description,
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue" : "4.0",
-            "ratingCount" : "51",
-            "reviewCount" : "51",
-            "worstRating" : "1",
-            "bestRating" : "5"
-          }
-        });
     
-        document.head.appendChild(script);
-    
-        return () => {
-          document.head.removeChild(script);
-        };
-      }, []);
 
     
 
@@ -284,7 +261,7 @@ const SingleClinic = () => {
     const jsonLdData = {
         "@context": "http://schema.org/",
         "@type": "Product",
-        "name": clinic?.name,
+        "name": clinic?.name + " - Wegodent",
         "description": description,
         "aggregateRating": {
             "@type": "AggregateRating",
@@ -302,7 +279,7 @@ const SingleClinic = () => {
             <Head>
                 <script 
                     type="application/ld+json" 
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData, null, 2) }}
                 />
             </Head>
 
